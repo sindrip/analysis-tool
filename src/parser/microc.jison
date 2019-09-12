@@ -1,3 +1,4 @@
+/* const ast = require('./../ast/nodes'); */
 /* lexical grammar */
 %lex
 
@@ -68,8 +69,6 @@
 
 program
     : '{' declaration_list statement_list '}' EOF
-        /*{ console.log( JSON.stringify( { vars: $2, statements: $3 }, undefined, 2 )); }*/
-        /*{ console.log({ vars: $2, statements: $3 }); }*/
         { return { vars: $2, statements: $3 }}
     ;
 
@@ -82,11 +81,11 @@ declaration_list
 
 declaration
     : INT NAME ';'
-        { $$ = { 'type': 'IntDecl', name: $2 }; }
+        { $$ = yy.intDeclaration($2); }
     | INT '[' NUMBER ']' NAME ';'
-        { $$ = { 'type': 'ArrayDecl', name: $5 }; }
+        { $$ = yy.arrayDeclaration($5, $3); }
     | '{' INT FST ';' INT SND '}' NAME ';'
-        { $$ = { 'type': 'RecordDecl', name: $8 }; }
+        { $$ = yy.recordDeclaration($8); }
     ;
 
 statement_list
@@ -97,47 +96,42 @@ statement_list
     ;
 
 statement
-    /*: variable ASSIGN a_expr ';'
-        { $$ = {'token': 'ASSIGN', left: $1, right: $3 }; }
-    | NAME ASSIGN '(' a_expr ';' a_expr ')' ';'
-        { $$ = { 'token': 'RECORD_ASSIGN', 'name': $1, fields: [ $1, $2] }; }
-    */
     : NAME ASSIGN a_expr ';'
-        { $$ = {'token': 'ASSIGN', left: { token: 'VAR', name: $1 }, right: $3 }; }
+        { $$ = yy.assignmentNode(yy.varIdentifier($1), $3); }
     | NAME '[' a_expr ']' ASSIGN a_expr ';'
-        { $$ = {'token': 'ASSIGN', left: { token: 'ARRAY', name: $1, index: $3 }, right: $6 }; }
+        { $$ = yy.assignmentNode(yy.arrayIdentifier($1, $3), $6); }
     | NAME '.' FST ASSIGN a_expr ';'
-        { $$ = {'token': 'ASSIGN', left: { token: 'RECORD_FIELD', field: 'fst' }, right: $5 }; }
+        { $$ = yy.assignmentNode(yy.recordIdentifier($1, 'fst'), $5); }
     | NAME '.' SND ASSIGN a_expr ';'
-        { $$ = {'token': 'ASSIGN', left: { token: 'RECORD_FIELD', field: 'snd' }, right: $5 }; }
+        { $$ = yy.assignmentNode(yy.recordIdentifier($1, 'snd'), $5); }
     | NAME ASSIGN '(' a_expr ';' a_expr ')' ';'
         { $$ = { 'token': 'RECORD_ASSIGN', 'name': $1, fields: [ $1, $2] }; }
 
     | IF '(' b_expr ')' '{' statement_list '}'
-        { $$ = { 'token': 'IF', 'condition': $3, 'body': $6 }; }
+        { $$ = yy.ifNode($3, $6); }
     | IF '(' b_expr ')' '{' statement_list '}' ELSE '{' statement_list '}'
-        { $$ = { 'token': 'IFELSE', 'condition': $3, 'ifbody': $6, 'elsebody': $10 }; }
+        { $$ = yy.ifElseNode($3, $6, $10); }
     | WHILE '(' b_expr ')' '{' statement_list '}'
-        { $$ = { 'token': 'WHILE', 'condition': $3, 'body': $6 };}
+        { $$ = yy.whileNode($3, $6); }
     | READ variable ';'
-        { $$ = { 'token': 'READ', value: $2 }; }
+        { $$ = yy.readNode($2); }
     | WRITE a_expr ';'
-        { $$ = { 'token': 'WRITE', value: $2 }; }
+        { $$ = yy.writeNode($2); }
     ;
 
 b_expr
     : TRUE
-        { $$ = { token: 'BOOLEAN', value: true }; }
+        { $$ = yy.booleanLiteral(true); }
     | FALSE
-        { $$ = { token: 'BOOLEAN', value: false }; }
+        { $$ = yy.booleanLiteral(false); }
     | NOT b_expr
         { $$ = { token: 'NOT', value: $2 }; }
     | b_expr AND b_expr
-        { $$ = { token: 'AND', left: $1, right: $3}; }
+        { $$ = yy.booleanBinopExpression($1, '&', $3); }
     | b_expr OR b_expr
-        { $$ = { token: 'OR', left: $1, right: $3}; }
+        { $$ = yy.booleanBinopExpression($1, '|', $3); }
     | a_expr op_r a_expr
-        { $$ = { token: $2, left: $1, right: $3}; }
+        { $$ = yy.relationalExpression($1, $2, $3); }
     ;
 
 op_r
@@ -157,26 +151,26 @@ op_r
 
 a_expr
     : NUMBER
-        { $$ = { token: 'INTEGER', value: $1 }; }
+        { $$ = yy.integerLiteral($1); }
     | variable
         { $$ = $1 }
     | a_expr '+' a_expr
-        { $$ = { token: 'PLUS', left: $1, right: $3 }; }
+        { $$ = yy.arithmeticBinopExpression($1, '+', $3); }
     | a_expr '-' a_expr
-        { $$ = { token: 'MINUS', left: $1, right: $3 }; }
+        { $$ = yy.arithmeticBinopExpression($1, '-', $3); }
     | a_expr '*' a_expr
-        { $$ = { token: 'MULT', left: $1, right: $3 }; }
+        { $$ = yy.arithmeticBinopExpression($1, '*', $3); }
     | a_expr '/' a_expr
-        { $$ = { token: 'DIV', left: $1, right: $3 }; }
+        { $$ = yy.arithmeticBinopExpression($1, '/', $3); }
     ;
 
 variable
     : NAME
-        { $$ = { token: 'VAR', name: $1 }; }
+        { $$ = yy.varIdentifier($1); }
     | NAME '[' a_expr ']'
-        { $$ = { token: 'ARRAY', name: $1, index: $3 }; }
+        { $$ = yy.arrayIdentifier($1, $3); }
     | NAME '.' FST
-        { $$ = { token: 'RECORD_FIELD', field: 'fst' }; }
+        { $$ = yy.recordIdentifier($1, 'fst'); }
     | NAME '.' SND
-        { $$ = { token: 'RECORD_FIELD', field: 'snd' }; }
+        { $$ = yy.recordIdentifier($1, 'snd'); }
     ;

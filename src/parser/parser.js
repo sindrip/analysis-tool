@@ -93,64 +93,64 @@ case 3:
  this.$ = []; 
 break;
 case 4:
- this.$ = { 'type': 'IntDecl', name: $$[$0-1] }; 
+ this.$ = yy.intDeclaration($$[$0-1]); 
 break;
 case 5:
- this.$ = { 'type': 'ArrayDecl', name: $$[$0-1] }; 
+ this.$ = yy.arrayDeclaration($$[$0-1], $$[$0-3]); 
 break;
 case 6:
- this.$ = { 'type': 'RecordDecl', name: $$[$0-1] }; 
+ this.$ = yy.recordDeclaration($$[$0-1]); 
 break;
 case 8:
  this.$ = [$$[$0]]; 
 break;
 case 9:
- this.$ = {'token': 'ASSIGN', left: { token: 'VAR', name: $$[$0-3] }, right: $$[$0-1] }; 
+ this.$ = yy.assignmentNode(yy.varIdentifier($$[$0-3]), $$[$0-1]); 
 break;
 case 10:
- this.$ = {'token': 'ASSIGN', left: { token: 'ARRAY', name: $$[$0-6], index: $$[$0-4] }, right: $$[$0-1] }; 
+ this.$ = yy.assignmentNode(yy.arrayIdentifier($$[$0-6], $$[$0-4]), $$[$0-1]); 
 break;
 case 11:
- this.$ = {'token': 'ASSIGN', left: { token: 'RECORD_FIELD', field: 'fst' }, right: $$[$0-1] }; 
+ this.$ = yy.assignmentNode(yy.recordIdentifier($$[$0-5], 'fst'), $$[$0-1]); 
 break;
 case 12:
- this.$ = {'token': 'ASSIGN', left: { token: 'RECORD_FIELD', field: 'snd' }, right: $$[$0-1] }; 
+ this.$ = yy.assignmentNode(yy.recordIdentifier($$[$0-5], 'snd'), $$[$0-1]); 
 break;
 case 13:
  this.$ = { 'token': 'RECORD_ASSIGN', 'name': $$[$0-7], fields: [ $$[$0-7], $$[$0-6]] }; 
 break;
 case 14:
- this.$ = { 'token': 'IF', 'condition': $$[$0-4], 'body': $$[$0-1] }; 
+ this.$ = yy.ifNode($$[$0-4], $$[$0-1]); 
 break;
 case 15:
- this.$ = { 'token': 'IFELSE', 'condition': $$[$0-8], 'ifbody': $$[$0-5], 'elsebody': $$[$0-1] }; 
+ this.$ = yy.ifElseNode($$[$0-8], $$[$0-5], $$[$0-1]); 
 break;
 case 16:
- this.$ = { 'token': 'WHILE', 'condition': $$[$0-4], 'body': $$[$0-1] };
+ this.$ = yy.whileNode($$[$0-4], $$[$0-1]); 
 break;
 case 17:
- this.$ = { 'token': 'READ', value: $$[$0-1] }; 
+ this.$ = yy.readNode($$[$0-1]); 
 break;
 case 18:
- this.$ = { 'token': 'WRITE', value: $$[$0-1] }; 
+ this.$ = yy.writeNode($$[$0-1]); 
 break;
 case 19:
- this.$ = { token: 'BOOLEAN', value: true }; 
+ this.$ = yy.booleanLiteral(true); 
 break;
 case 20:
- this.$ = { token: 'BOOLEAN', value: false }; 
+ this.$ = yy.booleanLiteral(false); 
 break;
 case 21:
  this.$ = { token: 'NOT', value: $$[$0] }; 
 break;
 case 22:
- this.$ = { token: 'AND', left: $$[$0-2], right: $$[$0]}; 
+ this.$ = yy.booleanBinopExpression($$[$0-2], '&', $$[$0]); 
 break;
 case 23:
- this.$ = { token: 'OR', left: $$[$0-2], right: $$[$0]}; 
+ this.$ = yy.booleanBinopExpression($$[$0-2], '|', $$[$0]); 
 break;
 case 24:
- this.$ = { token: $$[$0-1], left: $$[$0-2], right: $$[$0]}; 
+ this.$ = yy.relationalExpression($$[$0-2], $$[$0-1], $$[$0]); 
 break;
 case 25:
  this.$ = 'LT'; 
@@ -171,34 +171,34 @@ case 30:
  this.$ = 'NOT_EQ'; 
 break;
 case 31:
- this.$ = { token: 'INTEGER', value: $$[$0] }; 
+ this.$ = yy.integerLiteral($$[$0]); 
 break;
 case 32:
  this.$ = $$[$0] 
 break;
 case 33:
- this.$ = { token: 'PLUS', left: $$[$0-2], right: $$[$0] }; 
+ this.$ = yy.arithmeticBinopExpression($$[$0-2], '+', $$[$0]); 
 break;
 case 34:
- this.$ = { token: 'MINUS', left: $$[$0-2], right: $$[$0] }; 
+ this.$ = yy.arithmeticBinopExpression($$[$0-2], '-', $$[$0]); 
 break;
 case 35:
- this.$ = { token: 'MULT', left: $$[$0-2], right: $$[$0] }; 
+ this.$ = yy.arithmeticBinopExpression($$[$0-2], '*', $$[$0]); 
 break;
 case 36:
- this.$ = { token: 'DIV', left: $$[$0-2], right: $$[$0] }; 
+ this.$ = yy.arithmeticBinopExpression($$[$0-2], '/', $$[$0]); 
 break;
 case 37:
- this.$ = { token: 'VAR', name: $$[$0] }; 
+ this.$ = yy.varIdentifier($$[$0]); 
 break;
 case 38:
- this.$ = { token: 'ARRAY', name: $$[$0-3], index: $$[$0-1] }; 
+ this.$ = yy.arrayIdentifier($$[$0-3], $$[$0-1]); 
 break;
 case 39:
- this.$ = { token: 'RECORD_FIELD', field: 'fst' }; 
+ this.$ = yy.recordIdentifier($$[$0-2], 'fst'); 
 break;
 case 40:
- this.$ = { token: 'RECORD_FIELD', field: 'snd' }; 
+ this.$ = yy.recordIdentifier($$[$0-2], 'snd'); 
 break;
 }
 },
