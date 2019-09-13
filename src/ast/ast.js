@@ -38,6 +38,10 @@ class IntDecl extends Declaration {
     constructor(identifier) {
         super(identifier, INT_DECL);
     }
+
+    print() {
+        return 'int ' + this.name;
+    }
 }
 
 class ArrayDecl extends Declaration {
@@ -45,12 +49,20 @@ class ArrayDecl extends Declaration {
         super(identifier, ARRAY_DECL);
         this.size = size;
     }
+
+    print() {
+        return 'int[' + this.size + '] ' + this.name;
+    }
 }
 
 class RecordDecl extends Declaration{
     constructor(identifier, fields) {
         super(identifier, RECORD_DECL);
         this.fields = fields;
+    }
+
+    print() {
+        return '{ int fst; int snd; } ' + this.name;
     }
 }
 
@@ -65,12 +77,19 @@ class BoolLit extends Literal {
         super(BOOL_LITERAL);
         this.value = value;
     }
+    print() {
+        return this.value.toString();
+    }
 }
 
 class IntLit extends Literal {
     constructor(value) {
         super(INT_LITERAL);
         this.value = value;
+    }
+
+    print() {
+        return this.value.toString();
     }
 }
 
@@ -85,6 +104,10 @@ class Identifier extends VarAccess {
         super(IDENTIFIER);
         this.name = name;
     }
+
+    print() {
+        return this.name;
+    }
 }
 
 class ArrayAccess extends VarAccess {
@@ -92,6 +115,10 @@ class ArrayAccess extends VarAccess {
         super(ARRAY_ACCESS);
         this.name = name;
         this.index = expr;
+    }
+
+    print() {
+        return this.name + '[' + this.index.print() + ']'
     }
 }
 
@@ -101,6 +128,10 @@ class RecordAccess extends VarAccess {
         this.name = name;
         this.field = expr;
     }
+
+    print() {
+        return this.name + '.' + this.field;
+    }
 }
 
 class BinaryExpr {
@@ -109,6 +140,10 @@ class BinaryExpr {
         this.left = left;
         this.right = right;
         this.operator = operator;
+    }
+
+    print() {
+        return this.left.print() + ' ' + operator + ' ' + this.right.print();
     }
 }
 
@@ -135,6 +170,10 @@ class UnaryExpr {
         this.nodeKind = nodeKind;
         this.left = left;
         this.operator = operator;
+    }
+
+    print() {
+        return this.operator + ' ' + this.left;
     }
 }
 
@@ -163,6 +202,10 @@ class AssignStmt extends Statement {
         this.identifier = identifier;
         this.value = expr;
     }
+
+    print() {
+        return this.identifier.print() + ' := ' + this.value.print();
+    }
 }
 
 class IfStmt extends Statement{
@@ -170,6 +213,10 @@ class IfStmt extends Statement{
         super(IF_STMT);
         this.condition = bexpr;
         this.body = body;
+    }
+
+    print() {
+        return 'if (' + this.condition.print() + ') {' + this.body.print() + '}';
     }
 }
 
@@ -180,6 +227,10 @@ class IfElseStmt extends Statement {
         this.ifbody = ifbody;
         this.elsebody = elsebody;
     }
+
+    print() {
+        return 'if (' + this.condition.print() + ') {' + this.ifbody.print() + '} else {' + this.elsebody.print() + '}'
+    }
 }
 
 class WhileStmt extends Statement{
@@ -188,6 +239,10 @@ class WhileStmt extends Statement{
         this.condition = condition;
         this.body = body;
     }
+
+    print() {
+        return 'while (' + this.condition.print() + ') {' + this.body.print() + '}';
+    }
 }
 
 class ReadStmt extends Statement {
@@ -195,12 +250,20 @@ class ReadStmt extends Statement {
         super(READ_STMT);
         this.name = identifier;
     }
+
+    print() {
+        return 'Read ' + this.identifier.print();
+    }
 }
 
 class WriteStmt extends Statement {
     constructor(aexpr) {
         super(WRITE_STMT);
         this.value = aexpr;
+    }
+
+    print() {
+        return 'Write '+ this.identifier.print();
     }
 }
 
@@ -488,3 +551,9 @@ console.log(blocks2);
 console.log(getInit(p2));
 console.log(getFinal(p2));
 console.log(getFlow(p2));
+
+const t = new AssignStmt(new Identifier('y'), new IntLit(0));
+
+//console.log(program.print())
+
+blocks.forEach((e) => console.log(e.print()));
