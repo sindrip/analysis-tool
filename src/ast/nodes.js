@@ -1,226 +1,277 @@
-const DECLARATION_NODE = 'DeclarationStatement'
-const ASSIGNMENT_NODE = 'AssignmentStatement';
-const WHILE_NODE = 'WhileStatement';
-const IF_NODE = 'IfStatement';
-const IF_ELSE_NODE = 'IfElseStatement';
-const READ_NODE = 'ReadStatement';
-const WRITE_NODE = 'WriteStatement';
-const BOOLEAN_EXPRESSION = 'BooleanExpression';
-const BOOLEAN_BINOP_EXPRESSION = 'BooleanBinopExpression';
-const RELATIONAL_EXPRESSION = 'RelationalExpression';
-const ARITHMETIC_EXPRESSION  = 'ArithmeticExpression';
-const ARITHMETIC_BINOP_EXPRESSION = 'ArithmeticBinopExpression';
-const BOOLEAN_LITERAL = 'BooleanLiteral';
-const INTEGER_LITERAL = 'IntegerLiteral';
+const constants = require('./constants');
 
-const VAR_IDENTIFIER = 'VarIdentifier';
-const ARRAY_IDENTIFIER = 'ArrayIdentifier';
-const RECORD_IDENTIFIER = 'RecordIdentifier';
-
-const TYPE_INT = 'IntegerType';
-const TYPE_BOOLEAN = 'BooleanType';
-const TYPE_ARRAY = 'ArrayType';
-const TYPE_RECORD = 'RecordType';
-
-
-const intDeclaration = (name) => {
-    return {
-        nodeType: DECLARATION_NODE,
-        type: TYPE_INT,
-        name,
+class Declaration {
+    constructor(identifier, nodeKind) {
+        this.nodeKind = nodeKind;
+        this.name = identifier;
     }
-};
+}
 
-const arrayDeclaration = (name, size) => {
-    return {
-        nodeType: DECLARATION_NODE,
-        type: TYPE_ARRAY,
-        name,
-        size,
-    };
-};
+class IntDecl extends Declaration {
+    constructor(identifier) {
+        super(identifier, constants.INT_DECL);
+    }
 
-const recordDeclaration = (name) => {
-    return {
-        nodeType: DECLARATION_NODE,
-        type: TYPE_RECORD,
-        name,
-        fields: [
-           { name: 'fst', type: TYPE_INT, },
-           { name: 'snd', type: TYPE_INT, }, 
-        ],
-    };
-};
+    print() {
+        return 'int ' + this.name;
+    }
+}
 
-const assignmentNode = (name, expr) => {
-    return {
-        type: ASSIGNMENT_NODE,
-        name,
-        expr,
-    };
-};
+class ArrayDecl extends Declaration {
+    constructor(identifier, size) {
+        super(identifier, constants.ARRAY_DECL);
+        this.size = size;
+    }
 
-const whileNode = (condition, body) => {
-    return {
-        nodeType: WHILE_NODE,
-        condition,
-        body,
-    };
-};
+    print() {
+        return 'int[' + this.size + '] ' + this.name;
+    }
+}
 
-const ifNode = (condition, body) => {
-    return {
-        nodeType: IF_NODE,
-        condition,
-        body,
-    };
-};
+class RecordDecl extends Declaration{
+    constructor(identifier, fields) {
+        super(identifier, constants.RECORD_DECL);
+        this.fields = fields;
+    }
 
-const ifElseNode = (condition, ifbody, elsebody) => {
-    return {
-        nodeType: IF_ELSE_NODE,
-        condition,
-        ifbody,
-        elsebody,
-    };
-};
+    print() {
+        return '{ int fst; int snd; } ' + this.name;
+    }
+}
 
-const readNode = (name) => {
-    return {
-        nodeType: READ_NODE,
-        name,
-    };
-};
+class Literal {
+    constructor(nodeKind) {
+        this.nodeKind = nodeKind;
+    }
+}
 
-const writeNode = (expr) => {
-    return {
-        nodeType: WRITE_NODE,
-        expr,
-    };
-};
+class BoolLit extends Literal {
+    constructor(value) {
+        super(constants.BOOL_LITERAL);
+        this.value = value;
+    }
+    print() {
+        return this.value.toString();
+    }
+}
 
-const booleanExpression = (value) => {
-    return {
-        nodeType: BOOLEAN_EXPRESSION,
-        value,
-    };
-};
+class IntLit extends Literal {
+    constructor(value) {
+        super(constants.INT_LITERAL);
+        this.value = value;
+    }
 
-const booleanBinopExpression = (left, operator, right) => {
-    return {
-        nodeType: BOOLEAN_BINOP_EXPRESSION,
-        left,
-        operator,
-        right,
-    };
-};
+    print() {
+        return this.value.toString();
+    }
+}
 
-const relationalExpression = (left, operator, right) => {
-    return {
-        nodeType: RELATIONAL_EXPRESSION,
-        left,
-        operator,
-        right,
-    };
-};
+class TupleLit extends Literal {
+    constructor(values) {
+        super(constants.TUPLE_LITERAL);
+        this.values = values;
+    }
 
-const booleanLiteral = (value) => {
-    return {
-        nodeType: BOOLEAN_LITERAL,
-        value,
-    };
-};
+    print() {
+        return '(' + this.values.map((v) => v.print()).join(',') + ')';
+    }
+}
 
-const arithmeticExpression = (value) => {
-    return {
-        nodeType: ARITHMETIC_EXPRESSION,
-        value,
-    };
-};
+class VarAccess {
+    constructor(nodeKind) {
+        this.nodeKind = nodeKind;
+    }
+}
 
-const arithmeticBinopExpression = (left, operator, right) => {
-    return {
-        nodeType: ARITHMETIC_BINOP_EXPRESSION,
-        left,
-        operator,
-        right,
-    };
-};
+class Identifier extends VarAccess {
+    constructor(name) {
+        super(constants.IDENTIFIER);
+        this.name = name;
+    }
 
-const integerLiteral = (value) => {
-    return {
-        nodeType: INTEGER_LITERAL,
-        value,
-    };
-};
+    print() {
+        return this.name;
+    }
+}
 
-const varIdentifier = (name) => {
-    return {
-        nodeType: VAR_IDENTIFIER,
-        name,
-    };
-};
+class ArrayAccess extends VarAccess {
+    constructor(name, expr) {
+        super(constants.ARRAY_ACCESS);
+        this.name = name;
+        this.index = expr;
+    }
 
-const arrayIdentifier = (name, index) => {
-    return {
-        nodeType: ARRAY_IDENTIFIER,
-        name,
-        index,
-    };
-};
+    print() {
+        return this.name + '[' + this.index.print() + ']'
+    }
+}
 
-const recordIdentifier = (name, field) => {
-    return {
-        nodeType: RECORD_IDENTIFIER,
-        name,
-        field,
-    };
-};
+class RecordAccess extends VarAccess {
+    constructor(name, expr) {
+        super(constants.RECORD_ACCESS);
+        this.name = name;
+        this.field = expr;
+    }
+
+    print() {
+        return this.name + '.' + this.field;
+    }
+}
+
+class BinaryExpr {
+    constructor(left, right, operator, nodeKind) {
+        this.nodeKind = nodeKind;
+        this.left = left;
+        this.right = right;
+        this.operator = operator;
+    }
+
+    print() {
+        return this.left.print() + ' ' + operator + ' ' + this.right.print();
+    }
+}
+
+class ABinaryExpr extends BinaryExpr {
+    constructor(left, right, operator) {
+        super(left, right, operator, constants.A_BINARY_EXPR);
+    }
+}
+
+class BBinaryExpr extends BinaryExpr {
+    constructor(left, right, operator) {
+        super(left, right, operator, constants.B_BINARY_EXPR);
+    }
+}
+
+class RBinaryExpr extends BinaryExpr {
+    constructor(left, right, operator) {
+        super(left, right, operator, constants.R_BINARY_EXPR);
+    }
+}
+
+class UnaryExpr {
+    constructor(left, operator, nodeKind) {
+        this.nodeKind = nodeKind;
+        this.left = left;
+        this.operator = operator;
+    }
+
+    print() {
+        return this.operator + ' ' + this.left;
+    }
+}
+
+class BUnaryExpr extends UnaryExpr {
+    constructor(left, operator) {
+        super(left, operator, constants.B_UNARY_EXPR)
+    }
+}
+
+class Statement {
+    constructor(nodeKind) {
+        this.nodeKind = nodeKind;
+    }
+}
+
+class StatementList extends Statement {
+    constructor(statements) {
+        super(constants.STMT_LIST)
+        this.statements = statements;
+    }
+}
+
+class AssignStmt extends Statement {
+    constructor(identifier, expr) {
+        super(constants.ASSIGN_STMT);
+        this.identifier = identifier;
+        this.value = expr;
+    }
+
+    print() {
+        return this.identifier.print() + ' := ' + this.value.print();
+    }
+}
+
+class IfStmt extends Statement{
+    constructor(bexpr, body) {
+        super(constants.IF_STMT);
+        this.condition = bexpr;
+        this.body = body;
+    }
+
+    print() {
+        return 'if (' + this.condition.print() + ') {' + this.body.print() + '}';
+    }
+}
+
+class IfElseStmt extends Statement {
+    constructor(bexpr, ifbody, elsebody) {
+        super(constants.IF_ELSE_STMT);
+        this.condition = bexpr;
+        this.ifbody = ifbody;
+        this.elsebody = elsebody;
+    }
+
+    print() {
+        return 'if (' + this.condition.print() + ') {' + this.ifbody.print() + '} else {' + this.elsebody.print() + '}'
+    }
+}
+
+class WhileStmt extends Statement{
+    constructor(condition, body) {
+        super(constants.WHILE_STMT);
+        this.condition = condition;
+        this.body = body;
+    }
+
+    print() {
+        return 'while (' + this.condition.print() + ') {' + this.body.print() + '}';
+    }
+}
+
+class ReadStmt extends Statement {
+    constructor(identifier) {
+        super(constants.READ_STMT);
+        this.name = identifier;
+    }
+
+    print() {
+        return 'Read ' + this.identifier.print();
+    }
+}
+
+class WriteStmt extends Statement {
+    constructor(aexpr) {
+        super(constants.WRITE_STMT);
+        this.value = aexpr;
+    }
+
+    print() {
+        return 'Write '+ this.identifier.print();
+    }
+}
 
 module.exports = {
-    constants: {
-        DECLARATION_NODE,
-        ASSIGNMENT_NODE,
-        WHILE_NODE,
-        IF_NODE,
-        IF_ELSE_NODE,
-        READ_NODE,
-        WRITE_NODE,
-        BOOLEAN_EXPRESSION,
-        BOOLEAN_BINOP_EXPRESSION,
-        RELATIONAL_EXPRESSION,
-        ARITHMETIC_EXPRESSION,
-        ARITHMETIC_BINOP_EXPRESSION,
-        BOOLEAN_LITERAL,
-        INTEGER_LITERAL,
-        TYPE_INT,
-        TYPE_BOOLEAN,
-        TYPE_ARRAY,
-        TYPE_RECORD,
-        VAR_IDENTIFIER,
-        ARRAY_IDENTIFIER,
-        RECORD_IDENTIFIER,
-    },
+    IntDecl,
+    ArrayDecl,
+    RecordDecl,
 
-    intDeclaration,
-    arrayDeclaration,
-    recordDeclaration,
+    BoolLit,
+    IntLit,
+    TupleLit,
+    Identifier,
+    ArrayAccess,
+    RecordAccess,
+    ABinaryExpr,
+    BBinaryExpr,
+    RBinaryExpr,
+    BUnaryExpr,
 
-    varIdentifier,
-    arrayIdentifier,
-    recordIdentifier,
-    integerLiteral,
-    booleanLiteral,
-    arithmeticExpression,
-    arithmeticBinopExpression,
-    booleanExpression,
-    booleanBinopExpression,
-    relationalExpression,
-
-    assignmentNode,
-    whileNode,
-    ifNode,
-    ifElseNode,
-    readNode,
-    writeNode,
-}
+    StatementList,
+    AssignStmt,
+    IfStmt,
+    IfElseStmt,
+    WhileStmt,
+    ReadStmt,
+    WriteStmt,
+};
