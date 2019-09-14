@@ -6,6 +6,9 @@ const RECORD_DECL = 'RecordDeclaration';
 // -- Literals
 const BOOL_LITERAL = 'BooleanLiteral';
 const INT_LITERAL = 'IntegerLiteral';
+// The tuple literal is of the form (x_0, x_1, ..., x_n)
+// For the kernel implementation it is always of the form (x_0, x_1)
+const TUPLE_LITERAL = 'TupleLiteral';
 // -- Value Access
 const IDENTIFIER = 'Identifier';
 const ARRAY_ACCESS = 'ArrayAccess';
@@ -90,6 +93,17 @@ class IntLit extends Literal {
 
     print() {
         return this.value.toString();
+    }
+}
+
+class TupleLit extends Literal {
+    constructor(values) {
+        super(TUPLE_LITERAL);
+        this.values = values;
+    }
+
+    print() {
+        return '(' + this.values.map((v) => v.print()).join(',') + ')';
     }
 }
 
@@ -274,6 +288,7 @@ module.exports = {
         RECORD_DECL,
         BOOL_LITERAL,
         INT_LITERAL,
+        TUPLE_LITERAL,
         IDENTIFIER,
         ARRAY_ACCESS,
         RECORD_ACCESS,
@@ -295,6 +310,7 @@ module.exports = {
         RecordDecl,
         BoolLit,
         IntLit,
+        TupleLit,
         Identifier,
         ArrayAccess,
         RecordAccess,
@@ -305,7 +321,6 @@ module.exports = {
 
         StatementList,
         AssignStmt,
-        //RecordAssignStmt,
         IfStmt,
         IfElseStmt,
         WhileStmt,
@@ -495,6 +510,7 @@ const program = new StatementList([
     new RecordDecl('R', ['fst', 'snd']),
     new AssignStmt(new Identifier('x'), new IntLit(3)),
     new AssignStmt(new ArrayAccess('A', new IntLit(3)), new IntLit(3)),
+    new AssignStmt(new Identifier('R'), [ new IntLit(4), new ArrayAccess('A', new IntLit(3))]),
 ]);
 
 const blocks = getBlocks(program);
