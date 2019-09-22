@@ -8,7 +8,7 @@ class Node {
 }
 
 // program : ASTNode
-// blocks : []
+// blocksArray : []
 const blocks = (program, blocksArray) => {
     switch(program.nodeKind) {
         case constants.STMT_LIST:
@@ -102,18 +102,18 @@ const final = (program, finalArray) => {
     }
 };
 
-// blocks : ASTNode
+// program : ASTNode
 // flowArray : []
-const flow = (blocks, flowArray) => {
-    switch(blocks.nodeKind) {
+const flow = (program, flowArray) => {
+    switch(program.nodeKind) {
         case constants.STMT_LIST:
-            const s1 = blocks.statements[0];
-            if (blocks.statements.length === 1) {
+            const s1 = program.statements[0];
+            if (program.statements.length === 1) {
                 flow(s1, flowArray);
                 break;
             }
 
-            const s2 = new nodes.StatementList(blocks.statements.slice(1));
+            const s2 = new nodes.StatementList(program.statements.slice(1));
             const init_s2 = init(s2);
             const final_s1 = [];
             final(s1, final_s1);
@@ -125,24 +125,24 @@ const flow = (blocks, flowArray) => {
             });
         break;
         case constants.IF_STMT:
-            flow(blocks.body, flowArray);
-            flowArray.push(new Node(blocks.condition.label, init(blocks.body)));
+            flow(program.body, flowArray);
+            flowArray.push(new Node(program.condition.label, init(program.body)));
         break;
         case constants.IF_ELSE_STMT:
-            flow(blocks.ifbody, flowArray);
-            flow(blocks.elsebody, flowArray)
-            flowArray.push(new Node(blocks.condition.label, init(blocks.ifbody)));
-            flowArray.push(new Node(blocks.condition.label, init(blocks.elsebody)));
+            flow(program.ifbody, flowArray);
+            flow(program.elsebody, flowArray)
+            flowArray.push(new Node(program.condition.label, init(program.ifbody)));
+            flowArray.push(new Node(program.condition.label, init(program.elsebody)));
         break;
         case constants.WHILE_STMT:
-            const init_s0 = init(blocks.body);
+            const init_s0 = init(program.body);
             const final_s0 = [];
-            final(blocks.body, final_s0);
+            final(program.body, final_s0);
 
-            flow(blocks.body, flowArray);
-            flowArray.push(new Node(blocks.condition.label, init_s0))
+            flow(program.body, flowArray);
+            flowArray.push(new Node(program.condition.label, init_s0))
             final_s0.forEach((lab) => {
-                flowArray.push(new Node(lab, blocks.condition.label))
+                flowArray.push(new Node(lab, program.condition.label))
             });
         break;
         case constants.ASSIGN_STMT:
@@ -156,10 +156,17 @@ const flow = (blocks, flowArray) => {
     }
 };
 
+// reverseFlow takes a flow array of the form [ { src: s_1, dest: d_1 }, ... { src: s_n, dest d_n} ]
+// and returns [ { src: d_1, dest: s_1 }, ... { src: d_n, dest s_n} ]
+const reverseFlow = flowArray => flowArray.map(({src, dest}) => {
+    return { src: dest, dest: src}; 
+});
+
 module.exports = {
     blocks,
     labelBlocks,
     init,
     final,
     flow,
+    reverseFlow,
 };
