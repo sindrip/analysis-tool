@@ -9,10 +9,8 @@ class Program {
         this.final = [];
         this.flow = [];
         this.reverseFlow = null;
-        this.variables = [];
 
         this.calculateFlow();
-        this.initVariables(this.program);
     }
 
     calculateFlow() {
@@ -28,35 +26,6 @@ class Program {
         flow.final(this.program, this.final);
         flow.flow(this.program, this.flow);
         this.reverseFlow = flow.reverseFlow(this.flow);
-    }
-
-    initVariables(program) {
-        switch(program.nodeKind) {
-            case constants.STMT_LIST:
-                program.statements.forEach((s) => {
-                    this.initVariables(s);
-                });
-            break;
-            case constants.INT_DECL:
-                this.variables.push({ name: program.name, type: 'int' });
-            break;
-            case constants.ARRAY_DECL:
-                this.variables.push({ name: program.name, type: 'array' });
-            break;
-            case constants.RECORD_DECL:
-                this.variables.push({ name: program.name, fields: program.fields, type: 'record' });
-            break;
-            case constants.ASSIGN_STMT:
-            case constants.IF_STMT:
-            case constants.WHILE_STMT:
-            case constants.IF_ELSE_STMT:
-            case constants.READ_STMT:
-            case constants.WRITE_STMT:
-            case constants.INT_DECL:
-            case constants.ARRAY_DECL:
-            case constants.RECORD_DECL:
-            break;
-        }
     }
 }
 
