@@ -5,11 +5,11 @@ namespace Analysis.AST.Statement
     public class IfElseStmt : IStatement
     {
         public int Label { get; set; }
-        public IBexpr Condition { get; set; }
+        public IBExpr Condition { get; set; }
         public UnscopedBlock IfBody { get; set; }
         public UnscopedBlock ElseBody { get; set; }
 
-        public IfElseStmt(IBexpr condition, UnscopedBlock ifBody, UnscopedBlock elseBody)
+        public IfElseStmt(IBExpr condition, UnscopedBlock ifBody, UnscopedBlock elseBody)
         {
             Condition = condition;
             IfBody = ifBody;

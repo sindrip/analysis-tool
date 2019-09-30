@@ -1,6 +1,6 @@
 namespace Analysis.AST.BExpr
 {
-    public class BoolLit : IBexpr
+    public class BoolLit : IBExpr
     {
         public bool Value { get; set; }
 

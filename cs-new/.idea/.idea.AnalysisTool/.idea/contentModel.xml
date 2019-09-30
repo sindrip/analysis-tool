@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ContentModelStore">
     <e p="$USER_HOME$/.Rider2019.2/system/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_AnalysisTool.-827248862.00" t="ExcludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.2/system/resharper-host/local/Transient/ReSharperHost/v192/SolutionCaches/_AnalysisTool.1125185677.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="Analysis" t="IncludeRecursive">
         <e p="AST" t="Include">
@@ -17,8 +17,14 @@
             <e p="VarAccess.cs" t="Include" />
           </e>
           <e p="BExpr" t="Include">
+            <e p="BBinOp.cs" t="Include" />
+            <e p="BBinOperator.cs" t="Include" />
+            <e p="BUnOp.cs" t="Include" />
+            <e p="BUnOperator.cs" t="Include" />
             <e p="BoolLit.cs" t="Include" />
-            <e p="IBexpr.cs" t="Include" />
+            <e p="IBExpr.cs" t="Include" />
+            <e p="RBinOp.cs" t="Include" />
+            <e p="RBinOperator.cs" t="Include" />
           </e>
           <e p="IAstNode.cs" t="Include" />
           <e p="Identifier.cs" t="Include" />
