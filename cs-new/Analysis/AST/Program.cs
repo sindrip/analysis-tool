@@ -8,5 +8,10 @@ namespace Analysis.AST
         public ScopedBlock TopLevelStmt { get; set; }
 
         public Program(ScopedBlock topLevelStmt) => TopLevelStmt = topLevelStmt;
+
+        public override string ToString()
+        {
+            return TopLevelStmt.ToString();
+        }
     }
 }

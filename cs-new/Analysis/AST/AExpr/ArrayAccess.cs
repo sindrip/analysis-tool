@@ -10,5 +10,10 @@ namespace Analysis.AST.AExpr
             Left = left;
             Right = right;
         }
+
+        public override string ToString()
+        {
+            return $"{Left}[{Right}]";
+        }
     }
 }

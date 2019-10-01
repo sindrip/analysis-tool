@@ -15,5 +15,9 @@ namespace Analysis.AST.BExpr
             Op = op;
         }
 
+        public override string ToString()
+        {
+            return $"({Left} {Op} {Right})";
+        }
     }
 }

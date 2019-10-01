@@ -16,7 +16,7 @@ namespace Analysis.AST.Statement
 
         public override string ToString()
         {
-            return $@"{Left.ToString()} = {Right.ToString()};";
+            return $@"{Left.ToString()} := {Right.ToString()};";
         }
         
         public string PrintBlock() => $@"{Label.ToString()}[{this.ToString()}]";

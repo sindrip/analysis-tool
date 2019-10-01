@@ -6,9 +6,9 @@ namespace Analysis.AST
 {
     public class UnscopedBlock : IAstNode
     {
-        public IEnumerable<Statement.IStatement> Statements;
+        public IEnumerable<IStatement> Statements;
 
-        public UnscopedBlock(IEnumerable<Statement.IStatement> statements) => this.Statements = statements;
+        public UnscopedBlock(IEnumerable<IStatement> statements) => this.Statements = statements;
         
         public override string ToString()
         {

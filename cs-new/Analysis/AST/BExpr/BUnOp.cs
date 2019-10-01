@@ -10,5 +10,10 @@ namespace Analysis.AST.BExpr
             Left = left;
             Op = op;
         }
+
+        public override string ToString()
+        {
+            return $"(not {Left})";
+        }
     }
 }

@@ -9,9 +9,9 @@ namespace Analysis.AST
     // Holds a list of statements
     public class ScopedBlock : IAstNode
     {
-        public IEnumerable<Statement.IStatement> Statements;
+        public IEnumerable<IStatement> Statements;
 
-        public ScopedBlock(IEnumerable<Statement.IStatement> statements) => this.Statements = statements;
+        public ScopedBlock(IEnumerable<IStatement> statements) => this.Statements = statements;
 
         public override string ToString()
         {

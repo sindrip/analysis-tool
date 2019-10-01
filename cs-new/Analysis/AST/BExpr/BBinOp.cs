@@ -13,5 +13,10 @@ namespace Analysis.AST.BExpr
             Right = right;
             Op = op;
         }
+
+        public override string ToString()
+        {
+            return $"({Left} {Op} {Right})";
+        }
     }
 }

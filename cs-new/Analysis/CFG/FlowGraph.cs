@@ -17,11 +17,11 @@ namespace Analysis.CFG
         public FlowGraph(IAstNode program)
         {
             Program = program;
-            Blocks = FlowUtil.Blocks(program);
+            Blocks = FlowUtil.Blocks(Program);
             FlowUtil.LabelProgram(Blocks);
-            Inital = FlowUtil.Init(program);
-            Final = FlowUtil.Final(program).ToHashSet();
-            Edges = FlowUtil.Flow(program).ToHashSet();
+            Inital = FlowUtil.Init(Program);
+            Final = FlowUtil.Final(Program).ToHashSet();
+            Edges = FlowUtil.Flow(Program).ToHashSet();
             ReverseEdges = FlowUtil.FlowR(Edges);
         }
     }
