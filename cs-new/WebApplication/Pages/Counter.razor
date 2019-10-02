@@ -1,0 +1,27 @@
+﻿@page "/counter"
+@using WebApplication.Data
+@inject WeatherForecastService ForecastService
+
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<textarea @bind="source"></textarea>
+<button class="btn btn-primary" @onclick="Parse">Parse</button>
+<textarea @bind="parsed"></textarea>
+
+@code {
+    int currentCount = 0;
+    string source;
+    string parsed;
+
+    void Parse()
+    {
+        parsed = ForecastService.ParseStuff(source);
+    }
+
+    void IncrementCount()
+    {
+        currentCount++;
+    }
+}

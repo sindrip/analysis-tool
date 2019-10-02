@@ -58,7 +58,7 @@ namespace Analysis.CFG
                 WhileStmt whileStmt => (new[] {whileStmt}).Union(Blocks(whileStmt.Body)),
                 IfElseStmt ifElseStmt => (new[] {ifElseStmt}).Union(Blocks(ifElseStmt.IfBody)).Union(Blocks(ifElseStmt.ElseBody)),
                 IStatement statement => new List<IStatement>() {statement},
-                _ => throw new ArgumentException("Blocks can only accept Meta Nodes and IStatement Nodes")
+                _ => throw new ArgumentException($"Blocks can only accept Meta Nodes and IStatement Nodes but argument is of type: {node.GetType()}")
             };
         }
         
