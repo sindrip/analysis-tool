@@ -98,6 +98,16 @@ public interface IMicroCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitRecDecl([NotNull] MicroCParser.RecDeclContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MicroCParser.fieldDeclaration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFieldDeclaration([NotNull] MicroCParser.FieldDeclarationContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MicroCParser.fieldDeclaration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFieldDeclaration([NotNull] MicroCParser.FieldDeclarationContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>assignStmt</c>
 	/// labeled alternative in <see cref="MicroCParser.statement"/>.
 	/// </summary>

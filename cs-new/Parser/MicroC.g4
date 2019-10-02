@@ -17,14 +17,18 @@ unscopedBlock
 declaration
     : INT IDENT SEMICOLON #intDecl
     | INT LBRACKET NUMBER RBRACKET IDENT SEMICOLON #arrayDecl
-    | LBRACE INT IDENT SEMICOLON INT IDENT RBRACE IDENT SEMICOLON #recDecl
+    | LBRACE fieldDeclaration (SEMICOLON fieldDeclaration)* RBRACE name=IDENT SEMICOLON #recDecl
+    ;
+    
+fieldDeclaration
+    : INT IDENT
     ;
     
 statement
     : IDENT ASSIGN a_expr SEMICOLON #assignStmt
     | IDENT LBRACKET index=a_expr RBRACKET ASSIGN value=a_expr SEMICOLON #assignArrayStmt
     | name=IDENT DOT field=IDENT ASSIGN a_expr SEMICOLON #assignFieldStmt
-    | IDENT ASSIGN a_expr (COMMA a_expr)* LPAREN RPAREN #assignRecStmt
+    | IDENT ASSIGN LPAREN a_expr (COMMA a_expr)* RPAREN #assignRecStmt
     | IF LPAREN b_expr RPAREN unscopedBlock #ifStmt
     | IF LPAREN b_expr RPAREN ifBody=unscopedBlock ELSE elseBody=unscopedBlock #ifElseStmt
     | WHILE LPAREN b_expr RPAREN unscopedBlock #whileStmt

@@ -38,6 +38,7 @@
             <e p="IfStmt.cs" t="Include" />
             <e p="IntDecl.cs" t="Include" />
             <e p="ReadStmt.cs" t="Include" />
+            <e p="RecAssignStmt.cs" t="Include" />
             <e p="RecordDecl.cs" t="Include" />
             <e p="WhileStmt.cs" t="Include" />
             <e p="WriteStmt.cs" t="Include" />
@@ -87,8 +88,9 @@
         </e>
         <e p="MicroC.g4" t="Include" />
         <e p="ParseToAstVisitor.cs" t="Include" />
-        <e p="Parser.cs" t="Include" />
         <e p="Parser.csproj" t="IncludeRecursive" />
+        <e p="ThrowExceptionErrorListener.cs" t="Include" />
+        <e p="Util.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">

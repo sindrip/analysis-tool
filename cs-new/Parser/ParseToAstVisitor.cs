@@ -46,8 +46,17 @@ namespace Parser
 
         public override IAstNode VisitRecDecl(MicroCParser.RecDeclContext context)
         {
-            return base.VisitRecDecl(context);
+            string name = context.name.Text; 
+            IList<Identifier> fields = context.fieldDeclaration().Select(x => Visit(x) as Identifier).ToList();
+            return new RecordDecl(name, fields);
         }
+
+        public override IAstNode VisitFieldDeclaration(MicroCParser.FieldDeclarationContext context)
+        {
+            var name = context.IDENT().GetText();
+            return new Identifier(name);
+        }
+
         public override IAstNode VisitAssignStmt(MicroCParser.AssignStmtContext context)
         {
             VarAccess left = new VarAccess(context.IDENT().GetText());
@@ -76,7 +85,9 @@ namespace Parser
 
         public override IAstNode VisitAssignRecStmt(MicroCParser.AssignRecStmtContext context)
         {
-            return base.VisitAssignRecStmt(context);
+            string name = context.IDENT().GetText();
+            IList<IAExpr> expressions = context.a_expr().Select(x => Visit(x) as IAExpr).ToList();
+            return new RecAssignStmt(name, expressions);
         }
 
         public override IAstNode VisitIfStmt(MicroCParser.IfStmtContext context)

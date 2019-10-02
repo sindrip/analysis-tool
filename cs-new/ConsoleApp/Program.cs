@@ -27,11 +27,11 @@ namespace ConsoleApp1
     } else {
         y := 3;
     }
-    a[1+1] = (1+1)*2;
-}           
+    a[1+1] := (1+1)*2;
+}
 ";
 
-            var result = Parser.Parser.StringToAst(input);
+            var result = Parser.Util.StringToAst(input);
             Console.WriteLine(result);
             var fg = new FlowGraph(result);
             Console.WriteLine(fg.Inital);

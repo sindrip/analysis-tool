@@ -114,6 +114,18 @@ public partial class MicroCBaseListener : IMicroCListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitRecDecl([NotNull] MicroCParser.RecDeclContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MicroCParser.fieldDeclaration"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFieldDeclaration([NotNull] MicroCParser.FieldDeclarationContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MicroCParser.fieldDeclaration"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFieldDeclaration([NotNull] MicroCParser.FieldDeclarationContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>assignStmt</c>
 	/// labeled alternative in <see cref="MicroCParser.statement"/>.
 	/// <para>The default implementation does nothing.</para>

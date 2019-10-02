@@ -72,6 +72,12 @@ public interface IMicroCVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitRecDecl([NotNull] MicroCParser.RecDeclContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="MicroCParser.fieldDeclaration"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitFieldDeclaration([NotNull] MicroCParser.FieldDeclarationContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>assignStmt</c>
 	/// labeled alternative in <see cref="MicroCParser.statement"/>.
 	/// </summary>
