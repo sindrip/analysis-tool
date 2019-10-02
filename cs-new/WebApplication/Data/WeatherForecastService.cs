@@ -25,7 +25,7 @@ namespace WebApplication.Data
 
         public string ParseStuff(string source)
         {
-            var ast = Parser.Parser.StringToAst(source);
+            var ast = Parser.Util.StringToAst(source);
             var fg = new FlowGraph(ast);
             var blocks = string.Join("\n", fg.Blocks.Select(s => s.PrintBlock()));
             var flow = string.Join("\n", fg.Edges);
