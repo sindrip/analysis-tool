@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Analysis\Analysis.csproj" />
       <ProjectReference Include="..\Parser\Parser.csproj" />
     </ItemGroup>
 
