@@ -23,6 +23,10 @@ namespace WebApplication
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    var port = Environment.GetEnvironmentVariable("PORT");
+                    if (!String.IsNullOrEmpty(port)) {
+                        webBuilder.UseUrls("http://*:"+port);
+                    }
                 });
     }
 }

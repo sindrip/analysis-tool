@@ -6,3 +6,9 @@ Do some stuff and make stuff work
 
 ## Usage
 Run some stuff and watch magic happen!
+
+## Release
+```
+$ heroku container:push web
+$ heroku container:release web
+```
