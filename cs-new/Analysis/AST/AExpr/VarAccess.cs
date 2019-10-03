@@ -4,7 +4,7 @@ namespace Analysis.AST.AExpr
     {
         public string Name;
 
-        public VarAccess(string id) => Name = id;
+        public VarAccess(string name) => Name = name;
 
         public override string ToString()
         {

@@ -11,11 +11,11 @@ namespace Parser
         {
             var lexer = new MicroCLexer(new AntlrInputStream(source));
             lexer.RemoveErrorListeners();
-            lexer.AddErrorListener(new ThrowExceptionErrorListener());
+            lexer.AddErrorListener(new ThrowingErrorListener());
             
             var parser = new MicroCParser(new CommonTokenStream(lexer));
             parser.RemoveErrorListeners();
-            parser.AddErrorListener(new ThrowExceptionErrorListener());
+            parser.AddErrorListener(new ThrowingErrorListener());
             
             var result = new ParseToAstVisitor().Visit(parser.parse());
 

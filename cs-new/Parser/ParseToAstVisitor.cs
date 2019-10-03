@@ -5,13 +5,15 @@ using Analysis.AST;
 using Analysis.AST.AExpr;
 using Analysis.AST.BExpr;
 using Analysis.AST.Statement;
-using Antlr4.Runtime;
 using Parser.Generated;
 
 namespace Parser
 {
     public class ParseToAstVisitor : MicroCBaseVisitor<IAstNode>
     {
+
+        private SymbolTable _currentScope;
+        
         public override IAstNode VisitParse(MicroCParser.ParseContext context)
         {
             ScopedBlock scopedBLock = Visit(context.scopedBlock()) as ScopedBlock;
@@ -20,8 +22,11 @@ namespace Parser
 
         public override IAstNode VisitScopedBlock(MicroCParser.ScopedBlockContext context)
         {
+            // _currentScope is null during the first scoped block (program entry point)
+            _currentScope = _currentScope?.AddScope() ?? new SymbolTable();
             IList<IStatement> declarations = context.declaration().Select(x => Visit(x) as IStatement).ToList();
             IList<IStatement> statements = context.statement().Select(x => Visit(x) as IStatement).ToList();
+            _currentScope = _currentScope.RemoveScope();
             return new ScopedBlock(declarations.Concat(statements));
         }
 
@@ -34,6 +39,7 @@ namespace Parser
         public override IAstNode VisitIntDecl(MicroCParser.IntDeclContext context)
         {
             var name = context.IDENT().GetText();
+            _currentScope.InsertSymbol(name, "INT");
             return new IntDecl(name);
         }
 
@@ -41,26 +47,35 @@ namespace Parser
         {
             var name = context.IDENT().GetText();
             var size = int.Parse(context.NUMBER().GetText());
+            _currentScope.InsertSymbol(name, "ARRAY");
             return new ArrayDecl(name, size);
         }
 
         public override IAstNode VisitRecDecl(MicroCParser.RecDeclContext context)
         {
-            string name = context.name.Text; 
+            _currentScope = _currentScope.AddScope();
             IList<Identifier> fields = context.fieldDeclaration().Select(x => Visit(x) as Identifier).ToList();
+            _currentScope = _currentScope.RemoveScope();
+            
+            string name = context.name.Text; 
+            _currentScope.InsertSymbol(name, "RECORD");
             return new RecordDecl(name, fields);
         }
 
         public override IAstNode VisitFieldDeclaration(MicroCParser.FieldDeclarationContext context)
         {
             var name = context.IDENT().GetText();
-            return new Identifier(name);
+            var id =_currentScope.InsertSymbol(name, "FIELD");
+            return new Identifier(name, "FIELD", id);
         }
 
         public override IAstNode VisitAssignStmt(MicroCParser.AssignStmtContext context)
         {
             VarAccess left = new VarAccess(context.IDENT().GetText());
             IAExpr right = Visit(context.a_expr()) as IAExpr;
+
+            _currentScope.LookupSymbol(left.Name);
+            // TODO: Type check the symbol
             
             return new AssignStmt(left, right);
         }
@@ -71,6 +86,10 @@ namespace Parser
             IAExpr index = Visit(context.index) as IAExpr;
             ArrayAccess left = new ArrayAccess(name, index);
             IAExpr right = Visit(context.value) as IAExpr;
+
+            _currentScope.LookupSymbol(left.Left);
+            // TODO: Type check the symbol
+            
             return new AssignStmt(left, right);
         }
 
@@ -80,6 +99,10 @@ namespace Parser
             string field = context.field.Text;
             RecordAccess left = new RecordAccess(name, field);
             IAExpr right = Visit(context.a_expr()) as IAExpr;
+
+            _currentScope.LookupSymbol(left.Left);
+            // TODO lookup field somehow, maybe add children to Symbol class?
+            
             return new AssignStmt(left, right);
         }
 
@@ -87,6 +110,10 @@ namespace Parser
         {
             string name = context.IDENT().GetText();
             IList<IAExpr> expressions = context.a_expr().Select(x => Visit(x) as IAExpr).ToList();
+
+            _currentScope.LookupSymbol(name);
+            // TODO: Type check the symbol
+            
             return new RecAssignStmt(name, expressions);
         }
 
@@ -139,6 +166,7 @@ namespace Parser
             {
                 "*" => ABinOperator.Mult,
                 "/" => ABinOperator.Div,
+                _ => throw new ArgumentException("Invalid ABinOp Product Operator")
             };
             return new ABinOp(left, right, op);
         }
@@ -151,6 +179,7 @@ namespace Parser
             {
                 "+" => ABinOperator.Plus,
                 "-" => ABinOperator.Minus,
+                _ => throw new ArgumentException("Invalid ABinOp Sum Operator")
             };
             return new ABinOp(left, right, op);
         }
@@ -200,6 +229,7 @@ namespace Parser
             {
                 "&" => BBinOperator.And,
                 "|" => BBinOperator.Or,
+                _ => throw new ArgumentException("Invalid BBinOpOperator")
             };
             return new BBinOp(left, right, op);
         }
@@ -216,6 +246,7 @@ namespace Parser
                 ">=" => RBinOperator.GreaterThanEq,
                 "==" => RBinOperator.Eq,
                 "!=" => RBinOperator.NotEq,
+                _ => throw new ArgumentException("Invalid RBinOpOperator")
             };
             return new RBinOp(left, right, op);
         }
