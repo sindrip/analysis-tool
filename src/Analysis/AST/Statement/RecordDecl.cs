@@ -22,7 +22,7 @@ namespace Analysis.AST.Statement
             return $"{{{string.Join(";", Fields.Select(x => x.ToString()))}}} {Name};";
         }
 
-        public string PrintBlock() => $@"{Label.ToString()}[{this.ToString()}]";
+        public string PrintBlock() => $"[{this}]";
 
     }
 }

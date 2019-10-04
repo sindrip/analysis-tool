@@ -1,25 +1,38 @@
 ﻿@page "/"
 @inject IJSRuntime JsRuntime;
-
-<h1>Hello, world!</h1>
-
-@using WebApplication.Data
 @inject WeatherForecastService ForecastService
+@using WebApplication.Data
 
-<h1>Counter</h1>
+<div class="container-">
+    <div class="row">
+        <div class="col-md-5 col-sm-12">
+           <div class="row">
+               <div class="col-12">
+                    <h1>Upper</h1> 
+                    <textarea class="form-control" rows="10" @bind-value="source" @bind-value:event="oninput"></textarea>
+                    <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
+                </div> 
+            </div>             
+            <div class="row">
+               <div class="col-12">
+                   <h1>Lower Graph Section></h1> 
+                   <div id="imageDiv"></div>
+                </div> 
+            </div>
+        </div>
+        <div class="col-md-7 col-sm-12">
+            <div class="row">
+                <div class="col-12">
+                   <h1>Right Hand></h1> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>Current count: @currentCount</p>
-
-<textarea style="min-height: 200px;" @bind-value="source" @bind-value:event="oninput"></textarea>
-<button class="btn btn-primary" @onclick="Parse">Parse</button>
-<textarea style="min-height: 200px;" @bind="parsed"></textarea>
-<div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
-<div id="imageDiv"></div>
-<div id="d3body"></div>
-
-@code {
-    int currentCount = 0;
-
+@code
+{
+    string error = "";
     private string _source = "{ \n  int x;\n  x := 0;\n}";
     string source
     {
@@ -31,24 +44,16 @@
         }
     }
 
-    string parsed;
-    string error = "";
-
     async void Parse()
     {
         Console.WriteLine("parse");
         try
         {
-            parsed = ForecastService.ParseStuff(source);
-            error = String.Empty;
-
             var graph = ForecastService.GetGraph(source);
+            error = string.Empty;
+
             await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
-            await JsRuntime.InvokeAsync<string>("Lib.AddCircleSvg");
-
-
             StateHasChanged();
-
         }
         catch (ArgumentException exception)
         {
@@ -62,5 +67,11 @@
         }
     }
 
-}
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender) {
+            Parse();
+        }
+    }
 
+}

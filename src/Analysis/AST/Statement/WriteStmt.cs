@@ -15,6 +15,6 @@ namespace Analysis.AST.Statement
             return $@"write {Left.ToString()};";
         }
         
-        public string PrintBlock() => $@"{Label.ToString()}[{this.ToString()}]";
+        public string PrintBlock() => $"[{this}]";
     }
 }

@@ -37,7 +37,7 @@ namespace Analysis.CFG
 
         private string BlockToNode(IStatement block)
         {
-            return $"{block.Label}[label=<[{block.ToString()}]<SUP>{block.Label}</SUP>>];";
+            return $"{block.Label}[label=<{block.PrintBlock()}<SUP>{block.Label}</SUP>>];";
         }
         
     }

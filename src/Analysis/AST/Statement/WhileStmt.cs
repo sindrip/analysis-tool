@@ -19,7 +19,7 @@ namespace Analysis.AST.Statement
             return $@"while ({Condition}) {Body}";
         }
         
-        public string PrintBlock() => $@"{Label.ToString()}[{Condition}]";
+        public string PrintBlock() => $"[{Condition}]";
 
     }
 }
