@@ -11,12 +11,15 @@
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
+    <script src="~/Scripts/viz.js"></script>
+    <script src="~/Scripts/lite.render.js"></script>
 </head>
 <body>
     <app>
         @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
     </app>
 
-    <script src="_framework/blazor.server.js"></script>
-</body>
-</html>
+        <script src="_framework/blazor.server.js"></script>
+        <script src="~/Scripts/JsInteropFunctions.js"></script>
+</body >
+</html >
