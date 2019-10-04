@@ -2,10 +2,83 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <JSInteropRoot>JSInterop/</JSInteropRoot>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Content Remove="$(JSInteropRoot)**" />
+    <None Remove="$(JSInteropRoot)**" />
+    <None Include="$(JSInteropRoot)**" Exclude="$(JSInteropRoot)node_modules\**" />
+  </ItemGroup>
 
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(JSInteropRoot)node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(JSInteropRoot)" Command="echo $(JSInteropRoot)" />
+    <Exec WorkingDirectory="$(JSInteropRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(JSInteropRoot)" Command="npm run build" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec WorkingDirectory="$(JSInteropRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(JSInteropRoot)" Command="npm run build" />
+  </Target>
+          
   <ItemGroup>
     <ProjectReference Include="..\Parser\Parser.csproj" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp3.0\WebApplication.csproj.ResolveComReference.cache" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <IntermediateAssembly Remove="obj\Debug\netcoreapp3.0\WebApplication.dll" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp3.0\WebApplication.pdb" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp3.0\WebApplication.dll" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <ApplicationManifest Remove="obj\Debug\netcoreapp3.0\WebApplication.dll.manifest" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <DeployManifest Remove="obj\Debug\netcoreapp3.0\WebApplication.application" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <ClsidMap Remove="obj\Debug\netcoreapp3.0\WebApplication.clsidmap" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <RegFreeComManifest Remove="obj\Debug\netcoreapp3.0\WebApplication.X.manifest" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <RazorIntermediateAssembly Remove="obj\Debug\netcoreapp3.0\WebApplication.Views.dll" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <_RazorDebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp3.0\WebApplication.Views.pdb" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <UpToDateCheckBuilt Remove="obj\Debug\netcoreapp3.0\WebApplication.Views.dll" />
+  </ItemGroup>
+          
+  <ItemGroup>
+    <_RazorComponentDeclarationAssembly Remove="obj\Debug\netcoreapp3.0\RazorDeclaration\WebApplication.dll" />
   </ItemGroup>
 
 </Project>

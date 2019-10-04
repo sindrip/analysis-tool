@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Analysis.AST;
@@ -23,6 +24,20 @@ namespace Analysis.CFG
             Final = FlowUtil.Final(Program).ToHashSet();
             Edges = FlowUtil.Flow(Program).ToHashSet();
             ReverseEdges = FlowUtil.FlowR(Edges);
+        }
+
+        public string ToGraphvizFormat()
+        {
+            const string firstNode = "first[label=\"\",shape=none,height=0,width=0]";
+            var nodes = string.Join(" ", Blocks.Select(BlockToNode));
+            var relations = string.Join(" ", Edges.Select(e => $"{e.Item1} -> {e.Item2};"));
+            var entryArrow = $"first -> {Inital};";
+            return $"digraph {{ node [shape=box] {firstNode} {nodes} {relations} {entryArrow}}}";
+        }
+
+        private string BlockToNode(IStatement block)
+        {
+            return $"{block.Label}[label=<[{block.ToString()}]<SUP>{block.Label}</SUP>>];";
         }
         
     }

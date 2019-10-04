@@ -45,6 +45,13 @@ namespace WebApplication.Data
             var fg = new FlowGraph(ast);
             return string.Join("\n", fg.Blocks.Select(s => s.PrintBlock()));
         }
+
+        public string GetGraph(string source)
+        {
+            var ast = Parser.Util.StringToAst(source);
+            var fg = new FlowGraph(ast);
+            return fg.ToGraphvizFormat();
+        }
         
     }
 }

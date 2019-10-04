@@ -1,49 +1,26 @@
 ﻿@page "/counter"
-@using WebApplication.Data
-@inject WeatherForecastService ForecastService
 
-<h1>Counter</h1>
-
-<p>Current count: @currentCount</p>
-
-<textarea @bind-value="source" @bind-value:event="oninput"></textarea>
-<button class="btn btn-primary" @onclick="Parse">Parse</button>
-<textarea @bind="parsed"></textarea>
-<div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
-
-@code {
-    int currentCount = 0;
-
-    private string _source;
-    string source
-    {
-        get => _source;
-        set
-        {
-            _source = value;
-            Parse();
-        }
-    }
-
-    string parsed;
-    string error = "";
-
-    void Parse()
-    {
-        Console.WriteLine("parse");
-        try
-        {
-            parsed = ForecastService.ParseStuff(source);
-            error = String.Empty;
-        }
-        catch (ArgumentException exception)
-        {
-            error = exception.Message;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            error = ex.GetType().ToString();
-        }
-    }
-}
+<div class="container-">
+    <div class="row">
+        <div class="col-md-5 col-sm-12">
+           <div class="row">
+               <div class="col-12">
+                    <h1>Upper</h1> 
+                    <textarea class="form-control" rows="10"></textarea>
+                </div> 
+            </div>             
+            <div class="row">
+               <div class="col-12">
+                   <h1>Lower Graph Section></h1> 
+                </div> 
+            </div>
+        </div>
+        <div class="col-md-7 col-sm-12">
+            <div class="row">
+                <div class="col-12">
+                   <h1>Right Hand></h1> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,13 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster as build
 WORKDIR /src
+# Setup NodeJs
+RUN apt-get update && \
+    apt-get install -y wget && \
+    apt-get install -y gnupg2 && \
+    wget -qO- https://deb.nodesource.com/setup_10.x | bash - && \
+    apt-get install -y build-essential nodejs
+
 COPY AnalysisTool.sln .
 COPY src/WebApplication/WebApplication.csproj src/WebApplication/
 COPY src/Analysis/Analysis.csproj src/Analysis/

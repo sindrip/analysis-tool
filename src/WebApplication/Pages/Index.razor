@@ -15,6 +15,7 @@
 <textarea style="min-height: 200px;" @bind="parsed"></textarea>
 <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
 <div id="imageDiv"></div>
+<div id="d3body"></div>
 
 @code {
     int currentCount = 0;
@@ -41,9 +42,9 @@
             parsed = ForecastService.ParseStuff(source);
             error = String.Empty;
 
-            string fgEdges = ForecastService.GetFlow(source);
-            string blocks = ForecastService.GetBlocks(source);
-            await JsRuntime.InvokeAsync<string>("CreateFlowGraph", fgEdges, blocks);
+            var graph = ForecastService.GetGraph(source);
+            await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
+            await JsRuntime.InvokeAsync<string>("Lib.AddCircleSvg");
 
 
             StateHasChanged();
@@ -52,7 +53,7 @@
         catch (ArgumentException exception)
         {
             error = exception.Message;
-            await JsRuntime.InvokeAsync<string>("ClearGraph");
+            await JsRuntime.InvokeAsync<string>("Lib.ClearGraph");
         }
         catch (Exception ex)
         {
