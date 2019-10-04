@@ -31,6 +31,20 @@ namespace WebApplication.Data
             var flow = string.Join("\n", fg.Edges);
             return blocks + "\n" + flow;
         }
+
+        public string GetFlow(string source)
+        {
+            var ast = Parser.Util.StringToAst(source);
+            var fg = new FlowGraph(ast);
+            return string.Join("\n", fg.Edges);
+        }
+
+        public string GetBlocks(string source)
+        {
+            var ast = Parser.Util.StringToAst(source);
+            var fg = new FlowGraph(ast);
+            return string.Join("\n", fg.Blocks.Select(s => s.PrintBlock()));
+        }
         
     }
 }
