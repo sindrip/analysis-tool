@@ -2,13 +2,13 @@ namespace Analysis.AST.AExpr
 {
     public class VarAccess : IAExpr, IStateAccess
     {
-        public string Name;
+        public Identifier Ident;
 
-        public VarAccess(string name) => Name = name;
+        public VarAccess(Identifier ident) => Ident = ident;
 
         public override string ToString()
         {
-            return Name.ToString();
+            return Ident.ToString();
         }
     }
 }

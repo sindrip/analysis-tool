@@ -12,7 +12,7 @@ namespace Parser
     public class ParseToAstVisitor : MicroCBaseVisitor<IAstNode>
     {
 
-        private SymbolTable _currentScope;
+        private SymbolTable _symbolTable = new SymbolTable();
         
         public override IAstNode VisitParse(MicroCParser.ParseContext context)
         {
@@ -22,11 +22,10 @@ namespace Parser
 
         public override IAstNode VisitScopedBlock(MicroCParser.ScopedBlockContext context)
         {
-            // _currentScope is null during the first scoped block (program entry point)
-            _currentScope = _currentScope?.AddScope() ?? new SymbolTable();
+            _symbolTable.AddScope();
             IList<IStatement> declarations = context.declaration().Select(x => Visit(x) as IStatement).ToList();
             IList<IStatement> statements = context.statement().Select(x => Visit(x) as IStatement).ToList();
-            _currentScope = _currentScope.RemoveScope();
+            _symbolTable.RemoveScope();
             return new ScopedBlock(declarations.Concat(statements));
         }
 
@@ -39,7 +38,7 @@ namespace Parser
         public override IAstNode VisitIntDecl(MicroCParser.IntDeclContext context)
         {
             var name = context.IDENT().GetText();
-            _currentScope.InsertSymbol(name, "INT");
+            _symbolTable.InsertSymbol(name, "INT");
             return new IntDecl(name);
         }
 
@@ -47,35 +46,37 @@ namespace Parser
         {
             var name = context.IDENT().GetText();
             var size = int.Parse(context.NUMBER().GetText());
-            _currentScope.InsertSymbol(name, "ARRAY");
+            _symbolTable.InsertSymbol(name, "ARRAY");
             return new ArrayDecl(name, size);
         }
 
         public override IAstNode VisitRecDecl(MicroCParser.RecDeclContext context)
         {
-            _currentScope = _currentScope.AddScope();
+            _symbolTable.AddScope();
             IList<Identifier> fields = context.fieldDeclaration().Select(x => Visit(x) as Identifier).ToList();
-            _currentScope = _currentScope.RemoveScope();
+            var children = _symbolTable.RemoveScope();
             
             string name = context.name.Text; 
-            _currentScope.InsertSymbol(name, "RECORD");
+            _symbolTable.InsertSymbol(name, children);
             return new RecordDecl(name, fields);
         }
 
         public override IAstNode VisitFieldDeclaration(MicroCParser.FieldDeclarationContext context)
         {
             var name = context.IDENT().GetText();
-            var id =_currentScope.InsertSymbol(name, "FIELD");
+            var id =_symbolTable.InsertSymbol(name, "FIELD");
             return new Identifier(name, "FIELD", id);
         }
 
         public override IAstNode VisitAssignStmt(MicroCParser.AssignStmtContext context)
         {
-            VarAccess left = new VarAccess(context.IDENT().GetText());
-            IAExpr right = Visit(context.a_expr()) as IAExpr;
-
-            _currentScope.LookupSymbol(left.Name);
+            var name = context.IDENT().GetText();
+            var symbol = _symbolTable.LookupSymbol(name);
+            var ident = new Identifier(name, symbol.Type, symbol.Id);
             // TODO: Type check the symbol
+            
+            VarAccess left = new VarAccess(ident);
+            IAExpr right = Visit(context.a_expr()) as IAExpr;
             
             return new AssignStmt(left, right);
         }
@@ -83,25 +84,32 @@ namespace Parser
         public override IAstNode VisitAssignArrayStmt(MicroCParser.AssignArrayStmtContext context)
         {
             string name = context.IDENT().GetText();
-            IAExpr index = Visit(context.index) as IAExpr;
-            ArrayAccess left = new ArrayAccess(name, index);
-            IAExpr right = Visit(context.value) as IAExpr;
-
-            _currentScope.LookupSymbol(left.Left);
+            var symbol = _symbolTable.LookupSymbol(name);
+            var ident = new Identifier(name, symbol.Type, symbol.Id);
             // TODO: Type check the symbol
             
+            IAExpr index = Visit(context.index) as IAExpr;
+            ArrayAccess left = new ArrayAccess(ident, index);
+            IAExpr right = Visit(context.value) as IAExpr;
+
             return new AssignStmt(left, right);
         }
 
         public override IAstNode VisitAssignFieldStmt(MicroCParser.AssignFieldStmtContext context)
         {
-            string name = context.name.Text;
-            string field = context.field.Text;
-            RecordAccess left = new RecordAccess(name, field);
-            IAExpr right = Visit(context.a_expr()) as IAExpr;
+            string recName = context.name.Text;
+            string fieldName = context.field.Text;
+            var recSymbol = _symbolTable.LookupSymbol(recName);
+            var fieldSymbol = recSymbol.Children.SingleOrDefault(f => f.Name == fieldName);
+            if (fieldSymbol == null)
+            {
+                throw new ArgumentException($"Record: {recName} does not include a field: {fieldName}");
+            }
+            var recIdent = new Identifier(recName, recSymbol.Type, recSymbol.Id);
+            var fieldIdent = new Identifier(fieldName, fieldSymbol.Type, fieldSymbol.Id);
 
-            _currentScope.LookupSymbol(left.Left);
-            // TODO lookup field somehow, maybe add children to Symbol class?
+            RecordAccess left = new RecordAccess(recIdent, fieldIdent);
+            IAExpr right = Visit(context.a_expr()) as IAExpr;
             
             return new AssignStmt(left, right);
         }
@@ -111,10 +119,16 @@ namespace Parser
             string name = context.IDENT().GetText();
             IList<IAExpr> expressions = context.a_expr().Select(x => Visit(x) as IAExpr).ToList();
 
-            _currentScope.LookupSymbol(name);
+            var symbol = _symbolTable.LookupSymbol(name);
+            if (symbol.Size != expressions.Count)
+            {
+                throw new ArgumentException($"Cannot assign {expressions.Count} values to record of size {symbol.Size}");
+            }
+            var ident = new Identifier(name, symbol.Type, symbol.Id);
+
             // TODO: Type check the symbol
             
-            return new RecAssignStmt(name, expressions);
+            return new RecAssignStmt(ident, expressions);
         }
 
         public override IAstNode VisitIfStmt(MicroCParser.IfStmtContext context)
@@ -143,7 +157,9 @@ namespace Parser
         {
             // TODO all of read possibilites
             string name = context.IDENT().GetText();
-            IStateAccess sa = new VarAccess(name);
+            var symbol = _symbolTable.LookupSymbol(name);
+            var ident = new Identifier(symbol.Name, symbol.Type, symbol.Id);
+            IStateAccess sa = new VarAccess(ident);
             return new ReadStmt(sa);
         }
 
@@ -187,21 +203,34 @@ namespace Parser
         public override IAstNode VisitAexprVar(MicroCParser.AexprVarContext context)
         {
             string name = context.IDENT().GetText();
-            return new VarAccess(name);
+            var symbol = _symbolTable.LookupSymbol(name);
+            var ident = new Identifier(symbol.Name, symbol.Type, symbol.Id);
+            return new VarAccess(ident);
         }
 
         public override IAstNode VisitAexprArrayAccess(MicroCParser.AexprArrayAccessContext context)
         {
             string name = context.IDENT().GetText();
+            var symbol = _symbolTable.LookupSymbol(name);
+            var ident = new Identifier(symbol.Name, symbol.Type, symbol.Id);
             IAExpr index = Visit(context.a_expr()) as IAExpr;
-            return new ArrayAccess(name, index);
+            return new ArrayAccess(ident, index);
         }
 
         public override IAstNode VisitAexprRecAccess(MicroCParser.AexprRecAccessContext context)
         {
-            string name = context.name.Text;
-            string field = context.field.Text;
-            return new RecordAccess(name, field);
+            string recName = context.name.Text;
+            string fieldName = context.field.Text;
+            var recSymbol = _symbolTable.LookupSymbol(recName);
+            var fieldSymbol = recSymbol.Children.SingleOrDefault(f => f.Name == fieldName);
+            if (fieldSymbol == null)
+            {
+                throw new ArgumentException($"Record: {recName} does not include a field: {fieldName}");
+            }
+            var recIdent = new Identifier(recName, recSymbol.Type, recSymbol.Id);
+            var fieldIdent = new Identifier(fieldName, fieldSymbol.Type, fieldSymbol.Id);
+            
+            return new RecordAccess(recIdent, fieldIdent);
         }
 
         public override IAstNode VisitAexprLiteral(MicroCParser.AexprLiteralContext context)

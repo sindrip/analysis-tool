@@ -18,7 +18,7 @@ namespace Analysis.AST
 
         public override string ToString()
         {
-            return Name.ToString();
+            return $"({Id}, {Name})";
         }
     }
 }

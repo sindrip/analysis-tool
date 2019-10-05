@@ -7,11 +7,11 @@ namespace Analysis.AST.Statement
     {
         public int Label { get; set; }
         
-        public string Left { get; set; }
+        public Identifier Left { get; set; }
         
         public IEnumerable<IAExpr> Right { get; set; }
 
-        public RecAssignStmt(string left, IEnumerable<IAExpr> right)
+        public RecAssignStmt(Identifier left, IEnumerable<IAExpr> right)
         {
             Left = left;
             Right = right;

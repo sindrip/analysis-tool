@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from /home/sindrip/school/programanalysis/analysis-tool/cs-new/Parser/MicroC.g4 by ANTLR 4.7.2
+// Generated from /home/sindrip/school/programanalysis/analysis-tool/src/Parser/MicroC.g4 by ANTLR 4.7.2
 
 // Unreachable code detected
 #pragma warning disable 0162

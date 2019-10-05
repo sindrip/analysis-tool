@@ -28,7 +28,7 @@ statement
     : IDENT ASSIGN a_expr SEMICOLON #assignStmt
     | IDENT LBRACKET index=a_expr RBRACKET ASSIGN value=a_expr SEMICOLON #assignArrayStmt
     | name=IDENT DOT field=IDENT ASSIGN a_expr SEMICOLON #assignFieldStmt
-    | IDENT ASSIGN LPAREN a_expr (COMMA a_expr)* RPAREN #assignRecStmt
+    | IDENT ASSIGN LPAREN a_expr (COMMA a_expr)* RPAREN SEMICOLON #assignRecStmt
     | IF LPAREN b_expr RPAREN unscopedBlock #ifStmt
     | IF LPAREN b_expr RPAREN ifBody=unscopedBlock ELSE elseBody=unscopedBlock #ifElseStmt
     | WHILE LPAREN b_expr RPAREN unscopedBlock #whileStmt
