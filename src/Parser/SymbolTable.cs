@@ -7,8 +7,7 @@ namespace Parser
     public class SymbolTable
     {
         private IList<IList<Symbol>> _symbols;
-        private IList<Symbol> _current;
-        private int _currentScope = -1;
+        private int _currentScope;
         private int _id = 0;
 
         public SymbolTable()
@@ -61,8 +60,7 @@ namespace Parser
                 return s;
             }
 
-            var nextScope = scope--;
-            return LookupSymbol(nextScope, name);
+            return LookupSymbol(scope - 1, name);
         }
 
         public void AddScope()

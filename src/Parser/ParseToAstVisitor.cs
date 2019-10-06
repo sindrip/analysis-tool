@@ -118,6 +118,10 @@ namespace Parser
             string recName = context.name.Text;
             string fieldName = context.field.Text;
             var recSymbol = _symbolTable.LookupSymbol(recName);
+            if (recSymbol == null)
+            {
+                throw new ArgumentException($"Record: {recName} does not exist");
+            }
             var fieldSymbol = recSymbol.Children.SingleOrDefault(f => f.Name == fieldName);
             if (fieldSymbol == null)
             {

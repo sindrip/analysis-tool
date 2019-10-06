@@ -10,5 +10,7 @@ namespace Analysis.CFG
             Source = source;
             Dest = dest;
         }
+
+        public override string ToString() => $"({Source}, {Dest})";
     }
 }

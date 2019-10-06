@@ -55,6 +55,12 @@ namespace ConsoleApp1
             var ae2 = Analysis.Analysis.AnalysisUtil.AvailableExpressions(result);
             Console.WriteLine(ae);
             Console.WriteLine(ae2);
+            
+            // Overflowing program debug
+            var overflow = "{int x; x:=0; Point.x := 0;}";
+            var overflowParse = Parser.Util.StringToAst(overflow);
+            
+            Console.WriteLine(overflowParse);
         }
     }
 }
