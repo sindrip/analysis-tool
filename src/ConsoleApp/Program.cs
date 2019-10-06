@@ -40,10 +40,17 @@ namespace ConsoleApp1
             Console.WriteLine(fg.Edges.Count());
             Console.WriteLine(string.Join("\r\n", fg.Edges));
             var fv = Analysis.Analysis.Util.FreeVariables(result);
-            var fv1 = Analysis.Analysis.Util.FreeVariables(result);
             
             Console.WriteLine(fv.Count);
-
+            
+            var exp1 = new ABinOp(new IntLit(3), new IntLit(4), ABinOperator.Plus);
+            var exp2 = new ABinOp(new IntLit(3), new IntLit(4), ABinOperator.Plus);
+            var exp3 = new ABinOp(new IntLit(4), new IntLit(4), ABinOperator.Plus);
+            
+            Console.WriteLine(exp1 == exp2); // Should be false as we are not overloading the operator
+            Console.WriteLine(exp1.Equals(exp2)); // Should be true as we have implemented the IEquatable interface
+            Console.WriteLine(exp1.Equals(exp3)); // Should be false, different expressions
+            
         }
     }
 }
