@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Analysis.AST;
@@ -40,6 +39,5 @@ namespace Analysis.CFG
         {
             return $"{block.Label}[label=<{block.PrintBlock()}<SUP>{block.Label}</SUP>>];";
         }
-        
     }
 }

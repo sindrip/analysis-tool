@@ -7,7 +7,7 @@ namespace Analysis.AST.Statement
         public int Label { get; set; }
         public IStateAccess Left { get; set; }
         public IAExpr Right { get; set; }
-        
+
         public AssignStmt(IStateAccess left, IAExpr right)
         {
             Left = left;
@@ -18,7 +18,7 @@ namespace Analysis.AST.Statement
         {
             return $@"{Left.ToString()} := {Right.ToString()};";
         }
-        
+
         public string PrintBlock() => $"[{this}]";
     }
 }

@@ -20,8 +20,7 @@ namespace Analysis.AST.Statement
         {
             return $@"if ({Condition.ToString()}) {IfBody.ToString()} else {ElseBody.ToString()}";
         }
-        
-        public string PrintBlock() => $"[{Condition}]";
 
+        public string PrintBlock() => $"[{Condition}]";
     }
 }

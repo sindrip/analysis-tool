@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
 using Analysis.AST;
 using Analysis.AST.Statement;
 
@@ -11,7 +8,6 @@ namespace Analysis.CFG
 {
     public static class FlowUtil
     {
-
         // Done during the parsing phase now so redundant code, keeping for now
         //public static void LabelProgram(IEnumerable<IStatement> blocks)
         //{
@@ -33,7 +29,7 @@ namespace Analysis.CFG
                 _ => throw new ArgumentException("Init can only accept Meta Nodes and IStatement Nodes")
             };
         }
-        
+
         public static IEnumerable<int> Final(IAstNode node)
         {
             return node switch
@@ -57,12 +53,14 @@ namespace Analysis.CFG
                 UnscopedBlock unscopedBlock => unscopedBlock.Statements.SelectMany(Blocks),
                 IfStmt ifStmt => (new[] {ifStmt}).Union(Blocks(ifStmt.Body)),
                 WhileStmt whileStmt => (new[] {whileStmt}).Union(Blocks(whileStmt.Body)),
-                IfElseStmt ifElseStmt => (new[] {ifElseStmt}).Union(Blocks(ifElseStmt.IfBody)).Union(Blocks(ifElseStmt.ElseBody)),
+                IfElseStmt ifElseStmt => (new[] {ifElseStmt}).Union(Blocks(ifElseStmt.IfBody))
+                .Union(Blocks(ifElseStmt.ElseBody)),
                 IStatement statement => new List<IStatement>() {statement},
-                _ => throw new ArgumentException($"Blocks can only accept Meta Nodes and IStatement Nodes but argument is of type: {node.GetType()}")
+                _ => throw new ArgumentException(
+                    $"Blocks can only accept Meta Nodes and IStatement Nodes but argument is of type: {node.GetType()}")
             };
         }
-        
+
         public static IEnumerable<FlowEdge> Flow(IAstNode node)
         {
             switch (node)
@@ -74,7 +72,7 @@ namespace Analysis.CFG
                     {
                         return Flow(s1);
                     }
-                    
+
                     var s2 = new Program(program.TopLevelStmts.Skip(1));
                     var initS2 = Init(s2);
                     var finalS1 = Final(s1);
@@ -106,7 +104,7 @@ namespace Analysis.CFG
                     {
                         return Flow(s1);
                     }
-                    
+
                     var s2 = new UnscopedBlock(unscopedBlock.Statements.Skip(1));
                     var initS2 = Init(s2);
                     var finalS1 = Final(s1);
@@ -119,7 +117,7 @@ namespace Analysis.CFG
                 {
                     var f1 = Flow(ifStmt.Body);
                     var initS0 = Init(ifStmt.Body);
-                    var newEdge = new List<FlowEdge> { new FlowEdge(ifStmt.Label, initS0) };
+                    var newEdge = new List<FlowEdge> {new FlowEdge(ifStmt.Label, initS0)};
                     return f1.Union(newEdge);
                 }
                 case IfElseStmt ifElseStmt:
@@ -129,7 +127,7 @@ namespace Analysis.CFG
                     var initS1 = Init(ifElseStmt.IfBody);
                     var initS2 = Init(ifElseStmt.ElseBody);
                     var l = ifElseStmt.Label;
-                    var newEdges = new List<FlowEdge> { new FlowEdge(l, initS1), new FlowEdge(l, initS2)};
+                    var newEdges = new List<FlowEdge> {new FlowEdge(l, initS1), new FlowEdge(l, initS2)};
                     return f1.Union(f2).Union(newEdges);
                 }
                 case WhileStmt whileStmt:
@@ -137,7 +135,7 @@ namespace Analysis.CFG
                     var f0 = Flow(whileStmt.Body);
                     var initS0 = Init(whileStmt.Body);
                     // {(l,init(S0)}
-                    var newEdge = new List<FlowEdge> { new FlowEdge(whileStmt.Label, initS0) };
+                    var newEdge = new List<FlowEdge> {new FlowEdge(whileStmt.Label, initS0)};
                     var finalS0 = Final(whileStmt.Body);
                     var newEdges = finalS0.Select(lp => new FlowEdge(lp, whileStmt.Label));
                     return f0.Union(newEdge).Union(newEdges);
@@ -151,6 +149,5 @@ namespace Analysis.CFG
 
         public static HashSet<FlowEdge> FlowR(IEnumerable<FlowEdge> flowSet) =>
             flowSet.Select(tuple => new FlowEdge(tuple.Dest, tuple.Source)).ToHashSet();
-        
     }
 }

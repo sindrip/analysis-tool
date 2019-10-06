@@ -11,56 +11,55 @@
 <p>Current count: @currentCount</p>
 
 <textarea style="min-height: 200px;" @bind-value="source" @bind-value:event="oninput"></textarea>
-<button class="btn btn-primary" @onclick="Parse">Parse</button>
-<textarea style="min-height: 200px;" @bind="parsed"></textarea>
-<div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
-<div id="imageDiv"></div>
-<div id="d3body"></div>
+          <button class="btn btn-primary" @onclick="Parse">Parse</button>
+                  <textarea style="min-height: 200px;" @bind="parsed"></textarea>
+                            <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
+                            <div id="imageDiv"></div>
+                            <div id="d3body"></div>
 
-@code {
-    int currentCount = 0;
+                            @code {
+                                int currentCount = 0;
 
-    private string _source = "{ \n  int x;\n  x := 0;\n}";
-    string source
-    {
-        get => _source;
-        set
-        {
-            _source = value;
-            Parse();
-        }
-    }
+                                private string _source = "{ \n  int x;\n  x := 0;\n}";
 
-    string parsed;
-    string error = "";
+                                string source
+                                {
+                                    get => _source;
+                                    set
+                                    {
+                                        _source = value;
+                                        Parse();
+                                    }
+                                }
 
-    async void Parse()
-    {
-        Console.WriteLine("parse");
-        try
-        {
-            parsed = ForecastService.ParseStuff(source);
-            error = String.Empty;
+                                string parsed;
+                                string error = "";
 
-            var graph = ForecastService.GetGraph(source);
-            await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
-            await JsRuntime.InvokeAsync<string>("Lib.AddCircleSvg");
+                                async void Parse()
+                                {
+                                    Console.WriteLine("parse");
+                                    try
+                                    {
+                                        parsed = ForecastService.ParseStuff(source);
+                                        error = String.Empty;
+
+                                        var graph = ForecastService.GetGraph(source);
+                                        await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
+                                        await JsRuntime.InvokeAsync<string>("Lib.AddCircleSvg");
 
 
-            StateHasChanged();
+                                        StateHasChanged();
+                                    }
+                                    catch (ArgumentException exception)
+                                    {
+                                        error = exception.Message;
+                                        await JsRuntime.InvokeAsync<string>("Lib.ClearGraph");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Console.WriteLine(ex.Message);
+                                        error = ex.GetType().ToString();
+                                    }
+                                }
 
-        }
-        catch (ArgumentException exception)
-        {
-            error = exception.Message;
-            await JsRuntime.InvokeAsync<string>("Lib.ClearGraph");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            error = ex.GetType().ToString();
-        }
-    }
-
-}
-
+                            }

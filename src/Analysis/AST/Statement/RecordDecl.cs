@@ -23,6 +23,5 @@ namespace Analysis.AST.Statement
         }
 
         public string PrintBlock() => $"[{this}]";
-
     }
 }

@@ -1,5 +1,4 @@
 using Analysis.AST.AExpr;
-using Analysis.AST.BExpr;
 
 namespace Analysis.AST.Statement
 {
@@ -14,7 +13,7 @@ namespace Analysis.AST.Statement
         {
             return $@"write {Left.ToString()};";
         }
-        
+
         public string PrintBlock() => $"[{this}]";
     }
 }

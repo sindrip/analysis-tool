@@ -5,7 +5,7 @@ namespace Analysis.AST.BExpr
         public IBExpr Left { get; set; }
         public IBExpr Right { get; set; }
         public BBinOperator Op { get; set; }
-        
+
 
         public BBinOp(IBExpr left, IBExpr right, BBinOperator op)
         {

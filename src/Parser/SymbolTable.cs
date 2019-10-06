@@ -25,7 +25,7 @@ namespace Parser
             {
                 throw new ArgumentException($"Symbol with name {name} already declared in scope");
             }
-            
+
             var symbol = new Symbol(name, type, _id++);
             current.Add(symbol);
             return symbol.Id;
@@ -38,21 +38,23 @@ namespace Parser
             {
                 throw new ArgumentException($"Symbol with name {name} already declared in scope");
             }
-            
+
             var symbol = new Symbol(name, "RECORD", _id++, children);
             current.Add(symbol);
             return symbol.Id;
         }
 
         public Symbol LookupSymbol(string name) => LookupSymbol(_currentScope, name);
+
         private Symbol LookupSymbol(int scope, string name)
         {
             if (scope == -1)
             {
                 return null;
             }
+
             var current = _symbols[scope];
-            
+
             var s = current.FirstOrDefault(x => x.Name == name);
             if (s != null)
             {
@@ -68,6 +70,7 @@ namespace Parser
             _currentScope++;
             _symbols.Add(new List<Symbol>());
         }
+
         public IList<Symbol> RemoveScope()
         {
             var scopeToPop = _symbols[_currentScope];
@@ -98,7 +101,7 @@ namespace Parser
                 Id = id;
                 Size = size;
             }
-            
+
             public Symbol(string name, string type, int id, IList<Symbol> children)
             {
                 Name = name;
@@ -109,5 +112,4 @@ namespace Parser
             }
         }
     }
-
 }

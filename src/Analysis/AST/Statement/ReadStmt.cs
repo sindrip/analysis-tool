@@ -1,12 +1,11 @@
 using Analysis.AST.AExpr;
-using Analysis.AST.BExpr;
 
 namespace Analysis.AST.Statement
 {
     public class ReadStmt : IStatement
     {
         public int Label { get; set; }
-        
+
         public IStateAccess Left;
 
         public ReadStmt(IStateAccess left) => Left = left;
@@ -15,7 +14,7 @@ namespace Analysis.AST.Statement
         {
             return $@"read {Left.ToString()};";
         }
-        
+
         public string PrintBlock() => $"[{this}]";
     }
 }

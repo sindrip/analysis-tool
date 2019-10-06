@@ -1,4 +1,3 @@
-using System;
 using Analysis.AST.BExpr;
 
 namespace Analysis.AST.Statement
@@ -19,8 +18,7 @@ namespace Analysis.AST.Statement
         {
             return $@"if ({Condition.ToString()}) {Body.ToString()}";
         }
-        
-        public string PrintBlock() => $"[{Condition}]";
 
+        public string PrintBlock() => $"[{Condition}]";
     }
 }

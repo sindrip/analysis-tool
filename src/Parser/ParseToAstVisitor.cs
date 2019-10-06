@@ -11,10 +11,9 @@ namespace Parser
 {
     public class ParseToAstVisitor : MicroCBaseVisitor<IAstNode>
     {
-
         private SymbolTable _symbolTable = new SymbolTable();
         private int _label = 0;
-        
+
         public override IAstNode VisitParse(MicroCParser.ParseContext context)
         {
             return Visit(context.globalBlock());
@@ -58,7 +57,7 @@ namespace Parser
             var name = context.IDENT().GetText();
             var size = int.Parse(context.NUMBER().GetText());
             _symbolTable.InsertSymbol(name, "ARRAY");
-            var arrayDecl = new ArrayDecl(name,size);
+            var arrayDecl = new ArrayDecl(name, size);
             arrayDecl.Label = ++_label;
             return arrayDecl;
         }
@@ -68,8 +67,8 @@ namespace Parser
             _symbolTable.AddScope();
             IList<Identifier> fields = context.fieldDeclaration().Select(x => Visit(x) as Identifier).ToList();
             var children = _symbolTable.RemoveScope();
-            
-            string name = context.name.Text; 
+
+            string name = context.name.Text;
             _symbolTable.InsertSymbol(name, children);
             var recDecl = new RecordDecl(name, fields);
             recDecl.Label = ++_label;
@@ -79,7 +78,7 @@ namespace Parser
         public override IAstNode VisitFieldDeclaration(MicroCParser.FieldDeclarationContext context)
         {
             var name = context.IDENT().GetText();
-            var id =_symbolTable.InsertSymbol(name, "FIELD");
+            var id = _symbolTable.InsertSymbol(name, "FIELD");
             return new Identifier(name, "FIELD", id);
         }
 
@@ -89,10 +88,10 @@ namespace Parser
             var symbol = _symbolTable.LookupSymbol(name);
             var ident = new Identifier(name, symbol.Type, symbol.Id);
             // TODO: Type check the symbol
-            
+
             VarAccess left = new VarAccess(ident);
             IAExpr right = Visit(context.a_expr()) as IAExpr;
-            
+
             var assignStmt = new AssignStmt(left, right);
             assignStmt.Label = ++_label;
             return assignStmt;
@@ -104,7 +103,7 @@ namespace Parser
             var symbol = _symbolTable.LookupSymbol(name);
             var ident = new Identifier(name, symbol.Type, symbol.Id);
             // TODO: Type check the symbol
-            
+
             IAExpr index = Visit(context.index) as IAExpr;
             ArrayAccess left = new ArrayAccess(ident, index);
             IAExpr right = Visit(context.value) as IAExpr;
@@ -124,12 +123,13 @@ namespace Parser
             {
                 throw new ArgumentException($"Record: {recName} does not include a field: {fieldName}");
             }
+
             var recIdent = new Identifier(recName, recSymbol.Type, recSymbol.Id);
             var fieldIdent = new Identifier(fieldName, fieldSymbol.Type, fieldSymbol.Id);
 
             RecordAccess left = new RecordAccess(recIdent, fieldIdent);
             IAExpr right = Visit(context.a_expr()) as IAExpr;
-            
+
             var assignStmt = new AssignStmt(left, right);
             assignStmt.Label = ++_label;
             return assignStmt;
@@ -143,12 +143,14 @@ namespace Parser
             var symbol = _symbolTable.LookupSymbol(name);
             if (symbol.Size != expressions.Count)
             {
-                throw new ArgumentException($"Cannot assign {expressions.Count} values to record of size {symbol.Size}");
+                throw new ArgumentException(
+                    $"Cannot assign {expressions.Count} values to record of size {symbol.Size}");
             }
+
             var ident = new Identifier(name, symbol.Type, symbol.Id);
 
             // TODO: Type check the symbol
-            
+
             var recAssignStmt = new RecAssignStmt(ident, expressions);
             recAssignStmt.Label = ++_label;
             return recAssignStmt;
@@ -260,9 +262,10 @@ namespace Parser
             {
                 throw new ArgumentException($"Record: {recName} does not include a field: {fieldName}");
             }
+
             var recIdent = new Identifier(recName, recSymbol.Type, recSymbol.Id);
             var fieldIdent = new Identifier(fieldName, fieldSymbol.Type, fieldSymbol.Id);
-            
+
             return new RecordAccess(recIdent, fieldIdent);
         }
 
@@ -302,8 +305,8 @@ namespace Parser
             IAExpr right = Visit(context.right) as IAExpr;
             RBinOperator op = context.rop.Text switch
             {
-                "<"  => RBinOperator.LessThan,
-                ">"  => RBinOperator.GreaterThan,
+                "<" => RBinOperator.LessThan,
+                ">" => RBinOperator.GreaterThan,
                 "<=" => RBinOperator.LessThanEq,
                 ">=" => RBinOperator.GreaterThanEq,
                 "==" => RBinOperator.Eq,

@@ -9,7 +9,7 @@ namespace Analysis.AST
         public IEnumerable<IStatement> Statements;
 
         public UnscopedBlock(IEnumerable<IStatement> statements) => this.Statements = statements;
-        
+
         public override string ToString()
         {
             var statements = string.Join("\n", Statements.Select(s => s.ToString()));

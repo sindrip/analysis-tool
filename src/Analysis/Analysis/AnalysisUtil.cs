@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Analysis.AST;
@@ -62,7 +61,8 @@ namespace Analysis.Analysis
                 //ArrayDecl ad => 
                 //RecordDecl rc =>
                 // Statements
-                IfStmt ifStmt => AvailableExpressions(ifStmt.Condition).Union(AvailableExpressions(ifStmt.Body)).ToHashSet(),
+                IfStmt ifStmt => AvailableExpressions(ifStmt.Condition).Union(AvailableExpressions(ifStmt.Body))
+                    .ToHashSet(),
                 IfElseStmt ifElseStmt => AvailableExpressions(ifElseStmt.Condition)
                     .Union(AvailableExpressions(ifElseStmt.IfBody))
                     .Union(AvailableExpressions(ifElseStmt.ElseBody))
@@ -73,7 +73,8 @@ namespace Analysis.Analysis
                 AssignStmt assignStmt => AvailableExpressions(assignStmt.Left)
                     .Union(AvailableExpressions(assignStmt.Right))
                     .ToHashSet(),
-                RecAssignStmt recAssignStmt => recAssignStmt.Right.SelectMany(stmt => AvailableExpressions(stmt)).ToHashSet(),
+                RecAssignStmt recAssignStmt => recAssignStmt.Right.SelectMany(stmt => AvailableExpressions(stmt))
+                    .ToHashSet(),
                 ReadStmt readStmt => AvailableExpressions(readStmt.Left),
                 WriteStmt writeStmt => AvailableExpressions(writeStmt.Left),
                 // Expressions

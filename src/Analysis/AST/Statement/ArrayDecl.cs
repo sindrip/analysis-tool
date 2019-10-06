@@ -16,8 +16,7 @@ namespace Analysis.AST.Statement
         {
             return $@"int[{Size.ToString()}] {Name};";
         }
-        
-        public string PrintBlock() => $"[{this}]";
 
+        public string PrintBlock() => $"[{this}]";
     }
 }

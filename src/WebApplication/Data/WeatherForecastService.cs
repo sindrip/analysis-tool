@@ -52,6 +52,5 @@ namespace WebApplication.Data
             var fg = new FlowGraph(ast);
             return fg.ToGraphvizFormat();
         }
-        
     }
 }

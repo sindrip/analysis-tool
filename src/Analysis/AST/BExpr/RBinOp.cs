@@ -7,7 +7,7 @@ namespace Analysis.AST.BExpr
         public IAExpr Left { get; set; }
         public IAExpr Right { get; set; }
         public RBinOperator Op { get; set; }
-        
+
         public RBinOp(IAExpr left, IAExpr right, RBinOperator op)
         {
             Left = left;

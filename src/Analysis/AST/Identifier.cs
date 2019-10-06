@@ -2,7 +2,6 @@ using System;
 
 namespace Analysis.AST
 {
-
     public class Identifier : IAstNode, IEquatable<Identifier>
     {
         public string Name { get; set; }

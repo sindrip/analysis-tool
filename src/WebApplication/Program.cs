@@ -1,13 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace WebApplication
 {
@@ -24,8 +17,9 @@ namespace WebApplication
                 {
                     webBuilder.UseStartup<Startup>();
                     var port = Environment.GetEnvironmentVariable("PORT");
-                    if (!String.IsNullOrEmpty(port)) {
-                        webBuilder.UseUrls("http://*:"+port);
+                    if (!String.IsNullOrEmpty(port))
+                    {
+                        webBuilder.UseUrls("http://*:" + port);
                     }
                 });
     }
