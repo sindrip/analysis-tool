@@ -1,6 +1,6 @@
 namespace Analysis.Analysis
 {
-    public class ChaoticIteration : IWorkList
+    public class ChaoticIteration
     {
         
     }

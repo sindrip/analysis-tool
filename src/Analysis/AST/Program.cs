@@ -1,17 +1,20 @@
-using System.ComponentModel.Design;
+using System.Collections.Generic;
+using System.Linq;
+using Analysis.AST.Statement;
 
 namespace Analysis.AST
 {
-    // Encapsulates the top level statement (Metadata could be added here).
+    // Encapsulates the top level statements as global scope (Metadata could be added here).
     public class Program : IAstNode
     {
-        public ScopedBlock TopLevelStmt { get; set; }
+        public IEnumerable<IStatement> TopLevelStmts { get; set; }
 
-        public Program(ScopedBlock topLevelStmt) => TopLevelStmt = topLevelStmt;
+        public Program(IEnumerable<IStatement> topLevelStmts) => TopLevelStmts = topLevelStmts;
 
         public override string ToString()
         {
-            return TopLevelStmt.ToString();
+            var statements = string.Join("\n", TopLevelStmts.Select(s => s.ToString()));
+            return $@"{{ {statements} }}";
         }
     }
 }

@@ -4,7 +4,11 @@ grammar MicroC;
  * Parser Rules
  */
  
-parse : scopedBlock EOF ;
+parse : globalBlock EOF ;
+
+globalBlock
+    : LBRACE declaration* statement+ RBRACE
+    ;
     
 scopedBlock
     : LBRACE declaration* statement+ RBRACE

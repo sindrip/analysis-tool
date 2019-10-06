@@ -39,6 +39,10 @@ namespace ConsoleApp1
             Console.WriteLine(string.Join("\n", fg.Blocks.Select(s => s.PrintBlock())));
             Console.WriteLine(fg.Edges.Count());
             Console.WriteLine(string.Join("\r\n", fg.Edges));
+            var fv = Analysis.Analysis.Util.FreeVariables(result);
+            var fv1 = Analysis.Analysis.Util.FreeVariables(result);
+            
+            Console.WriteLine(fv.Count);
 
         }
     }

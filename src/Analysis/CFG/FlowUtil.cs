@@ -25,7 +25,7 @@ namespace Analysis.CFG
         {
             return node switch
             {
-                Program program => Init(program.TopLevelStmt),
+                Program program => Init(program.TopLevelStmts.First()),
                 ScopedBlock scopedBlock => Init(scopedBlock.Statements.First()),
                 UnscopedBlock unscopedBlock => Init(unscopedBlock.Statements.First()),
                 IStatement statement => statement.Label,
@@ -37,7 +37,7 @@ namespace Analysis.CFG
         {
             return node switch
             {
-                Program program => Final(program.TopLevelStmt),
+                Program program => Final(program.TopLevelStmts.Last()),
                 ScopedBlock scopedBlock => Final(scopedBlock.Statements.Last()),
                 UnscopedBlock unscopedBlock => Final(unscopedBlock.Statements.Last()),
                 IfStmt ifStmt => Final(ifStmt.Body),
@@ -51,7 +51,7 @@ namespace Analysis.CFG
         {
             return node switch
             {
-                Program program => Blocks(program.TopLevelStmt),
+                Program program => program.TopLevelStmts.SelectMany(Blocks),
                 ScopedBlock scopedBlock => scopedBlock.Statements.SelectMany(Blocks),
                 UnscopedBlock unscopedBlock => unscopedBlock.Statements.SelectMany(Blocks),
                 IfStmt ifStmt => (new[] {ifStmt}).Union(Blocks(ifStmt.Body)),
@@ -67,7 +67,21 @@ namespace Analysis.CFG
             switch (node)
             {
                 case Program program:
-                    return Flow(program.TopLevelStmt);
+                {
+                    var s1 = program.TopLevelStmts.First();
+                    if (program.TopLevelStmts.Count() == 1)
+                    {
+                        return Flow(s1);
+                    }
+                    
+                    var s2 = new Program(program.TopLevelStmts.Skip(1));
+                    var initS2 = Init(s2);
+                    var finalS1 = Final(s1);
+                    var f1 = Flow(s1);
+                    var f2 = Flow(s2);
+                    var newEdges = finalS1.Select(l => (l, initS2));
+                    return f1.Union(f2).Union(newEdges);
+                }
                 case ScopedBlock scopedBlock:
                 {
                     var s1 = scopedBlock.Statements.First();

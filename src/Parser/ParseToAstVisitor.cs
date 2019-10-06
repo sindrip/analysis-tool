@@ -16,8 +16,16 @@ namespace Parser
         
         public override IAstNode VisitParse(MicroCParser.ParseContext context)
         {
-            ScopedBlock scopedBLock = Visit(context.scopedBlock()) as ScopedBlock;
-            return new Program(scopedBLock);
+            return Visit(context.globalBlock());
+        }
+
+        public override IAstNode VisitGlobalBlock(MicroCParser.GlobalBlockContext context)
+        {
+            _symbolTable.AddScope();
+            IList<IStatement> declarations = context.declaration().Select(x => Visit(x) as IStatement).ToList();
+            IList<IStatement> statements = context.statement().Select(x => Visit(x) as IStatement).ToList();
+            _symbolTable.RemoveScope();
+            return new Program(declarations.Concat(statements));
         }
 
         public override IAstNode VisitScopedBlock(MicroCParser.ScopedBlockContext context)

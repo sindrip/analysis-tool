@@ -1,6 +1,6 @@
 namespace Analysis.Analysis
 {
-    public class ReachingDefinitions : IMonotone
+    public class ReachingDefinitions
     {
         public void Kill()
         {

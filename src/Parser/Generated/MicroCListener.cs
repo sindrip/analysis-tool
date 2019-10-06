@@ -42,6 +42,16 @@ public interface IMicroCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitParse([NotNull] MicroCParser.ParseContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MicroCParser.globalBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterGlobalBlock([NotNull] MicroCParser.GlobalBlockContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MicroCParser.globalBlock"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitGlobalBlock([NotNull] MicroCParser.GlobalBlockContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="MicroCParser.scopedBlock"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

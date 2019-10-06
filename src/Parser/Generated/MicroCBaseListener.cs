@@ -48,6 +48,18 @@ public partial class MicroCBaseListener : IMicroCListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitParse([NotNull] MicroCParser.ParseContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MicroCParser.globalBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterGlobalBlock([NotNull] MicroCParser.GlobalBlockContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MicroCParser.globalBlock"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitGlobalBlock([NotNull] MicroCParser.GlobalBlockContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="MicroCParser.scopedBlock"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
