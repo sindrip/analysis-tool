@@ -12,14 +12,15 @@ namespace Analysis.CFG
     public static class FlowUtil
     {
 
-        public static void LabelProgram(IEnumerable<IStatement> blocks)
-        {
-            var labelCounter = 0;
-            foreach (var statement in blocks)
-            {
-                statement.Label = ++labelCounter;
-            }
-        }
+        // Done during the parsing phase now so redundant code, keeping for now
+        //public static void LabelProgram(IEnumerable<IStatement> blocks)
+        //{
+        //    var labelCounter = 0;
+        //    foreach (var statement in blocks)
+        //    {
+        //        statement.Label = ++labelCounter;
+        //    }
+        //}
 
         public static int Init(IAstNode node)
         {
@@ -62,7 +63,7 @@ namespace Analysis.CFG
             };
         }
         
-        public static IEnumerable<(int, int)> Flow(IAstNode node)
+        public static IEnumerable<FlowEdge> Flow(IAstNode node)
         {
             switch (node)
             {
@@ -79,7 +80,7 @@ namespace Analysis.CFG
                     var finalS1 = Final(s1);
                     var f1 = Flow(s1);
                     var f2 = Flow(s2);
-                    var newEdges = finalS1.Select(l => (l, initS2));
+                    var newEdges = finalS1.Select(l => new FlowEdge(l, initS2));
                     return f1.Union(f2).Union(newEdges);
                 }
                 case ScopedBlock scopedBlock:
@@ -95,7 +96,7 @@ namespace Analysis.CFG
                     var finalS1 = Final(s1);
                     var f1 = Flow(s1);
                     var f2 = Flow(s2);
-                    var newEdges = finalS1.Select(l => (l, initS2));
+                    var newEdges = finalS1.Select(l => new FlowEdge(l, initS2));
                     return f1.Union(f2).Union(newEdges);
                 }
                 case UnscopedBlock unscopedBlock:
@@ -111,14 +112,14 @@ namespace Analysis.CFG
                     var finalS1 = Final(s1);
                     var f1 = Flow(s1);
                     var f2 = Flow(s2);
-                    var newEdges = finalS1.Select(l => (l, initS2));
+                    var newEdges = finalS1.Select(l => new FlowEdge(l, initS2));
                     return f1.Union(f2).Union(newEdges);
                 }
                 case IfStmt ifStmt:
                 {
                     var f1 = Flow(ifStmt.Body);
                     var initS0 = Init(ifStmt.Body);
-                    var newEdge = new List<(int, int)> { (ifStmt.Label, initS0) };
+                    var newEdge = new List<FlowEdge> { new FlowEdge(ifStmt.Label, initS0) };
                     return f1.Union(newEdge);
                 }
                 case IfElseStmt ifElseStmt:
@@ -128,7 +129,7 @@ namespace Analysis.CFG
                     var initS1 = Init(ifElseStmt.IfBody);
                     var initS2 = Init(ifElseStmt.ElseBody);
                     var l = ifElseStmt.Label;
-                    var newEdges = new List<(int, int)> {(l, initS1), (l, initS2)};
+                    var newEdges = new List<FlowEdge> { new FlowEdge(l, initS1), new FlowEdge(l, initS2)};
                     return f1.Union(f2).Union(newEdges);
                 }
                 case WhileStmt whileStmt:
@@ -136,20 +137,20 @@ namespace Analysis.CFG
                     var f0 = Flow(whileStmt.Body);
                     var initS0 = Init(whileStmt.Body);
                     // {(l,init(S0)}
-                    var newEdge = new List<(int, int)> { (whileStmt.Label, initS0) };
+                    var newEdge = new List<FlowEdge> { new FlowEdge(whileStmt.Label, initS0) };
                     var finalS0 = Final(whileStmt.Body);
-                    var newEdges = finalS0.Select(lp => (lp, whileStmt.Label));
+                    var newEdges = finalS0.Select(lp => new FlowEdge(lp, whileStmt.Label));
                     return f0.Union(newEdge).Union(newEdges);
                 }
                 case IStatement statement:
-                    return new List<(int, int)>();
+                    return new List<FlowEdge>();
                 default:
                     throw new ArgumentException("f");
             }
         }
 
-        public static HashSet<(int, int)> FlowR(IEnumerable<(int, int)> flowSet) =>
-            flowSet.Select(tuple => (tuple.Item2, tuple.Item1)).ToHashSet();
+        public static HashSet<FlowEdge> FlowR(IEnumerable<FlowEdge> flowSet) =>
+            flowSet.Select(tuple => new FlowEdge(tuple.Dest, tuple.Source)).ToHashSet();
         
     }
 }

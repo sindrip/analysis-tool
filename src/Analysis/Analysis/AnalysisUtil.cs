@@ -8,7 +8,7 @@ using Analysis.AST.Statement;
 
 namespace Analysis.Analysis
 {
-    public static class Util
+    public static class AnalysisUtil
     {
         // It would probably be wise to split this up, for now with a single global scope, it is fine as is
         public static HashSet<Identifier> FreeVariables(IAstNode node) =>

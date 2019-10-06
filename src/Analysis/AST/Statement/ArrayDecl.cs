@@ -14,7 +14,7 @@ namespace Analysis.AST.Statement
 
         public override string ToString()
         {
-            return $@"int {Name.ToString()}[{Size.ToString()}];";
+            return $@"int[{Size.ToString()}] {Name};";
         }
         
         public string PrintBlock() => $"[{this}]";

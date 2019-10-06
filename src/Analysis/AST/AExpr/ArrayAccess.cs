@@ -15,7 +15,7 @@ namespace Analysis.AST.AExpr
 
         public override string ToString()
         {
-            return $"{Left}[{Right}]";
+            return $"({Left.Id}, {Left}[{Right}])";
         }
 
         public bool Equals(ArrayAccess other)

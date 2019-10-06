@@ -13,6 +13,11 @@ namespace Analysis.AST.AExpr
             Right = right;
         }
 
+        public override string ToString()
+        {
+            return $"({Right.Id}, {Left.Name}.{Right.Name})";
+        }
+
         public bool Equals(RecordAccess other)
         {
             if (ReferenceEquals(null, other)) return false;

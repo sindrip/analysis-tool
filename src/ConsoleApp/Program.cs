@@ -39,7 +39,7 @@ namespace ConsoleApp1
             Console.WriteLine(string.Join("\n", fg.Blocks.Select(s => s.PrintBlock())));
             Console.WriteLine(fg.Edges.Count());
             Console.WriteLine(string.Join("\r\n", fg.Edges));
-            var fv = Analysis.Analysis.Util.FreeVariables(result);
+            var fv = Analysis.Analysis.AnalysisUtil.FreeVariables(result);
             
             Console.WriteLine(fv.Count);
             
@@ -55,8 +55,8 @@ namespace ConsoleApp1
             Console.WriteLine(exp1.Equals(exp2)); // Should be true as we have implemented the IEquatable interface
             Console.WriteLine(exp1.Equals(exp3)); // Should be false, different expressions
 
-            var ae = Analysis.Analysis.Util.AvailableExpressions(exp5);
-            var ae2 = Analysis.Analysis.Util.AvailableExpressions(result);
+            var ae = Analysis.Analysis.AnalysisUtil.AvailableExpressions(exp5);
+            var ae2 = Analysis.Analysis.AnalysisUtil.AvailableExpressions(result);
             Console.WriteLine(ae);
             Console.WriteLine(ae2);
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Analysis.AST.AExpr;
 
 namespace Analysis.AST.Statement
@@ -19,7 +20,7 @@ namespace Analysis.AST.Statement
 
         public override string ToString()
         {
-            return $@"{Left.ToString()} := {Right.ToString()};";
+            return $@"{Left} := ({string.Join(",",Right.Select(x => x.ToString()))});";
         }
 
         public string PrintBlock() => $"[{this}]";

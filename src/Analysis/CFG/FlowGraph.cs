@@ -11,15 +11,16 @@ namespace Analysis.CFG
         public IAstNode Program;
         public int Inital;
         public HashSet<int> Final;
-        public HashSet<(int, int)> Edges;
-        public HashSet<(int, int)> ReverseEdges;
+        public HashSet<FlowEdge> Edges;
+        public HashSet<FlowEdge> ReverseEdges;
         public IEnumerable<IStatement> Blocks;
 
         public FlowGraph(IAstNode program)
         {
             Program = program;
             Blocks = FlowUtil.Blocks(Program);
-            FlowUtil.LabelProgram(Blocks);
+            // Keeping this for now, remove later. (Everyone loves commented out code right?)
+            //FlowUtil.LabelProgram(Blocks);
             Inital = FlowUtil.Init(Program);
             Final = FlowUtil.Final(Program).ToHashSet();
             Edges = FlowUtil.Flow(Program).ToHashSet();
@@ -30,7 +31,7 @@ namespace Analysis.CFG
         {
             const string firstNode = "first[label=\"\",shape=none,height=0,width=0]";
             var nodes = string.Join(" ", Blocks.Select(BlockToNode));
-            var relations = string.Join(" ", Edges.Select(e => $"{e.Item1} -> {e.Item2};"));
+            var relations = string.Join(" ", Edges.Select(e => $"{e.Source} -> {e.Dest};"));
             var entryArrow = $"first -> {Inital};";
             return $"digraph {{ node [shape=box] {firstNode} {nodes} {relations} {entryArrow}}}";
         }
