@@ -1,6 +1,6 @@
 namespace Analysis.AST.AExpr
 {
-    public interface IAExpr : IAstNode
+    public interface IAExpr : IExpression
     {
         
     }

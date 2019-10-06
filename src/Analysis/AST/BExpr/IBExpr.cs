@@ -1,6 +1,6 @@
 namespace Analysis.AST.BExpr
 {
-    public interface IBExpr : IAstNode
+    public interface IBExpr : IExpression
     {
         
     }
