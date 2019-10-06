@@ -46,9 +46,10 @@ namespace Parser
         public override IAstNode VisitIntDecl(MicroCParser.IntDeclContext context)
         {
             var name = context.IDENT().GetText();
-            _symbolTable.InsertSymbol(name, "INT");
+            var id = _symbolTable.InsertSymbol(name, "INT");
             var intDecl = new IntDecl(name);
             intDecl.Label = ++_label;
+            intDecl.Id = id;
             return intDecl;
         }
 
@@ -56,9 +57,10 @@ namespace Parser
         {
             var name = context.IDENT().GetText();
             var size = int.Parse(context.NUMBER().GetText());
-            _symbolTable.InsertSymbol(name, "ARRAY");
+            var id = _symbolTable.InsertSymbol(name, "ARRAY");
             var arrayDecl = new ArrayDecl(name, size);
             arrayDecl.Label = ++_label;
+            arrayDecl.Id = id;
             return arrayDecl;
         }
 
@@ -69,9 +71,10 @@ namespace Parser
             var children = _symbolTable.RemoveScope();
 
             string name = context.name.Text;
-            _symbolTable.InsertSymbol(name, children);
+            var id =_symbolTable.InsertSymbol(name, children);
             var recDecl = new RecordDecl(name, fields);
             recDecl.Label = ++_label;
+            recDecl.Id = id;
             return recDecl;
         }
 

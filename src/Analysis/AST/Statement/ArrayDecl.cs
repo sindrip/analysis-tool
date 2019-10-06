@@ -5,6 +5,7 @@ namespace Analysis.AST.Statement
         public int Label { get; set; }
         public string Name { get; set; }
         public int Size { get; set; }
+        public int Id { get; set; }
 
         public ArrayDecl(string name, int size)
         {
@@ -14,7 +15,7 @@ namespace Analysis.AST.Statement
 
         public override string ToString()
         {
-            return $@"int[{Size.ToString()}] {Name};";
+            return $@"int[{Size}] ({Id}, ""{Name}"");";
         }
 
         public string PrintBlock() => $"[{this}]";

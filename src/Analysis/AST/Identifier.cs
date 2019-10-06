@@ -17,7 +17,7 @@ namespace Analysis.AST
 
         public override string ToString()
         {
-            return $"({Id}, {Name})";
+            return $@"({Id}, ""{Name}"")";
         }
 
         public bool Equals(Identifier other)

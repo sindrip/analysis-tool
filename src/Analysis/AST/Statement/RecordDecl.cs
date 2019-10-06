@@ -9,6 +9,7 @@ namespace Analysis.AST.Statement
         public string Name { get; set; }
         public IEnumerable<Identifier> Fields { get; set; }
         public int Size { get; set; }
+        public int Id { get; set; }
 
         public RecordDecl(string name, IEnumerable<Identifier> fields)
         {
@@ -19,7 +20,8 @@ namespace Analysis.AST.Statement
 
         public override string ToString()
         {
-            return $"{{{string.Join(";", Fields.Select(x => x.ToString()))}}} {Name};";
+            var fields = string.Join("; ", Fields.Select(f => $@"({f.Id}, ""{Name}.{f.Name}"""")"));
+            return $@"{{{fields}}} ({Id}, ""{Name}"");";
         }
 
         public string PrintBlock() => $"[{this}]";
