@@ -20,7 +20,7 @@ namespace Analysis.AST.Statement
 
         public override string ToString()
         {
-            var fields = string.Join("; ", Fields.Select(f => $@"({f.Id}, ""{Name}.{f.Name}"""")"));
+            var fields = string.Join("; ", Fields.Select(f => $@"({f.Id}, ""{Name}.{f.Name}"")"));
             return $@"{{{fields}}} ({Id}, ""{Name}"");";
         }
 
