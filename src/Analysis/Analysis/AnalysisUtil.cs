@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Analysis.AST;
@@ -45,7 +46,7 @@ namespace Analysis.Analysis
                 VarAccess va => FreeVariables(va.Ident),
                 RecordAccess ra => FreeVariables(ra.Right),
                 ArrayAccess aa => FreeVariables(aa.Left).Union(FreeVariables(aa.Right)).ToHashSet(),
-                Identifier ident => new HashSet<Identifier>() {ident},
+                Identifier ident => ident.Singleton().ToHashSet(),
                 _ => Enumerable.Empty<Identifier>().ToHashSet(),
             };
 
@@ -81,15 +82,15 @@ namespace Analysis.Analysis
                 ArrayAccess aa => AvailableExpressions(aa.Left).Union(AvailableExpressions(aa.Right)).ToHashSet(),
                 ABinOp abinop => AvailableExpressions(abinop.Left)
                     .Union(AvailableExpressions(abinop.Right))
-                    .Union(new HashSet<IExpression>() {abinop})
+                    .Union(abinop.Singleton())
                     .ToHashSet(),
                 BBinOp bbinop => AvailableExpressions(bbinop.Left)
                     .Union(AvailableExpressions(bbinop.Right))
-                    .Union(new HashSet<IExpression>() {bbinop})
+                    .Union(bbinop.Singleton())
                     .ToHashSet(),
                 RBinOp rbinop => AvailableExpressions(rbinop.Left)
                     .Union(AvailableExpressions(rbinop.Right))
-                    .Union(new HashSet<IExpression>() {rbinop})
+                    .Union(rbinop.Singleton())
                     .ToHashSet(),
                 _ => Enumerable.Empty<IExpression>().ToHashSet(),
             };
