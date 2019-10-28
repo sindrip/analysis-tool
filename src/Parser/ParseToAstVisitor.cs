@@ -12,7 +12,7 @@ namespace Parser
     public class ParseToAstVisitor : MicroCBaseVisitor<IAstNode>
     {
         private SymbolTable _symbolTable = new SymbolTable();
-        private int _label = 0;
+        private int _label = -1;
 
         public override IAstNode VisitParse(MicroCParser.ParseContext context)
         {

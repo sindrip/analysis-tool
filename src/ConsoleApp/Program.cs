@@ -66,18 +66,31 @@ namespace ConsoleApp1
             //Console.WriteLine(overflowParse);
 
             var x = new Identifier("x", "int", 0);
+            var y = new Identifier("y", "int", 2);
             var A = new Identifier("A", "array", 1);
             var d1 = new Dictionary<Identifier, HashSet<int>>();
             d1[x] = new HashSet<int> {1,2};
             d1[A] = new HashSet<int> {1};
+            d1[y] = new HashSet<int>() {3};
             var d2 = new Dictionary<Identifier, HashSet<int>>();
             d2[x] = new HashSet<int> {1,2,3};
             d2[A] = new HashSet<int> {2};
-            var l1 = new RDLattice(d1);
-            var l2 = new RDLattice(d2);
-            Console.WriteLine(l1.PartialOrder(l2));
-            var joined = l1.Join(l2);
-            Console.WriteLine(joined);
+            //var l1 = new RDLattice(d1);
+            //var l2 = new RDLattice(d2);
+            //Console.WriteLine(l1.PartialOrder(l2));
+            //var joined = l1.Join(l2);
+            //Console.WriteLine(joined);
+            var n = d2.Except(d1);
+            var s = string.Join("\n", n.Select(x => $"{x.Key}: {string.Join(",", x.Value)}"));
+            Console.WriteLine(s);
+
+            //var hs = new HashSet<int?>();
+            //hs.Add(1);
+            //hs.Add(null);
+            //hs.Add(null);
+            //hs.Add(2);
+            //Console.WriteLine(hs.Count);
+
         }
     }
 }
