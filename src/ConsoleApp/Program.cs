@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Analysis.Analysis;
+using Analysis.AST;
 using Analysis.CFG;
 using Analysis.AST.AExpr;
 
@@ -55,12 +58,26 @@ namespace ConsoleApp1
             var ae2 = Analysis.Analysis.AnalysisUtil.AvailableExpressions(result);
             Console.WriteLine(ae);
             Console.WriteLine(ae2);
-            
-            // Overflowing program debug
-            var overflow = "{int x; x:=0; Point.x := 0;}";
-            var overflowParse = Parser.Util.StringToAst(overflow);
-            
-            Console.WriteLine(overflowParse);
+
+            //// Overflowing program debug
+            //var overflow = "{int x; x:=0; Point.x := 0;}";
+            //var overflowParse = Parser.Util.StringToAst(overflow);
+            //
+            //Console.WriteLine(overflowParse);
+
+            var x = new Identifier("x", "int", 0);
+            var A = new Identifier("A", "array", 1);
+            var d1 = new Dictionary<Identifier, HashSet<int>>();
+            d1[x] = new HashSet<int> {1,2};
+            d1[A] = new HashSet<int> {1};
+            var d2 = new Dictionary<Identifier, HashSet<int>>();
+            d2[x] = new HashSet<int> {1,2,3};
+            d2[A] = new HashSet<int> {2};
+            var l1 = new RDLattice(d1);
+            var l2 = new RDLattice(d2);
+            Console.WriteLine(l1.PartialOrder(l2));
+            var joined = l1.Join(l2);
+            Console.WriteLine(joined);
         }
     }
 }
