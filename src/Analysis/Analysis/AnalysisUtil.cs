@@ -43,7 +43,7 @@ namespace Analysis.Analysis
                 RBinOp rbinop => FreeVariables(rbinop.Left).Union(FreeVariables(rbinop.Right)).ToHashSet(),
                 // Arithmetic nodes
                 ABinOp abinop => FreeVariables(abinop.Left).Union(FreeVariables(abinop.Right)).ToHashSet(),
-                VarAccess va => FreeVariables(va.Ident),
+                VarAccess va => FreeVariables(va.Left),
                 RecordAccess ra => FreeVariables(ra.Right),
                 ArrayAccess aa => FreeVariables(aa.Left).Union(FreeVariables(aa.Right)).ToHashSet(),
                 Identifier ident => ident.Singleton().ToHashSet(),

@@ -4,20 +4,20 @@ namespace Analysis.AST.AExpr
 {
     public class VarAccess : IAExpr, IStateAccess, IEquatable<VarAccess>
     {
-        public Identifier Ident;
+        public Identifier Left { get; set; }
 
-        public VarAccess(Identifier ident) => Ident = ident;
+        public VarAccess(Identifier ident) => Left = ident;
 
         public override string ToString()
         {
-            return Ident.ToString();
+            return Left.ToString();
         }
 
         public bool Equals(VarAccess other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(Ident, other.Ident);
+            return Equals(Left, other.Left);
         }
 
         public override bool Equals(object obj)
@@ -30,7 +30,7 @@ namespace Analysis.AST.AExpr
 
         public override int GetHashCode()
         {
-            return (Ident != null ? Ident.GetHashCode() : 0);
+            return (Left != null ? Left.GetHashCode() : 0);
         }
     }
 }

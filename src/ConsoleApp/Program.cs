@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Analysis.Analysis;
 using Analysis.AST;
 using Analysis.CFG;
@@ -19,7 +20,7 @@ namespace ConsoleApp1
     int [10] a;
     int y;
     
-    x := 0;
+    x := 0 + 1 + 2;
     y := x;
     if (not true & false) {
         x := 3;
@@ -29,8 +30,23 @@ namespace ConsoleApp1
     a[1+1] := (1+1)*2;
 }
 ";
+            
+            var aeinput = @"
+{
+    int x;
+    int y;
+    int a;
+    int b;
+    x := a + b;
+    y := a * b;
+    while (y > a + b) {
+        a := a + 1;
+        x := a + b;
+    }
+}";
 
             var result = Parser.Util.StringToAst(input);
+            var aeresult = Parser.Util.StringToAst(aeinput);
             Console.WriteLine(result);
             var fg = new FlowGraph(result);
             Console.WriteLine(fg.Inital);
@@ -56,6 +72,7 @@ namespace ConsoleApp1
 
             var ae = Analysis.Analysis.AnalysisUtil.AvailableExpressions(exp5);
             var ae2 = Analysis.Analysis.AnalysisUtil.AvailableExpressions(result);
+            Console.WriteLine("=========");
             Console.WriteLine(ae);
             Console.WriteLine(ae2);
 
@@ -80,9 +97,10 @@ namespace ConsoleApp1
             //Console.WriteLine(l1.PartialOrder(l2));
             //var joined = l1.Join(l2);
             //Console.WriteLine(joined);
-            var n = d2.Except(d1);
-            var s = string.Join("\n", n.Select(x => $"{x.Key}: {string.Join(",", x.Value)}"));
-            Console.WriteLine(s);
+            
+           // var n = d2.Except(d1);
+           // var s = string.Join("\n", n.Select(x => $"{x.Key}: {string.Join(",", x.Value)}"));
+           // Console.WriteLine(s);
 
             //var hs = new HashSet<int?>();
             //hs.Add(1);
@@ -90,7 +108,17 @@ namespace ConsoleApp1
             //hs.Add(null);
             //hs.Add(2);
             //Console.WriteLine(hs.Count);
-
+            
+            
+            var t = new AELattice(ae2);
+            var t2 = new AELattice(ae);
+            Console.WriteLine(t);
+            Console.WriteLine(t2);
+            Console.WriteLine(t <= t);
+            Console.WriteLine(t2 <= (t & t2));
+            
+            var analysis = new AEAnalysis(aeresult);
+            Console.WriteLine(analysis);
         }
     }
 }

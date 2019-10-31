@@ -61,6 +61,8 @@ namespace Analysis.CFG
             };
         }
 
+        public static IEnumerable<int> Labels(IEnumerable<IStatement> blocks) => blocks.Select(x => x.Label);
+
         public static IEnumerable<FlowEdge> Flow(IAstNode node)
         {
             switch (node)
