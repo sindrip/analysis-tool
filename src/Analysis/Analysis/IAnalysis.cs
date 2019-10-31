@@ -23,7 +23,9 @@ namespace Analysis.Analysis
         public IEnumerable<int> ExtremalLabels { get; set; }
         public IEnumerable<FlowEdge> Flow { get; set; }
         private IEnumerable<IStatement> _blocks { get; set; }
-        private IWorkList _workList { get; set; }
+        private IWorkList _workListChaotic { get; set; }
+        private IWorkList _workListFIFO { get; set; }
+        private IWorkList _workListLIFO { get; set; }
         private List<AELattice> _analysisFilled { get; set; }
         private List<AELattice> _analysisCircle { get; set; }
         private Program _program { get; set; }
@@ -52,23 +54,13 @@ namespace Analysis.Analysis
                 _analysisCircle.Add(AELattice.Bottom(program));
             }
 
-            _workList = new ChaoticIteration(Flow);
+            _workListChaotic = new ChaoticIteration(Flow);
+            _workListFIFO = new FIFOWorklist(Flow);
+            _workListLIFO = new LIFOWorklist(Flow);
 
-            while (!_workList.Empty())
-            {
-                var edge = _workList.Extract();
-                var sourceTransfer = TransferFunctions(edge.Source);
-                var target = _analysisFilled[edge.Dest];
-                if (!sourceTransfer.PartialOrder(target))
-                {
-                    _analysisFilled[edge.Dest] = target.Join(sourceTransfer);
-                    var edgesToAdd = Flow.Where(x => x.Source == edge.Dest);
-                    foreach (var e in edgesToAdd)
-                    {
-                        _workList.Insert(e);
-                    }
-                }
-            }
+            worklistAlgorithm(_workListChaotic);
+            worklistAlgorithm(_workListFIFO);
+            worklistAlgorithm(_workListLIFO);
 
             var labels = FlowUtil.Labels(_blocks);
             foreach (var lab in labels)
@@ -113,6 +105,29 @@ namespace Analysis.Analysis
 
         public AELattice Iota() => AELattice.Top();
         private IStatement getBlock(int label) => _blocks.First(x => x.Label == label);
+
+        private void worklistAlgorithm(IWorkList workListToWorkThrough)
+        {
+            int numberOfOpertations = 0;
+            while (!workListToWorkThrough.Empty())
+            {
+                var edge = workListToWorkThrough.Extract();
+                numberOfOpertations++;
+                var sourceTransfer = TransferFunctions(edge.Source);
+                var target = _analysisFilled[edge.Dest];
+                if (!sourceTransfer.PartialOrder(target))
+                {
+                    _analysisFilled[edge.Dest] = target.Join(sourceTransfer);
+                    var edgesToAdd = Flow.Where(x => x.Source == edge.Dest);
+                    foreach (var e in edgesToAdd)
+                    {
+                        workListToWorkThrough.Insert(e);
+                        numberOfOpertations++;
+                    }
+                }
+            }
+            Console.WriteLine("Worklist operations: " + numberOfOpertations);
+        }
 
         public override string ToString()
         {
