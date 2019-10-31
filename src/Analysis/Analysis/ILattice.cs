@@ -10,9 +10,32 @@ namespace Analysis.Analysis
         //bool PartialOrder(ILattice<T> right);
         //ILattice<T> Join(ILattice<T> right);
     }
+    
+    // Available Expressions
+    public class AELattice : ILattice<HashSet<IExpression>>
+    {
+        public HashSet<IExpression> Lattice { get; set; }
 
-    //public class RDLattice : ILattice<Dictionary<Identifier, HashSet<int?>>>
-    public class RDLattice
+        private AELattice() => Lattice = new HashSet<IExpression>();
+        public AELattice(HashSet<IExpression> expressions) => Lattice = expressions;
+        public AELattice(IAstNode node) => Lattice = AnalysisUtil.AvailableExpressions(node);
+
+        public bool PartialOrder(AELattice right) => Lattice.IsSupersetOf(right.Lattice);
+
+        public AELattice Join(AELattice right) => new AELattice(Lattice.Intersect(right.Lattice).ToHashSet());
+        
+        public static AELattice Bottom(Program program) => new AELattice(program);
+        public static AELattice Top() => new AELattice();
+
+        public static bool operator <=(AELattice l1, AELattice l2) => l1.Lattice.IsSupersetOf(l2.Lattice);
+        public static bool operator >=(AELattice l1, AELattice l2) => !(l1 <= l2);
+        public static AELattice operator &(AELattice l1, AELattice l2) => new AELattice(l1.Lattice.Intersect(l2.Lattice).ToHashSet());
+
+        public override string ToString() => $"{{ {string.Join(",", Lattice.Select(x => x.ToString()))} }}";
+    }
+
+    // Reaching Definitions
+    public class RDLattice : ILattice<Dictionary<Identifier, HashSet<int?>>>
     {
         public Dictionary<Identifier, HashSet<int?>> Lattice { get; set; }
 
