@@ -19,7 +19,7 @@ namespace Analysis.Analysis
     }
 
     
-    public class RDAnalysis : IAnalysis<RDLattice>
+    public class RDAnalysisOld : IAnalysis<RDLattice>
     {
         public IEnumerable<int> ExtremalLabels { get; set; }
         public IEnumerable<FlowEdge> Flow { get; set; }
@@ -28,7 +28,7 @@ namespace Analysis.Analysis
         private IEnumerable<IStatement> _blocks { get; set; }
         private IWorkList _workList { get; set; }
 
-        public RDAnalysis(Program program)
+        public RDAnalysisOld(Program program)
         {
             Flow = FlowUtil.Flow(program);
             ExtremalLabels = FlowUtil.Init(program).Singleton();

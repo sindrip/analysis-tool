@@ -7,6 +7,7 @@ namespace Analysis.Analysis.AvailableExpressions
     {
         public AEDomain Domain { get; set; }
 
+        // TODO: what?
         public AELattice(AEDomain intersect) => Domain = new AEDomain();
 
         public bool PartialOrder(AELattice right) => Domain.IsSupersetOf(right.Domain);

@@ -3,7 +3,7 @@ using Analysis.AST;
 
 namespace Analysis.Analysis.ReachingDefinitions
 {
-    public class RDDomain : HashSet<Identifier>
+    public class RDDomain : HashSet<RDDefinition>
     {
         
     }
