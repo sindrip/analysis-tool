@@ -3,77 +3,78 @@
 @inject WeatherForecastService ForecastService
 @using WebApplication.Data
 
-<div class="container-">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-5 col-sm-12">
             <div class="row">
                 <div class="col-12">
-                    <h1>Upper</h1>
+                    <h1>Program</h1>
                     <textarea class="form-control" rows="10" @bind-value="source" @bind-value:event="oninput"></textarea>
-                              <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
-                              </div>
-                              </div>
-                              <div class="row">
-                                  <div class="col-12">
-                                      <h1>Lower Graph Section></h1>
-                                      <div id="imageDiv"></div>
-                                  </div>
-                              </div>
-                              </div>
-                              <div class="col-md-7 col-sm-12">
-                                  <div class="row">
-                                      <div class="col-12">
-                                          <h1>Right Hand></h1>
-                                      </div>
-                                  </div>
-                              </div>
-                              </div>
-                              </div>
+                    <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <h1>Program Graph</h1>
+                    <div id="imageDiv"></div>
+                </div>
+            </div>
+        </div>
 
-                              @code
+        <div class="col-md-7 col-sm-12">
+            <div class="row">
+                <div class="col-12">
+                    <h1>Right Hand></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code
                               {
-                                  string error = "";
-                                  private string _source = "{ \n  int x;\n  x := 0;\n}";
+    string error = "";
+    private string _source = "{ \n  int x;\n  x := 0;\n}";
 
-                                  string source
-                                  {
-                                      get => _source;
-                                      set
-                                      {
-                                          _source = value;
-                                          Parse();
-                                      }
-                                  }
+    string source
+    {
+        get => _source;
+        set
+        {
+            _source = value;
+            Parse();
+        }
+    }
 
-                                  async void Parse()
-                                  {
-                                      Console.WriteLine("parse");
-                                      try
-                                      {
-                                          var graph = ForecastService.GetGraph(source);
-                                          error = string.Empty;
+    async void Parse()
+    {
+        Console.WriteLine("parse");
+        try
+        {
+            var graph = ForecastService.GetGraph(source);
+            error = string.Empty;
 
-                                          await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
-                                          StateHasChanged();
-                                      }
-                                      catch (ArgumentException exception)
-                                      {
-                                          error = exception.Message;
-                                          await JsRuntime.InvokeAsync<string>("Lib.ClearGraph");
-                                      }
-                                      catch (Exception ex)
-                                      {
-                                          Console.WriteLine(ex.Message);
-                                          error = ex.GetType().ToString();
-                                      }
-                                  }
+            await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
+            StateHasChanged();
+        }
+        catch (ArgumentException exception)
+        {
+            error = exception.Message;
+            await JsRuntime.InvokeAsync<string>("Lib.ClearGraph");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            error = ex.GetType().ToString();
+        }
+    }
 
-                                  protected override void OnAfterRender(bool firstRender)
-                                  {
-                                      if (firstRender)
-                                      {
-                                          Parse();
-                                      }
-                                  }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Parse();
+        }
+    }
 
-                              }
+}
