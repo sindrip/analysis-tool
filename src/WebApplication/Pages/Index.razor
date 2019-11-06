@@ -25,6 +25,26 @@
             <div class="row">
                 <div class="col-12">
                     <h1>Right Hand></h1>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int x = 0; x < source.Split(";").Count()-1; x++)
+                            {
+                                <tr>
+                                    <td>@x</td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
