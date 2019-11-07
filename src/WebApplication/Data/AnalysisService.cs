@@ -62,13 +62,13 @@ namespace WebApplication.Data
             var analysis = new RDAnalysis(ast);
             var lattice = analysis.GetResultLattice();
             int i = 0;
+
             res.AddRange(from item in lattice
                          select new AnalysisResult
                          {
-                             Label = (i++).ToString(),
+                             Label =  (i++).ToString(),
                              Result = item.ToString()
                          });
-
             return res;
         }
     }

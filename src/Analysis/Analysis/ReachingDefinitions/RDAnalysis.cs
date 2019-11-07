@@ -59,22 +59,22 @@ namespace Analysis.Analysis.ReachingDefinitions
         public RDDomain Kill(IStatement block) => block switch
         {
             // TODO: RecordDecl and AssignRecord (Needs work in parser to get ID's)
-            IntDecl intDecl => GetLabels().Select(l => new RDDefinition(intDecl.Id, l)).Append(new RDDefinition(intDecl.Id)).ToDomain(),
-            ArrayDecl arrayDecl => GetLabels().Select(l => new RDDefinition(arrayDecl.Id, l)).Append(new RDDefinition(arrayDecl.Id)).ToDomain(),
+            IntDecl intDecl => GetLabels().Select(l => new RDDefinition(intDecl.Id, l, intDecl.Name)).Append(new RDDefinition(intDecl.Id, intDecl.Name)).ToDomain(),
+            ArrayDecl arrayDecl => GetLabels().Select(l => new RDDefinition(arrayDecl.Id, l, arrayDecl.Name)).Append(new RDDefinition(arrayDecl.Id, arrayDecl.Name)).ToDomain(),
             // RecordDecl
-            AssignStmt assignStmt => GetLabels().Select(l => new RDDefinition(assignStmt.Left.Left.Id, l))
-                .Append(new RDDefinition(assignStmt.Left.Left.Id)).ToDomain(),
+            AssignStmt assignStmt => GetLabels().Select(l => new RDDefinition(assignStmt.Left.Left.Id, l, assignStmt.Left.Left.Name))
+                .Append(new RDDefinition(assignStmt.Left.Left.Id, assignStmt.Left.Left.Name)).ToDomain(),
             // RecAssignStmt 
             _ => new RDDomain(),
         };
 
         public RDDomain Gen(IStatement block) => block switch
         {
-            IntDecl intDecl => new RDDefinition(intDecl.Id, intDecl.Label).Singleton().ToDomain(),
-            ArrayDecl arrayDecl => new RDDefinition(arrayDecl.Id, arrayDecl.Label).Singleton().ToDomain(),
+            IntDecl intDecl => new RDDefinition(intDecl.Id, intDecl.Label, intDecl.Name).Singleton().ToDomain(),
+            ArrayDecl arrayDecl => new RDDefinition(arrayDecl.Id, arrayDecl.Label, arrayDecl.Name).Singleton().ToDomain(),
             // TODO: RecordDecl and AssignRecord (Needs work in parser to get ID's)
             //RecordDecl arrayDecl => (RDDomain)(new RDDefinition(arrayDecl.Id, arrayDecl.Label)).Singleton(),
-            AssignStmt assignStmt => new RDDefinition(assignStmt.Left.Left.Id, assignStmt.Label).Singleton().ToDomain(),
+            AssignStmt assignStmt => new RDDefinition(assignStmt.Left.Left.Id, assignStmt.Label, assignStmt.Left.Left.Name).Singleton().ToDomain(),
             _ => new RDDomain(),
         };
         

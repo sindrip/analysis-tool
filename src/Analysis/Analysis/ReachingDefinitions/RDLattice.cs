@@ -18,9 +18,9 @@ namespace Analysis.Analysis.ReachingDefinitions
         //public RDLattice Top(Program program) => new RDLattice(program);
 
         public RDLattice(Program program) => 
-            Domain = AnalysisUtil.FreeVariables(program).Select(x => new RDDefinition(x.Id)).ToDomain();
+            Domain = AnalysisUtil.FreeVariables(program).Select(x => new RDDefinition(x.Id, x.Name)).ToDomain();
         private RDLattice() => Domain = new RDDomain();
         
-        public override string ToString() => $"{{ {string.Join(",", Domain.Select(x => x.ToString()))} }}";
+        public override string ToString() => $"{{ {string.Join(", ", Domain.Select(x => x.ToString()))} }}";
     }
 }
