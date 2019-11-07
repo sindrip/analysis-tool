@@ -60,15 +60,15 @@ namespace WebApplication.Data
             
             var ast = Parser.Util.StringToAst(source);
             var analysis = new RDAnalysis(ast);
-            // var lattice = analysis.GetResultLattice();
-            // int i = 0;
+            var lattice = analysis.GetResultLattice();
+            int i = 0;
 
-            // res.AddRange(from item in lattice
-            //              select new AnalysisResult
-            //              {
-            //                  Label =  (i++).ToString(),
-            //                  Result = item.ToString()
-            //              });
+            res.AddRange(from item in lattice
+                         select new AnalysisResult
+                         {
+                             Label =  (i++).ToString(),
+                             Result = item.ToString()
+                         });
             return res;
         }
     }

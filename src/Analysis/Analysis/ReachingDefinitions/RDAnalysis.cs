@@ -29,6 +29,7 @@ namespace Analysis.Analysis.ReachingDefinitions
             var newDomain = domain.Except(kill).Union(gen).ToDomain();
             return new RDLattice(newDomain);
         }
+        
 
         public RDDomain Kill(IStatement block) => block switch
         {

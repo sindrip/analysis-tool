@@ -41,6 +41,7 @@ namespace Analysis.Analysis
             _analysisCircle = new List<ILattice<T>>();
         }
         
+        public List<ILattice<T>> GetResultLattice() => _analysisFilled; 
         protected IStatement GetBlock(int label) => _blocks.First(x => x.Label == label);
         protected IEnumerable<int> GetLabels() => _blocks.Select(b => b.Label);
 
