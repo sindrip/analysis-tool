@@ -4,16 +4,18 @@ using Analysis.AST;
 
 namespace Analysis.Analysis.ReachingDefinitions
 {
-    public class RDLattice
+    public class RDLattice : ILattice<RDDomain>
     {
         public RDDomain Domain { get; set; }
 
         public RDLattice(RDDomain domain) => Domain = domain;
 
-        public bool PartialOrder(RDLattice right) => Domain.IsSubsetOf(right.Domain);
+        public bool PartialOrder(ILattice<RDDomain> right) => Domain.IsSubsetOf(right.GetDomain());
         
-        public RDLattice Join(RDLattice right) => new RDLattice(Domain.Union(right.Domain).ToDomain());
+        public ILattice<RDDomain> Join(ILattice<RDDomain> right) => new RDLattice(Domain.Union(right.GetDomain()).ToDomain());
         
+        public RDDomain GetDomain() => Domain;
+
         public RDLattice Bottom() => new RDLattice();
         //public RDLattice Top(Program program) => new RDLattice(program);
 

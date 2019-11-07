@@ -45,27 +45,30 @@ namespace Parser
 
         public override IAstNode VisitIntDecl(MicroCParser.IntDeclContext context)
         {
+            var label = ++_label;
             var name = context.IDENT().GetText();
             var id = _symbolTable.InsertSymbol(name, "INT");
             var intDecl = new IntDecl(name);
-            intDecl.Label = ++_label;
+            intDecl.Label = label;
             intDecl.Id = id;
             return intDecl;
         }
 
         public override IAstNode VisitArrayDecl(MicroCParser.ArrayDeclContext context)
         {
+            var label = ++_label;
             var name = context.IDENT().GetText();
             var size = int.Parse(context.NUMBER().GetText());
             var id = _symbolTable.InsertSymbol(name, "ARRAY");
             var arrayDecl = new ArrayDecl(name, size);
-            arrayDecl.Label = ++_label;
+            arrayDecl.Label = label;
             arrayDecl.Id = id;
             return arrayDecl;
         }
 
         public override IAstNode VisitRecDecl(MicroCParser.RecDeclContext context)
         {
+            var label = ++_label;
             _symbolTable.AddScope();
             IList<Identifier> fields = context.fieldDeclaration().Select(x => Visit(x) as Identifier).ToList();
             var children = _symbolTable.RemoveScope();
@@ -73,7 +76,7 @@ namespace Parser
             string name = context.name.Text;
             var id =_symbolTable.InsertSymbol(name, children);
             var recDecl = new RecordDecl(name, fields);
-            recDecl.Label = ++_label;
+            recDecl.Label = label;
             recDecl.Id = id;
             return recDecl;
         }
@@ -87,6 +90,7 @@ namespace Parser
 
         public override IAstNode VisitAssignStmt(MicroCParser.AssignStmtContext context)
         {
+            var label = ++_label;
             var name = context.IDENT().GetText();
             var symbol = _symbolTable.LookupSymbol(name);
             var ident = new Identifier(name, symbol.Type, symbol.Id);
@@ -96,12 +100,13 @@ namespace Parser
             IAExpr right = Visit(context.a_expr()) as IAExpr;
 
             var assignStmt = new AssignStmt(left, right);
-            assignStmt.Label = ++_label;
+            assignStmt.Label = label;
             return assignStmt;
         }
 
         public override IAstNode VisitAssignArrayStmt(MicroCParser.AssignArrayStmtContext context)
         {
+            var label = ++_label;
             string name = context.IDENT().GetText();
             var symbol = _symbolTable.LookupSymbol(name);
             var ident = new Identifier(name, symbol.Type, symbol.Id);
@@ -112,12 +117,13 @@ namespace Parser
             IAExpr right = Visit(context.value) as IAExpr;
 
             var assignStmt = new AssignStmt(left, right);
-            assignStmt.Label = ++_label;
+            assignStmt.Label = label;
             return assignStmt;
         }
 
         public override IAstNode VisitAssignFieldStmt(MicroCParser.AssignFieldStmtContext context)
         {
+            var label = ++_label;
             string recName = context.name.Text;
             string fieldName = context.field.Text;
             var recSymbol = _symbolTable.LookupSymbol(recName);
@@ -138,12 +144,13 @@ namespace Parser
             IAExpr right = Visit(context.a_expr()) as IAExpr;
 
             var assignStmt = new AssignStmt(left, right);
-            assignStmt.Label = ++_label;
+            assignStmt.Label = label;
             return assignStmt;
         }
 
         public override IAstNode VisitAssignRecStmt(MicroCParser.AssignRecStmtContext context)
         {
+            var label = ++_label;
             string name = context.IDENT().GetText();
             IList<IAExpr> expressions = context.a_expr().Select(x => Visit(x) as IAExpr).ToList();
 
@@ -159,55 +166,60 @@ namespace Parser
             // TODO: Type check the symbol
 
             var recAssignStmt = new RecAssignStmt(ident, expressions);
-            recAssignStmt.Label = ++_label;
+            recAssignStmt.Label = label;
             return recAssignStmt;
         }
 
         public override IAstNode VisitIfStmt(MicroCParser.IfStmtContext context)
         {
+            var label = ++_label;
             IBExpr condition = Visit(context.b_expr()) as IBExpr;
             UnscopedBlock body = Visit(context.unscopedBlock()) as UnscopedBlock;
             var ifStmt = new IfStmt(condition, body);
-            ifStmt.Label = ++_label;
+            ifStmt.Label = label;
             return ifStmt;
         }
 
         public override IAstNode VisitIfElseStmt(MicroCParser.IfElseStmtContext context)
         {
+            var label = ++_label;
             IBExpr condition = Visit(context.b_expr()) as IBExpr;
             UnscopedBlock ifBody = Visit(context.ifBody) as UnscopedBlock;
             UnscopedBlock elseBody = Visit(context.elseBody) as UnscopedBlock;
             var ifElseStmt = new IfElseStmt(condition, ifBody, elseBody);
-            ifElseStmt.Label = ++_label;
+            ifElseStmt.Label = label;
             return ifElseStmt;
         }
 
         public override IAstNode VisitWhileStmt(MicroCParser.WhileStmtContext context)
         {
+            var label = ++_label;
             IBExpr condition = Visit(context.b_expr()) as IBExpr;
             UnscopedBlock body = Visit(context.unscopedBlock()) as UnscopedBlock;
             var whileStmt = new WhileStmt(condition, body);
-            whileStmt.Label = ++_label;
+            whileStmt.Label = label;
             return whileStmt;
         }
 
         public override IAstNode VisitReadStmt(MicroCParser.ReadStmtContext context)
         {
+            var label = ++_label;
             // TODO all of read possibilites
             string name = context.IDENT().GetText();
             var symbol = _symbolTable.LookupSymbol(name);
             var ident = new Identifier(symbol.Name, symbol.Type, symbol.Id);
             IStateAccess sa = new VarAccess(ident);
             var readStmt = new ReadStmt(sa);
-            readStmt.Label = ++_label;
+            readStmt.Label = label;
             return readStmt;
         }
 
         public override IAstNode VisitWriteStmt(MicroCParser.WriteStmtContext context)
         {
+            var label = ++_label;
             IAExpr value = Visit(context.a_expr()) as IAExpr;
             var writeStmt = new WriteStmt(value);
-            writeStmt.Label = ++_label;
+            writeStmt.Label = label;
             return writeStmt;
         }
 

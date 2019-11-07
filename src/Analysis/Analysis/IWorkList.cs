@@ -31,4 +31,49 @@ namespace Analysis.Analysis
 
         public bool Empty() => _edgeList.Count == 0;
     }
+
+    public class FIFOWorklist : IWorkList
+    {
+        private Queue<FlowEdge> _edgeList;
+
+        public FIFOWorklist(IEnumerable<FlowEdge> edges)
+        {
+            _edgeList = new Queue<FlowEdge>(edges);
+        }
+        public bool Empty() => _edgeList.Count == 0;
+
+        public FlowEdge Extract()
+        {
+            return _edgeList.Dequeue();
+        }
+
+        public void Insert(FlowEdge flowEdge)
+        {
+            _edgeList.Enqueue(flowEdge);
+        }
+
+    }
+
+    public class LIFOWorklist : IWorkList
+    {
+        private Stack<FlowEdge> _edgeList;
+
+        public LIFOWorklist(IEnumerable<FlowEdge> edgeList)
+        {
+            _edgeList = new Stack<FlowEdge>(edgeList);
+        }
+
+        public bool Empty() => _edgeList.Count == 0;
+
+        public FlowEdge Extract()
+        {
+            return _edgeList.Pop();
+        }
+
+        public void Insert(FlowEdge flowEdge)
+        {
+            _edgeList.Push(flowEdge);
+        }
+
+    }
 }
