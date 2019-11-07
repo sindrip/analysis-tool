@@ -17,7 +17,6 @@ namespace Analysis.Analysis
         L Iota();
         //void TransferFunctions(int label);
     }
-
     
     public class RDAnalysisOld : IAnalysis<RDLattice>
     {
