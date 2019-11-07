@@ -1,7 +1,8 @@
 ﻿@page "/"
 @inject IJSRuntime JsRuntime;
-@inject WeatherForecastService ForecastService
+@inject AnalysisService ForecastService
 @using WebApplication.Data
+@using WebApplication.Shared.Components
 
 <div class="container-fluid">
     <div class="row">
@@ -24,27 +25,10 @@
         <div class="col-md-7 col-sm-12">
             <div class="row">
                 <div class="col-12">
-                    <h1>Right Hand></h1>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Label</th>
-                                <th>Entry</th>
-                                <th>Exit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (int x = 0; x < source.Split(";").Count()-1; x++)
-                            {
-                                <tr>
-                                    <td>@x</td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <AnalysisTableComponent 
+                        Title="Reaching Definition Analysis"
+                        Results="@analysis"
+                    />
                 </div>
             </div>
         </div>
@@ -56,6 +40,8 @@
     string error = "";
     private string _source = "{ \n  int x;\n  x := 0;\n}";
 
+    public List<AnalysisResult> analysis = new List<AnalysisResult>();
+    
     string source
     {
         get => _source;
@@ -69,9 +55,12 @@
     async void Parse()
     {
         Console.WriteLine("parse");
+
         try
         {
             var graph = ForecastService.GetGraph(source);
+            analysis = ForecastService.RunAnalysis(source);
+            
             error = string.Empty;
 
             await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);

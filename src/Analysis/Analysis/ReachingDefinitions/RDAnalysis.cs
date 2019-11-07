@@ -34,6 +34,7 @@ namespace Analysis.Analysis.ReachingDefinitions
             RunAnalysis();
         }
         
+        public List<RDLattice> GetResultLattice() => _analysisFilled;
         private IStatement GetBlock(int label) => _blocks.First(x => x.Label == label);
         private IEnumerable<int> GetLabels() => _blocks.Select(b => b.Label);
         private RDLattice Iota() => new RDLattice(_program);
@@ -131,6 +132,6 @@ namespace Analysis.Analysis.ReachingDefinitions
             var filled = string.Join("\n", _analysisFilled.Select(x => x.ToString()));
             return $"circle: {circle} \n filled: {filled}";
         }
-        
+
     }
 }

@@ -1,0 +1,15 @@
+<div>
+    <select>
+        @foreach (var option in Options)
+        {
+            <option value="@option.Key">@option.Value</option>
+        }
+        
+    </select>
+</div>
+
+
+@code {
+    [Parameter]
+     public Dictionary<string, string> Options { get; set; }
+}

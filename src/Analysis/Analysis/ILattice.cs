@@ -68,7 +68,7 @@ namespace Analysis.Analysis
 
         RDLabel()
         {
-            int? x;
+            // int? x;
         }
 
         RDLabel(int value) => _value = value;

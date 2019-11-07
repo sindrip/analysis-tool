@@ -112,17 +112,14 @@ namespace Analysis.Analysis
                 case IntDecl intDecl:
                 {
                     return hs;
-                    break;
                 }
                 case ArrayDecl arrayDecl:
                 {
                     return hs;
-                    break;
                 }
                 case RecordDecl recordDecl:
                 {
                     return hs;
-                    break;
                 }
                 case AssignStmt assignStmt:
                 {
@@ -134,7 +131,6 @@ namespace Analysis.Analysis
                     {
                         return hs;
                     }
-                    break;
                 }
                 case RecAssignStmt recAssignStmt:
                 {

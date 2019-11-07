@@ -1,0 +1,35 @@
+@using WebApplication.Data
+
+<div class="my-5">
+    <h2>@Title</h2>
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Label</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(Results.Count > 0)
+        {
+            @foreach (var item in Results)
+            {
+                <tr>
+                    <td>@item.Label</td>
+                    <td>@item.Result</td>
+                </tr>
+            }
+        }
+    </tbody>
+    </table>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public List<AnalysisResult> Results { get; set; }
+
+}

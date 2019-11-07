@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Analysis.Analysis.ReachingDefinitions;
 using Analysis.CFG;
 
 namespace WebApplication.Data
 {
-    public class WeatherForecastService
+    public class AnalysisService
     {
         private static readonly string[] Summaries = new[]
         {
@@ -51,6 +53,23 @@ namespace WebApplication.Data
             var ast = Parser.Util.StringToAst(source);
             var fg = new FlowGraph(ast);
             return fg.ToGraphvizFormat();
+        }
+        public List<AnalysisResult> RunAnalysis(string source)
+        {
+            var res = new List<AnalysisResult>();
+            
+            var ast = Parser.Util.StringToAst(source);
+            var analysis = new RDAnalysis(ast);
+            var lattice = analysis.GetResultLattice();
+            int i = 0;
+            res.AddRange(from item in lattice
+                         select new AnalysisResult
+                         {
+                             Label = (i++).ToString(),
+                             Result = item.ToString()
+                         });
+
+            return res;
         }
     }
 }
