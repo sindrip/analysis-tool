@@ -1,6 +1,8 @@
 ﻿@page "/"
 @inject IJSRuntime JsRuntime;
 @inject AnalysisService ForecastService
+@inject AppStateService AppState
+
 @using WebApplication.Data
 @using WebApplication.Shared.Components
 
@@ -12,6 +14,9 @@
                     <h1>Program</h1>
                     <textarea id="editor" @bind-value="source" @bind-value:event="oninput"></textarea>
                     <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
+
+                    <AnalysisPickerComponent />
+
                 </div>
             </div>
             <div class="row">
@@ -26,7 +31,7 @@
             <div class="row">
                 <div class="col-12">
                     <AnalysisTableComponent 
-                        Title="Reaching Definition Analysis"
+                        Title="@AppState.SelectedAnalysis.ToString()"
                         Results="@analysis"
                     />
                 </div>
@@ -40,8 +45,8 @@
     string error = "";
     private string _source = "{ \n  int x;\n  x := 0;\n}";
 
-    public List<AnalysisResult> analysis = new List<AnalysisResult>();
-    
+    List<AnalysisResult> analysis = new List<AnalysisResult>();
+
     string source
     {
         get => _source;
@@ -59,7 +64,9 @@
         try
         {
             var graph = ForecastService.GetGraph(source);
-            analysis = ForecastService.RunAnalysis(source);
+
+            Console.WriteLine(AppState.SelectedAnalysis.ToString());
+            analysis = ForecastService.RunAnalysis(source, AppState.SelectedAnalysis);
             
             error = string.Empty;
 
@@ -86,6 +93,10 @@
         {
             Parse();
         }
+    }
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += StateHasChanged;
     }
 
 }

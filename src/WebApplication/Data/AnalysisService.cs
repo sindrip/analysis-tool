@@ -54,21 +54,38 @@ namespace WebApplication.Data
             var fg = new FlowGraph(ast);
             return fg.ToGraphvizFormat();
         }
-        public List<AnalysisResult> RunAnalysis(string source)
+        public List<AnalysisResult> RunAnalysis(string source, AnalysisType analysisType)
         {
-            var res = new List<AnalysisResult>();
-            
             var ast = Parser.Util.StringToAst(source);
-            var analysis = new RDAnalysis(ast);
-            var lattice = analysis.GetResultLattice();
-            int i = 0;
+            List<AnalysisResult> res = new List<AnalysisResult>();
 
-            res.AddRange(from item in lattice
+            switch(analysisType)
+            {
+                case AnalysisType.ReachingDefinitions:
+                {
+                    var analysis = new RDAnalysis(ast);
+                    var lattice = analysis.GetResultLattice();
+                    int i = 0;
+
+                    res.AddRange(from item in lattice
                          select new AnalysisResult
                          {
                              Label =  (i++).ToString(),
                              Result = item.ToString()
                          });
+
+                    break;
+                }
+                case AnalysisType.AvailableExpressions:
+                {
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+
             return res;
         }
     }

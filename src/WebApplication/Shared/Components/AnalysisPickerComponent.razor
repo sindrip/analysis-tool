@@ -1,0 +1,33 @@
+@using WebApplication.Data
+@inject AppStateService AppState
+
+<div>
+    <select class="form-control" id="analysisTypes" @bind="selected" >
+        @foreach(var at in Enum.GetValues(typeof(AnalysisType)))
+        {
+            <option value="@at">@at.ToString()</option>
+        }
+    </select>
+</div>
+
+
+@code {
+    private AnalysisType _selected { get; set; }
+
+    [Parameter]
+    public AnalysisType selected
+    {
+        get => _selected;
+        set
+        {
+            _selected = value;
+            SelectAnalysis();
+        }
+    }
+
+    void SelectAnalysis() {
+        AppState.SetAnalysisType(_selected);
+    }
+
+    
+}
