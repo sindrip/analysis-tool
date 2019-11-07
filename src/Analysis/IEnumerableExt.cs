@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Analysis.Analysis;
+using Analysis.Analysis.AvailableExpressions;
 using Analysis.Analysis.ReachingDefinitions;
+using Analysis.AST;
 
 namespace Analysis
 {
@@ -23,6 +26,17 @@ namespace Analysis
             }
 
             return rdDomain;
+        }
+
+        public static AEDomain ToDomain(this IEnumerable<IExpression> enumerable)
+        {
+            var aeDomain = new AEDomain();
+            foreach (var aeDefinition in enumerable)
+            {
+                aeDomain.Add(aeDefinition);
+            }
+
+            return aeDomain;
         }
     }
 }
