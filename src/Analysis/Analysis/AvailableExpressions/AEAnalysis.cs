@@ -9,13 +9,6 @@ namespace Analysis.Analysis.AvailableExpressions
 {
     public class AEAnalysis : Analysis<AEDomain>
     {
-        private IEnumerable<int> _extremalLabels;
-        private IEnumerable<FlowEdge> _flow;
-        private IEnumerable<IStatement> _blocks;
-        private IWorkList _workList;
-        private List<AELattice> _analysisFilled;
-        private List<AELattice> _analysisCircle;
-        private Program _program;
         private AELattice _dummyLattice;
 
         public AEAnalysis(Program program) : base(program, AnalysisDirection.Forward)
@@ -36,7 +29,7 @@ namespace Analysis.Analysis.AvailableExpressions
             var block = GetBlock(label);
             var kill = Kill(block);
             var gen = Gen(block);
-            var domain = _analysisFilled[label].Domain;
+            var domain = _analysisFilled[label].GetDomain();
             var newDomain = domain.Except(kill).Union(gen).ToDomain();
             return new AELattice(newDomain);
         }

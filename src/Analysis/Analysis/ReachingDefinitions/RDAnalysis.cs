@@ -35,10 +35,10 @@ namespace Analysis.Analysis.ReachingDefinitions
             // TODO: RecordDecl and AssignRecord (Needs work in parser to get ID's)
             IntDecl intDecl => GetLabels().Select(l => new RDDefinition(intDecl.Id, l)).Append(new RDDefinition(intDecl.Id)).ToDomain(),
             ArrayDecl arrayDecl => GetLabels().Select(l => new RDDefinition(arrayDecl.Id, l)).Append(new RDDefinition(arrayDecl.Id)).ToDomain(),
-            // RecordDecl
+            RecordDecl recordDecl => GetLabels().SelectMany(l => recordDecl.Fields.Select(f => new RDDefinition(f.Id, l))).ToDomain(),
             AssignStmt assignStmt => GetLabels().Select(l => new RDDefinition(assignStmt.Left.Left.Id, l))
                 .Append(new RDDefinition(assignStmt.Left.Left.Id)).ToDomain(),
-            // RecAssignStmt 
+            RecAssignStmt recAssignStmt => GetLabels().SelectMany(l => recAssignStmt.Left.ChildrenIds.Select(cid => new RDDefinition(cid, l))).ToDomain(),
             _ => new RDDomain(),
         };
 
@@ -47,8 +47,10 @@ namespace Analysis.Analysis.ReachingDefinitions
             IntDecl intDecl => new RDDefinition(intDecl.Id, intDecl.Label).Singleton().ToDomain(),
             ArrayDecl arrayDecl => new RDDefinition(arrayDecl.Id, arrayDecl.Label).Singleton().ToDomain(),
             // TODO: RecordDecl and AssignRecord (Needs work in parser to get ID's)
-            //RecordDecl arrayDecl => (RDDomain)(new RDDefinition(arrayDecl.Id, arrayDecl.Label)).Singleton(),
+            RecordDecl recordDecl => recordDecl.Fields.Select(f => new RDDefinition(f.Id, recordDecl.Label)).ToDomain(),
             AssignStmt assignStmt => new RDDefinition(assignStmt.Left.Left.Id, assignStmt.Label).Singleton().ToDomain(),
+            RecAssignStmt recAssignStmt => recAssignStmt.Left.ChildrenIds
+                .Select(cid => new RDDefinition(cid, recAssignStmt.Label)).ToDomain(),
             _ => new RDDomain(),
         };
         

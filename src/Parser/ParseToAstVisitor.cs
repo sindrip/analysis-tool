@@ -162,6 +162,7 @@ namespace Parser
             }
 
             var ident = new Identifier(name, symbol.Type, symbol.Id);
+            ident.ChildrenIds = symbol.Children.Select(c => c.Id).ToList();
 
             // TODO: Type check the symbol
 
