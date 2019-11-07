@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Analysis.AST
 {
@@ -7,6 +8,7 @@ namespace Analysis.AST
         public string Name { get; set; }
         public string Type { get; set; }
         public int Id { get; }
+        public List<int> ChildrenIds { get; set; }
 
         public Identifier(string name, string type, int id)
         {
