@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Analysis.Analysis.AvailableExpressions;
+using Analysis.Analysis.ReachingDefinitions;
 
 namespace Analysis
 {
@@ -9,5 +11,19 @@ namespace Analysis
         {
             return Enumerable.Repeat<T>(element, 1);
         } 
+    }
+
+    public static class DomainExt
+    {
+        public static RDDomain ToDomain(this IEnumerable<RDDefinition> enumerable)
+        {
+            var rdDomain = new RDDomain();
+            foreach (var rdDefinition in enumerable)
+            {
+                rdDomain.Add(rdDefinition);
+            }
+
+            return rdDomain;
+        }
     }
 }
