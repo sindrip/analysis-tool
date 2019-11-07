@@ -96,6 +96,7 @@
         if (firstRender)
         {
             Parse();
+            JsRuntime.InvokeAsync<string>("Lib.InitCodeMirror");
         }
     }
 
