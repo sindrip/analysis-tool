@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Analysis.Analysis;
 using Analysis.Analysis.AvailableExpressions;
+using Analysis.Analysis.FaintVariables;
 using Analysis.Analysis.LiveVariables;
 using Analysis.Analysis.ReachingDefinitions;
 using Analysis.AST;
@@ -167,7 +168,9 @@ namespace ConsoleApp1
             //Console.WriteLine(analysis);
 
             var analysis2 = new LVAnalysis(lvresult);
+            var analysis3 = new FVAnalysis(lvresult);
             Console.WriteLine(analysis2);
+            Console.WriteLine(analysis3);
         }
     }
 }
