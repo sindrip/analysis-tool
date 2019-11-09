@@ -6,11 +6,11 @@ namespace Analysis.AST
     public class Identifier : IAstNode, IEquatable<Identifier>
     {
         public string Name { get; set; }
-        public string Type { get; set; }
+        public VarType Type { get; set; }
         public int Id { get; }
-        public List<int> ChildrenIds { get; set; }
+        public List<Identifier> Children { get; set; }
 
-        public Identifier(string name, string type, int id)
+        public Identifier(string name, VarType type, int id)
         {
             Name = name;
             Type = type;

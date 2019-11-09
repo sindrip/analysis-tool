@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Analysis.Analysis;
 using Analysis.Analysis.AvailableExpressions;
+using Analysis.Analysis.LiveVariables;
 using Analysis.Analysis.ReachingDefinitions;
 using Analysis.AST;
 
@@ -37,6 +38,17 @@ namespace Analysis
             }
 
             return aeDomain;
+        }
+
+        public static LVDomain ToDomain(this IEnumerable<Identifier> enumerable)
+        {
+            var lvDomain = new LVDomain();
+            foreach (var lvIdentifier in enumerable)
+            {
+                lvDomain.Add(lvIdentifier);
+            }
+
+            return lvDomain;
         }
     }
 }

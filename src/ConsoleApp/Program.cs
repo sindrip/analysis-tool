@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Analysis.Analysis;
 using Analysis.Analysis.AvailableExpressions;
+using Analysis.Analysis.LiveVariables;
 using Analysis.Analysis.ReachingDefinitions;
 using Analysis.AST;
 using Analysis.CFG;
@@ -67,9 +68,29 @@ namespace ConsoleApp1
 }
 ";
 
+            var lvinput = @"
+{
+    { int fst; int snd } r;
+    int x;
+    
+    r := (0,1);
+
+    read x;
+
+    while (x > 0) {
+        r.fst := r.fst + x;
+        r.snd := r.snd * x;
+        x := x - 1;
+    }
+
+    r := (0, 0);
+}
+";
+
             var result = Parser.Util.StringToAst(input);
             var aeresult = Parser.Util.StringToAst(aeinput);
             var rdresult = Parser.Util.StringToAst(rdinput);
+            var lvresult = Parser.Util.StringToAst(lvinput);
             Console.WriteLine(result);
             var fg = new FlowGraph(result);
             Console.WriteLine(fg.Inital);
@@ -143,7 +164,10 @@ namespace ConsoleApp1
             //var analysis = new AEAnalysis(aeresult);
             //Console.WriteLine(analysis);
             var analysis = new RDAnalysis(rdresult);
-            Console.WriteLine(analysis);
+            //Console.WriteLine(analysis);
+
+            var analysis2 = new LVAnalysis(lvresult);
+            Console.WriteLine(analysis2);
         }
     }
 }
