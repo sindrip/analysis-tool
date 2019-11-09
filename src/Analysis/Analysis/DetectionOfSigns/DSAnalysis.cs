@@ -24,8 +24,7 @@ namespace Analysis.Analysis.DetectionOfSigns
             var newDomain = block switch
             {
                 AssignStmt assignStmt => AssignTransfer(assignStmt, domain),
-                // TODO: recassign
-                //RecAssignStmt recAssignStmt => RecAssignTransfer(recAssignStmt, domain),
+                RecAssignStmt recAssignStmt => RecAssignTransfer(recAssignStmt, domain),
                 IfStmt ifStmt => ConditionTransfer(ifStmt.Condition, domain),
                 IfElseStmt ifElseStmt => ConditionTransfer(ifElseStmt.Condition, domain),
                 WhileStmt whileStmt => ConditionTransfer(whileStmt.Condition, domain),
@@ -67,6 +66,20 @@ namespace Analysis.Analysis.DetectionOfSigns
             };
 
             newDomain[ident] = newValue.ToHashSet();
+            return newDomain;
+        }
+
+        private DSDomain RecAssignTransfer(RecAssignStmt recAssignStmt, DSDomain domain)
+        {
+            var newDomain = CopyDomain(domain);
+            for (int i = 0; i < recAssignStmt.Left.Children.Count; i++)
+            {
+                var ident = recAssignStmt.Left.Children[i];
+                var expr = recAssignStmt.Right[i];
+
+                newDomain[ident] = DSUtil.Arithmetic(expr, domain);
+            }
+
             return newDomain;
         }
 

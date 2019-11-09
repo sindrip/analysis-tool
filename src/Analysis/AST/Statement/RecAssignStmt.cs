@@ -10,9 +10,9 @@ namespace Analysis.AST.Statement
 
         public Identifier Left { get; set; }
 
-        public IEnumerable<IAExpr> Right { get; set; }
+        public IList<IAExpr> Right { get; set; }
 
-        public RecAssignStmt(Identifier left, IEnumerable<IAExpr> right)
+        public RecAssignStmt(Identifier left, IList<IAExpr> right)
         {
             Left = left;
             Right = right;
