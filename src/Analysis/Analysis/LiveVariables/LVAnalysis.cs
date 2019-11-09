@@ -37,11 +37,11 @@ namespace Analysis.Analysis.LiveVariables
 
         public LVDomain Kill(IStatement block) => block switch
         {
-            IntDecl intDecl => new Identifier(intDecl.Name, "int", intDecl.Id).Singleton().ToDomain(),
+            IntDecl intDecl => new Identifier(intDecl.Name, VarType.Int, intDecl.Id).Singleton().ToDomain(),
             RecordDecl recordDecl => recordDecl.Fields.ToDomain(),
             AssignStmt assignStmt => assignStmt.Left.Left.Singleton().ToDomain(),
             // TODO: Need full identifier here ..
-            //RecAssignStmt recAssignStmt => 
+            RecAssignStmt recAssignStmt => recAssignStmt.Left.Children.ToDomain(),
             ReadStmt readStmt => readStmt.Left.Left.Singleton().ToDomain(),
             _ => new LVDomain(),
         };

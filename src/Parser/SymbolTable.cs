@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Analysis.AST;
 
 namespace Parser
 {
@@ -17,7 +18,7 @@ namespace Parser
             _id = 0;
         }
 
-        public int InsertSymbol(string name, string type)
+        public int InsertSymbol(string name, VarType type)
         {
             var current = _symbols[_currentScope];
             if (current.Any(s => s.Name == name))
@@ -38,7 +39,7 @@ namespace Parser
                 throw new ArgumentException($"Symbol with name {name} already declared in scope");
             }
 
-            var symbol = new Symbol(name, "RECORD", _id++, children);
+            var symbol = new Symbol(name, VarType.Record, _id++, children);
             current.Add(symbol);
             return symbol.Id;
         }
@@ -81,18 +82,18 @@ namespace Parser
         {
             public int Id;
             public string Name;
-            public string Type;
+            public VarType Type;
             public int Size;
             public IList<Symbol> Children;
 
-            public Symbol(string name, string type, int id)
+            public Symbol(string name, VarType type, int id)
             {
                 Name = name;
                 Type = type;
                 Id = id;
             }
 
-            public Symbol(string name, string type, int id, int size)
+            public Symbol(string name, VarType type, int id, int size)
             {
                 Name = name;
                 Type = type;
@@ -100,7 +101,7 @@ namespace Parser
                 Size = size;
             }
 
-            public Symbol(string name, string type, int id, IList<Symbol> children)
+            public Symbol(string name, VarType type, int id, IList<Symbol> children)
             {
                 Name = name;
                 Type = type;
