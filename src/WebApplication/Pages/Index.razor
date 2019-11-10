@@ -93,6 +93,7 @@
         if (firstRender)
         {
             Parse();
+            JsRuntime.InvokeAsync<string>("Lib.InitCodeMirror");
         }
     }
     protected override void OnInitialized()

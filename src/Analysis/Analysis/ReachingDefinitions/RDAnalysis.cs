@@ -33,13 +33,12 @@ namespace Analysis.Analysis.ReachingDefinitions
 
         public RDDomain Kill(IStatement block) => block switch
         {
-            // TODO: RecordDecl and AssignRecord (Needs work in parser to get ID's)
             IntDecl intDecl => GetLabels().Select(l => new RDDefinition(intDecl.Id, l, intDecl.Name)).Append(new RDDefinition(intDecl.Id, intDecl.Name)).ToDomain(),
             ArrayDecl arrayDecl => GetLabels().Select(l => new RDDefinition(arrayDecl.Id, l, arrayDecl.Name)).Append(new RDDefinition(arrayDecl.Id, arrayDecl.Name)).ToDomain(),
-            // RecordDecl
+            RecordDecl recordDecl => GetLabels().SelectMany(l => recordDecl.Fields.Select(f => new RDDefinition(f.Id, l, recordDecl.Name))).ToDomain(),
             AssignStmt assignStmt => GetLabels().Select(l => new RDDefinition(assignStmt.Left.Left.Id, l, assignStmt.Left.Left.Name))
                 .Append(new RDDefinition(assignStmt.Left.Left.Id, assignStmt.Left.Left.Name)).ToDomain(),
-            // RecAssignStmt 
+            RecAssignStmt recAssignStmt => GetLabels().SelectMany(l => recAssignStmt.Left.Children.Select(c => new RDDefinition(c.Id, l, recAssignStmt.Left.Name))).ToDomain(),
             _ => new RDDomain(),
         };
 
@@ -47,9 +46,11 @@ namespace Analysis.Analysis.ReachingDefinitions
         {
             IntDecl intDecl => new RDDefinition(intDecl.Id, intDecl.Label, intDecl.Name).Singleton().ToDomain(),
             ArrayDecl arrayDecl => new RDDefinition(arrayDecl.Id, arrayDecl.Label, arrayDecl.Name).Singleton().ToDomain(),
-            // TODO: RecordDecl and AssignRecord (Needs work in parser to get ID's)
-            //RecordDecl arrayDecl => (RDDomain)(new RDDefinition(arrayDecl.Id, arrayDecl.Label)).Singleton(),
+            RecordDecl recordDecl => recordDecl.Fields.Select(f => new RDDefinition(f.Id, recordDecl.Label, recordDecl.Name)).ToDomain(),
             AssignStmt assignStmt => new RDDefinition(assignStmt.Left.Left.Id, assignStmt.Label, assignStmt.Left.Left.Name).Singleton().ToDomain(),
+            //TODO:
+            RecAssignStmt recAssignStmt => recAssignStmt.Left.Children
+                .Select(c => new RDDefinition(c.Id, recAssignStmt.Label, recAssignStmt.Left.Name)).ToDomain(),
             _ => new RDDomain(),
         };
         

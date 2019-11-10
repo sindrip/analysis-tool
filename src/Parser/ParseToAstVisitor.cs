@@ -13,6 +13,8 @@ namespace Parser
     {
         private SymbolTable _symbolTable = new SymbolTable();
         private int _label = -1;
+        // Quick fix to be able to access the identifiers of a record
+        private IList<RecordDecl> _recordDecls = new List<RecordDecl>();
 
         public override IAstNode VisitParse(MicroCParser.ParseContext context)
         {
@@ -47,7 +49,7 @@ namespace Parser
         {
             var label = ++_label;
             var name = context.IDENT().GetText();
-            var id = _symbolTable.InsertSymbol(name, "INT");
+            var id = _symbolTable.InsertSymbol(name, VarType.Int);
             var intDecl = new IntDecl(name);
             intDecl.Label = label;
             intDecl.Id = id;
@@ -59,7 +61,7 @@ namespace Parser
             var label = ++_label;
             var name = context.IDENT().GetText();
             var size = int.Parse(context.NUMBER().GetText());
-            var id = _symbolTable.InsertSymbol(name, "ARRAY");
+            var id = _symbolTable.InsertSymbol(name, VarType.Array);
             var arrayDecl = new ArrayDecl(name, size);
             arrayDecl.Label = label;
             arrayDecl.Id = id;
@@ -78,14 +80,15 @@ namespace Parser
             var recDecl = new RecordDecl(name, fields);
             recDecl.Label = label;
             recDecl.Id = id;
+            _recordDecls.Add(recDecl);
             return recDecl;
         }
 
         public override IAstNode VisitFieldDeclaration(MicroCParser.FieldDeclarationContext context)
         {
             var name = context.IDENT().GetText();
-            var id = _symbolTable.InsertSymbol(name, "FIELD");
-            return new Identifier(name, "FIELD", id);
+            var id = _symbolTable.InsertSymbol(name, VarType.Int);
+            return new Identifier(name, VarType.Int, id);
         }
 
         public override IAstNode VisitAssignStmt(MicroCParser.AssignStmtContext context)
@@ -161,7 +164,9 @@ namespace Parser
                     $"Cannot assign {expressions.Count} values to record of size {symbol.Size}");
             }
 
+            var children = _recordDecls.First(r => r.Id == symbol.Id).Fields.ToList();
             var ident = new Identifier(name, symbol.Type, symbol.Id);
+            ident.Children = children;
 
             // TODO: Type check the symbol
 
