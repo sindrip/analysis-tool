@@ -12,6 +12,7 @@
             <div class="row">
                 <div class="col-12">
                     <h1>Program</h1>
+
                     <textarea id="editor" @bind-value="source" @bind-value:event="oninput"></textarea>
                     <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
 

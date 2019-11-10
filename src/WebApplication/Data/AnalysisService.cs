@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Analysis.Analysis.AvailableExpressions;
 using Analysis.Analysis.ReachingDefinitions;
 using Analysis.CFG;
 
@@ -78,6 +79,16 @@ namespace WebApplication.Data
                 }
                 case AnalysisType.AvailableExpressions:
                 {
+                    var analysis = new AEAnalysis(ast);
+                    var lattice = analysis.GetResultLattice();
+                    int i = 0;
+
+                    res.AddRange(from item in lattice
+                         select new AnalysisResult
+                         {
+                             Label =  (i++).ToString(),
+                             Result = item.ToString()
+                         });
                     break;
                 }
                 default:
