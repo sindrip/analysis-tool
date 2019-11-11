@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Analysis.Analysis;
+using Analysis.Analysis.AvailableExpressions;
+using Analysis.Analysis.DetectionOfSigns;
+using Analysis.Analysis.FaintVariables;
+using Analysis.Analysis.LiveVariables;
+using Analysis.Analysis.ReachingDefinitions;
 using Analysis.AST;
 using Analysis.CFG;
 using Analysis.AST.AExpr;
@@ -56,8 +61,49 @@ namespace ConsoleApp1
     write r;
 }";
 
+            var rdinput = @"
+{
+    int fst;
+    int snd;
+    int x;
+
+    x := 5;
+    fst := 0;
+    snd := 1;
+
+    while (x > 0) {
+        fst := fst + x;
+        snd := snd * x;
+        x := x - 1;
+    }
+    fst := 0;
+    snd := 0;
+}
+";
+
+            var lvinput = @"
+{
+    { int fst; int snd } r;
+    int x;
+    
+    r := (0,1);
+
+    read x;
+
+    while (x > 0) {
+        r.fst := r.fst + x;
+        r.snd := r.snd * x;
+        x := x - 1;
+    }
+
+    r := (0, 0);
+}
+";
+
             var result = Parser.Util.StringToAst(input);
             var aeresult = Parser.Util.StringToAst(aeinput);
+            var rdresult = Parser.Util.StringToAst(rdinput);
+            var lvresult = Parser.Util.StringToAst(lvinput);
             Console.WriteLine(result);
             var fg = new FlowGraph(result);
             Console.WriteLine(fg.Inital);
@@ -93,16 +139,16 @@ namespace ConsoleApp1
             //
             //Console.WriteLine(overflowParse);
 
-            var x = new Identifier("x", "int", 0);
-            var y = new Identifier("y", "int", 2);
-            var A = new Identifier("A", "array", 1);
-            var d1 = new Dictionary<Identifier, HashSet<int>>();
-            d1[x] = new HashSet<int> {1,2};
-            d1[A] = new HashSet<int> {1};
-            d1[y] = new HashSet<int>() {3};
-            var d2 = new Dictionary<Identifier, HashSet<int>>();
-            d2[x] = new HashSet<int> {1,2,3};
-            d2[A] = new HashSet<int> {2};
+            //var x = new Identifier("x", "int", 0);
+            //var y = new Identifier("y", "int", 2);
+            //var A = new Identifier("A", "array", 1);
+            //var d1 = new Dictionary<Identifier, HashSet<int>>();
+            //d1[x] = new HashSet<int> {1,2};
+            //d1[A] = new HashSet<int> {1};
+            //d1[y] = new HashSet<int>() {3};
+            //var d2 = new Dictionary<Identifier, HashSet<int>>();
+            //d2[x] = new HashSet<int> {1,2,3};
+            //d2[A] = new HashSet<int> {2};
             //var l1 = new RDLattice(d1);
             //var l2 = new RDLattice(d2);
             //Console.WriteLine(l1.PartialOrder(l2));
@@ -121,15 +167,24 @@ namespace ConsoleApp1
             //Console.WriteLine(hs.Count);
             
             
-            var t = new AELattice(ae2);
-            var t2 = new AELattice(ae);
-            Console.WriteLine(t);
-            Console.WriteLine(t2);
-            Console.WriteLine(t <= t);
-            Console.WriteLine(t2 <= (t & t2));
-            
-            var analysis = new AEAnalysis(aeresult);
-            Console.WriteLine(analysis);
+            //var t = new AELattice(ae2);
+            //var t2 = new AELattice(ae);
+            //Console.WriteLine(t);
+            //Console.WriteLine(t2);
+            //Console.WriteLine(t <= t);
+            //Console.WriteLine(t2 <= (t & t2));
+            //
+            //var analysis = new AEAnalysis(aeresult);
+            //Console.WriteLine(analysis);
+            var analysis = new RDAnalysis(rdresult);
+            //Console.WriteLine(analysis);
+
+            var analysis2 = new LVAnalysis(lvresult);
+            var analysis3 = new FVAnalysis(lvresult);
+            var analysis4 = new DSAnalysis(lvresult);
+            Console.WriteLine(analysis2);
+            Console.WriteLine(analysis3);
+            Console.WriteLine(analysis4);
         }
     }
 }

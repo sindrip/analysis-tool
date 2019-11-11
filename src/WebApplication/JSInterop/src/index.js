@@ -2,6 +2,12 @@ import * as d3 from 'd3';
 import Viz from "viz.js";
 import { Module, render } from 'viz.js/full.render.js';
 
+/*import * as CodeMirror from 'codemirror';*/
+import CodeMirror from 'codemirror/lib/codemirror.js';
+import 'codemirror/mode/clike/clike.js';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+
 export function AddCircleSvg() {
     const svg = d3.select('#d3body')
         .append('svg')
@@ -40,4 +46,27 @@ export function CreateFlowGraph(graph) {
 export function ClearGraph() {
     let imageDiv = document.getElementById('imageDiv');
     imageDiv.innerHTML = "";
+};
+
+// Very ugly, but works.
+export function InitCodeMirror() {
+    let editor = document.getElementById("editor");
+    let oldInstance = document.getElementsByClassName("CodeMirror");
+
+    if (oldInstance.length === 0) {
+        let cmEditor = CodeMirror.fromTextArea(editor, {
+            lineNumbers: true,
+            mode: "clike",
+            theme: "material",
+            autofocus: true,
+        });
+        cmEditor.on('change', x => {
+            editor.value = x.getValue();
+            editor.dispatchEvent(new Event('input', {
+                bubbles: true,
+                cancelable: true
+            }));
+        });
+    } 
+
 };
