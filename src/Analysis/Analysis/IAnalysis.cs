@@ -67,7 +67,7 @@ namespace Analysis.Analysis
             // testing Depth First Spanning Tree
             DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
 
-            _workListRoundRobin = new RoundRobin(Flow, dfst.getRP());
+            _workListRoundRobin = new RoundRobin(Flow, dfst.GetRP());
 
             worklistAlgorithm(_workListRoundRobin);
 

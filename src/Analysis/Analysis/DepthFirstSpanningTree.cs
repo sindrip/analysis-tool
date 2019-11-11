@@ -24,8 +24,6 @@ namespace Analysis.Analysis
             k = flowGraph.Blocks.Count();
 
             rP = new List<(int, int)>();
-            uP = new Dictionary<int, int>();
-            iP = new Dictionary<int, Interval<int>>();
 
             DFS(this.flowGraph.Inital);
 
@@ -46,30 +44,24 @@ namespace Analysis.Analysis
         {
             V.Add(label);
 
-            while (flowEdgeHasntDestInV() != null)
+            List<FlowEdge> list = FlowEdgeHasntDestInV(label);
+
+            foreach (FlowEdge edge in list)
             {
-                FlowEdge edge = flowEdgeHasntDestInV().Value;
                 this.T.Add(edge);
                 DFS(edge.Dest);
-                rP.Add((label, k));
-                Console.WriteLine("label: " + label);
-                k--;
             }
+            rP.Add((label, k));
+            Console.WriteLine("label: " + label);
+            k--;
         }
 
-        private FlowEdge? flowEdgeHasntDestInV ()
+        private List<FlowEdge> FlowEdgeHasntDestInV (int label)
         {
-            foreach (FlowEdge flowEdge in flowGraph.Edges)
-            {
-                if (!V.Contains(flowEdge.Dest))
-                {
-                    return flowEdge;
-                }
-            }
-            return null;
+            return flowGraph.Edges.Where(x => x.Source == label && !V.Contains(x.Dest)).ToList();
         }
 
-        public List<(int, int)> getRP()
+        public List<(int, int)> GetRP()
         {
             return this.rP;
         }
