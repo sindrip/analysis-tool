@@ -34,16 +34,26 @@ namespace ConsoleApp1
             var aeinput = @"
 {
     int x;
-    if (x >= 0) {
-        while ( x > 0) {
-            x := x - 1;
+    int y;
+    int q;
+    int r;
+    if (x >= 0 & y >0) {
+        q := 0;
+        r := x;
+        while ( r >= y) {
+            r := r - y;
+            q := q + 1;
+        while ( r >= y) {
+            r := r - y;
+            q := q + 1;
+        while ( r >= y) {
+            r := r - y;
+            q := q + 1;
         }
-    } else {
-        while ( x < 0) {
-            x := x + 1;
         }
-    }
-    x := 1;
+        }
+    } 
+    write r;
 }";
 
             var result = Parser.Util.StringToAst(input);

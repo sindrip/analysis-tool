@@ -26,18 +26,6 @@ namespace Analysis.Analysis
             rP = new List<(int, int)>();
 
             DFS(this.flowGraph.Inital);
-
-            foreach (var element in flowGraph.Blocks)
-            {
-                Console.WriteLine("blocklabels: " + element.Label);
-            }
-
-            Console.WriteLine("rp:");
-            foreach (var rpelement in rP)
-            {
-                Console.WriteLine("label: " + rpelement.Item1);
-                Console.WriteLine("reverse postorder number: " + rpelement.Item2);
-            }
         }
 
         private void DFS(int label)
@@ -52,7 +40,6 @@ namespace Analysis.Analysis
                 DFS(edge.Dest);
             }
             rP.Add((label, k));
-            Console.WriteLine("label: " + label);
             k--;
         }
 
