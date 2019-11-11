@@ -26,6 +26,8 @@ namespace Analysis.Analysis
         private IWorkList _workListChaotic { get; set; }
         private IWorkList _workListFIFO { get; set; }
         private IWorkList _workListLIFO { get; set; }
+
+        private IWorkList _workListRoundRobin { get; set; }
         private List<AELattice> _analysisFilled { get; set; }
         private List<AELattice> _analysisCircle { get; set; }
         private Program _program { get; set; }
@@ -38,7 +40,7 @@ namespace Analysis.Analysis
             _blocks = FlowUtil.Blocks(program);
             _analysisFilled = new List<AELattice>();
             _analysisCircle = new List<AELattice>();
-
+            
             var orderedBlocks = _blocks.OrderBy(x => x.Label);
             foreach (var b in orderedBlocks)
             {
@@ -54,13 +56,20 @@ namespace Analysis.Analysis
                 _analysisCircle.Add(AELattice.Bottom(program));
             }
 
-            _workListChaotic = new ChaoticIteration(Flow);
-            _workListFIFO = new FIFOWorklist(Flow);
-            _workListLIFO = new LIFOWorklist(Flow);
+            _workListChaotic = new ChaoticIteration(Flow.Shuffle(1));
+            _workListFIFO = new FIFOWorklist(Flow.Shuffle(3));
+            _workListLIFO = new LIFOWorklist(Flow.Shuffle());
 
             worklistAlgorithm(_workListChaotic);
             worklistAlgorithm(_workListFIFO);
             worklistAlgorithm(_workListLIFO);
+
+            // testing Depth First Spanning Tree
+            DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
+
+            _workListRoundRobin = new RoundRobin(Flow, dfst.getRP());
+
+            worklistAlgorithm(_workListRoundRobin);
 
             var labels = FlowUtil.Labels(_blocks);
             foreach (var lab in labels)
@@ -230,17 +239,14 @@ namespace Analysis.Analysis
                 case IntDecl intDecl:
                 {
                     return hs;
-                    break;
                 }
                 case ArrayDecl arrayDecl:
                 {
                     return hs;
-                    break;
                 }
                 case RecordDecl recordDecl:
                 {
                     return hs;
-                    break;
                 }
                 case AssignStmt assignStmt:
                 {
@@ -252,7 +258,6 @@ namespace Analysis.Analysis
                     {
                         return hs;
                     }
-                    break;
                 }
                 case RecAssignStmt recAssignStmt:
                 {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Analysis.CFG;
@@ -75,5 +76,54 @@ namespace Analysis.Analysis
             _edgeList.Push(flowEdge);
         }
 
+    }
+
+    public class RoundRobin : IWorkList
+    {
+        private List<FlowEdge> V;
+        private List<FlowEdge> P;
+        private List<(int, int)> rP;
+
+        public RoundRobin(IEnumerable<FlowEdge> edgeList, List<(int, int)> rP)
+        {
+            this.V = new List<FlowEdge>();
+            this.P = new List<FlowEdge>(edgeList);
+            this.rP = rP;
+        }
+
+        public bool Empty() => V.Count == 0 && P.Count == 0;
+
+        public FlowEdge Extract()
+        {
+            if (V.Count == 0)
+            {
+                V = sortRP(P);
+                FlowEdge q = V.First();
+                V.RemoveAt(0);
+                P.Clear();
+                return q;
+            }
+            else
+            {
+                FlowEdge q = V.First();
+                V.RemoveAt(0);
+                return q;
+            }
+        }
+
+        public void Insert(FlowEdge flowEdge)
+        {
+            if (!V.Contains(flowEdge))
+            {
+                P.Add(flowEdge);
+            }
+        }
+
+        private List<FlowEdge> sortRP(List<FlowEdge> listToSort)
+        {
+            List<int> rPSortOrder = rP.Select(x => x.Item1).ToList();
+
+            return listToSort.OrderBy(x => rPSortOrder.IndexOf(x.Source)).ToList();
+        }
     }
 }
