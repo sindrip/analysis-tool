@@ -12,8 +12,6 @@ namespace Analysis.Analysis
         private HashSet<FlowEdge> T; // the set of edges in the tree
         private List<(int, int)> rP; // a reverse postorder numbering of the nodes in the flowgraph
         private HashSet<int> V; // nodes visited so far
-        private Dictionary<int, int> uP; // the initial value of k when calling DFS (label, value)
-        private Dictionary<int, Interval<int>> iP; // the interval between rP and uP 
         private int k; // the number so far 
 
         public DepthFirstSpanningTree(FlowGraph flowGraph)
@@ -51,23 +49,6 @@ namespace Analysis.Analysis
         public List<(int, int)> GetRP()
         {
             return this.rP;
-        }
-
-        public class Interval<T> where T : struct, IComparable
-        {
-            public T start { get; set; }
-            public T end { get; set; }
-
-            public Interval(T start, T end)
-            {
-                this.start = start;
-                this.end = end;
-            }
-
-            public bool InRange(T value)
-            {
-                return (value.CompareTo(start) > 0) && (end.CompareTo(value) > 0);
-            }
         }
     }
 }

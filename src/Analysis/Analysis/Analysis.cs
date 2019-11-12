@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Analysis.AST;
@@ -64,12 +65,15 @@ namespace Analysis.Analysis
 
         protected void RunAnalysis()
         {
-            
-            _workList = new ChaoticIteration(_flow);
+            DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
+            _workList = new RoundRobin(_flow, dfst.GetRP());
+
+            int numberOfOperations = 0;
 
             while (!_workList.Empty())
             {
                 var edge = _workList.Extract();
+                numberOfOperations++;
                 var sourceTransfer = TransferFunctions(edge.Source);
                 var target = _analysisFilled[edge.Dest];
                 if (!sourceTransfer.PartialOrder(target))
@@ -79,9 +83,12 @@ namespace Analysis.Analysis
                     foreach (var e in edgesToAdd)
                     {
                         _workList.Insert(e);
+                        numberOfOperations++;
                     }
                 }
             }
+            Console.WriteLine("number of operations in worklist " + numberOfOperations);
+
             
             var labels = FlowUtil.Labels(_blocks);
             foreach (var lab in labels)

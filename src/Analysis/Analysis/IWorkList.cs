@@ -80,14 +80,14 @@ namespace Analysis.Analysis
 
     public class RoundRobin : IWorkList
     {
-        private List<FlowEdge> V;
-        private List<FlowEdge> P;
+        private LinkedList<FlowEdge> V;
+        private LinkedList<FlowEdge> P;
         private List<(int, int)> rP;
 
         public RoundRobin(IEnumerable<FlowEdge> edgeList, List<(int, int)> rP)
         {
-            this.V = new List<FlowEdge>();
-            this.P = new List<FlowEdge>(edgeList);
+            this.V = new LinkedList<FlowEdge>();
+            this.P = new LinkedList<FlowEdge>(edgeList);
             this.rP = rP;
         }
 
@@ -99,14 +99,14 @@ namespace Analysis.Analysis
             {
                 V = sortRP(P);
                 FlowEdge q = V.First();
-                V.RemoveAt(0);
+                V.RemoveFirst();
                 P.Clear();
                 return q;
             }
             else
             {
                 FlowEdge q = V.First();
-                V.RemoveAt(0);
+                V.RemoveFirst();
                 return q;
             }
         }
@@ -115,15 +115,15 @@ namespace Analysis.Analysis
         {
             if (!V.Contains(flowEdge))
             {
-                P.Add(flowEdge);
+                P.AddLast(flowEdge);
             }
         }
 
-        private List<FlowEdge> sortRP(List<FlowEdge> listToSort)
+        private LinkedList<FlowEdge> sortRP(LinkedList<FlowEdge> listToSort)
         {
             List<int> rPSortOrder = rP.Select(x => x.Item1).ToList();
 
-            return listToSort.OrderBy(x => rPSortOrder.IndexOf(x.Source)).ToList();
+            return new LinkedList<FlowEdge>(listToSort.OrderBy(x => rPSortOrder.IndexOf(x.Source)).ToList());
         }
     }
 }

@@ -39,66 +39,118 @@ namespace ConsoleApp1
             var aeinput = @"
 {
     int x;
+    int [10] a;
     int y;
-    int q;
-    int r;
-    if (x >= 0 & y >0) {
-        q := 0;
-        r := x;
-        while ( r >= y) {
-            r := r - y;
-            q := q + 1;
-        while ( r >= y) {
-            r := r - y;
-            q := q + 1;
-        while ( r >= y) {
-            r := r - y;
-            q := q + 1;
-        }
-        }
-        }
-    } 
-    write r;
+    
+    x := 0 + 1 + 2;
+    y := x;
+    if (not true & false) {
+        x := 3;
+    } else {
+        y := 3;
+    }
+    a[1+1] := (1+1)*2;
 }";
 
             var rdinput = @"
 {
-    int fst;
-    int snd;
-    int x;
-
-    x := 5;
-    fst := 0;
-    snd := 1;
-
-    while (x > 0) {
-        fst := fst + x;
-        snd := snd * x;
-        x := x - 1;
+int x;
+int y;
+int q;
+int r;
+if (x >= 0 & y >0) {
+q := 0;
+r := x;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+}
+}
+}
+} else {
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+    while ( r >= y) {
+        r := r - y;
+        q := q + 1;
     }
-    fst := 0;
-    snd := 0;
+}
+}
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+}           
+}
+
+}
+write r;
 }
 ";
 
             var lvinput = @"
 {
-    { int fst; int snd } r;
-    int x;
-    
-    r := (0,1);
-
-    read x;
-
-    while (x > 0) {
-        r.fst := r.fst + x;
-        r.snd := r.snd * x;
-        x := x - 1;
-    }
-
-    r := (0, 0);
+int x;
+int y;
+int q;
+int r;
+if (x >= 0 & y >0) {
+q := 0;
+r := x;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
 }
+}
+}
+} else {
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+    while ( r >= y) {
+        r := r - y;
+        q := q + 1;
+    }
+}
+}
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+}           
+}
+
+}
+write r;
+}
+
 ";
+
+
+
 
             var result = Parser.Util.StringToAst(input);
             var aeresult = Parser.Util.StringToAst(aeinput);
@@ -177,14 +229,110 @@ namespace ConsoleApp1
             //var analysis = new AEAnalysis(aeresult);
             //Console.WriteLine(analysis);
             var analysis = new RDAnalysis(rdresult);
-            //Console.WriteLine(analysis);
+            Console.WriteLine(analysis);
 
-            var analysis2 = new LVAnalysis(lvresult);
-            var analysis3 = new FVAnalysis(lvresult);
-            var analysis4 = new DSAnalysis(lvresult);
-            Console.WriteLine(analysis2);
-            Console.WriteLine(analysis3);
-            Console.WriteLine(analysis4);
+            //var analysis2 = new LVAnalysis(lvresult);
+            //var analysis3 = new FVAnalysis(lvresult);
+            //var analysis4 = new DSAnalysis(lvresult);
+            //Console.WriteLine(analysis2);
+            //Console.WriteLine(analysis3);
+            //Console.WriteLine(analysis4);
         }
     }
 }
+
+/* 
+  programs used for testing the worklist algorithm 
+
+one while loop
+{
+{ int fst; int snd } r;
+int x;
+
+r := (0,1);
+
+read x;
+
+while (x > 0) {
+r.fst := r.fst + x;
+r.snd := r.snd * x;
+x := x - 1;
+}
+
+r := (0, 0);
+}
+
+
+
+triple nested while loop
+{
+int x;
+int y;
+int q;
+int r;
+if (x >= 0 & y >0) {
+q := 0;
+r := x;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+}
+}
+}
+} 
+write r;
+}
+
+    several nested while loops
+{
+int x;
+int y;
+int q;
+int r;
+if (x >= 0 & y >0) {
+q := 0;
+r := x;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+}
+}
+}
+} else {
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+    while ( r >= y) {
+        r := r - y;
+        q := q + 1;
+    }
+}
+}
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+}           
+}
+
+}
+write r;
+}
+*/
