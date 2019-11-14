@@ -16,7 +16,7 @@ namespace Analysis.Analysis.FaintVariables
         {
             _dummyLattice = new FVLattice();
             
-            InitalizeAnalysis();
+            InitializeAnalysis();
             RunAnalysis();
         }
 

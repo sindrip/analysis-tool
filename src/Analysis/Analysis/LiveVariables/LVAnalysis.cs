@@ -17,7 +17,7 @@ namespace Analysis.Analysis.LiveVariables
             //_dummyLattice = new LVLattice(program);
             _dummyLattice = new LVLattice();
             
-            InitalizeAnalysis();
+            InitializeAnalysis();
             RunAnalysis();
         }
 

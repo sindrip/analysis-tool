@@ -13,7 +13,7 @@ namespace Analysis.Analysis.DetectionOfSigns
     {
         public DSAnalysis(Program program) : base(program, AnalysisDirection.Forward)
         {
-            InitalizeAnalysis();
+            InitializeAnalysis();
             RunAnalysis();
         }
 

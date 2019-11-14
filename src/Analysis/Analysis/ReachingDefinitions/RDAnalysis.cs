@@ -13,7 +13,7 @@ namespace Analysis.Analysis.ReachingDefinitions
         {
             _dummyLattice = new RDLattice(program);
             
-            InitalizeAnalysis();
+            InitializeAnalysis();
             RunAnalysis();
         }
         

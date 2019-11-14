@@ -149,8 +149,102 @@ write r;
 
 ";
 
+            var input1 = @"
+{
+{ int fst; int snd } r;
+int x;
+
+r := (0,1);
+
+read x;
+
+while (x > 0) {
+r.fst := r.fst + x;
+r.snd := r.snd * x;
+x := x - 1;
+}
+
+r := (0, 0);
+}
+";
+
+            var input2 = @"
+{
+int x;
+int y;
+int q;
+int r;
+if (x >= 0 & y >0) {
+q := 0;
+r := x;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+}
+}
+}
+} 
+write r;
+}
+";
+            var input3 = @"
+{
+int x;
+int y;
+int q;
+int r;
+if (x >= 0 & y >0) {
+q := 0;
+r := x;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+}
+}
+}
+} else {
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+    while ( r >= y) {
+        r := r - y;
+        q := q + 1;
+    }
+}
+}
+while ( r >= y) {
+r := r - y;
+q := q + 1;
+while ( r >= y) {
+    r := r - y;
+    q := q + 1;
+}           
+}
+
+}
+write r;
+}
+";
 
 
+            var result1 = Parser.Util.StringToAst(input1);
+            var result2 = Parser.Util.StringToAst(input2);
+            var result3 = Parser.Util.StringToAst(input3);
 
             var result = Parser.Util.StringToAst(input);
             var aeresult = Parser.Util.StringToAst(aeinput);
@@ -206,10 +300,10 @@ write r;
             //Console.WriteLine(l1.PartialOrder(l2));
             //var joined = l1.Join(l2);
             //Console.WriteLine(joined);
-            
-           // var n = d2.Except(d1);
-           // var s = string.Join("\n", n.Select(x => $"{x.Key}: {string.Join(",", x.Value)}"));
-           // Console.WriteLine(s);
+
+            // var n = d2.Except(d1);
+            // var s = string.Join("\n", n.Select(x => $"{x.Key}: {string.Join(",", x.Value)}"));
+            // Console.WriteLine(s);
 
             //var hs = new HashSet<int?>();
             //hs.Add(1);
@@ -217,8 +311,8 @@ write r;
             //hs.Add(null);
             //hs.Add(2);
             //Console.WriteLine(hs.Count);
-            
-            
+
+
             //var t = new AELattice(ae2);
             //var t2 = new AELattice(ae);
             //Console.WriteLine(t);
@@ -228,9 +322,19 @@ write r;
             //
             //var analysis = new AEAnalysis(aeresult);
             //Console.WriteLine(analysis);
-            var analysis = new RDAnalysis(rdresult);
-            Console.WriteLine(analysis);
+            //var analysis = new RDAnalysis(rdresult);
+            //Console.WriteLine(analysis);
 
+
+            Console.WriteLine("------- Analysis 1 --------");
+            var analysis1 = new LVAnalysis(result1);
+            Console.WriteLine("--------- Analysis 2 --------");
+            var analysis2 = new LVAnalysis(result2);
+            Console.WriteLine("------- Analysis 3 -------");
+            var analysis3 = new LVAnalysis(result3);
+            //Console.WriteLine(analysis1);
+            //Console.WriteLine(analysis2);
+            //Console.WriteLine(analysis3);
             //var analysis2 = new LVAnalysis(lvresult);
             //var analysis3 = new FVAnalysis(lvresult);
             //var analysis4 = new DSAnalysis(lvresult);
