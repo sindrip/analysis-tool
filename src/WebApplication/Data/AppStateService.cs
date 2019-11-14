@@ -5,7 +5,7 @@ namespace WebApplication.Data
 {
     public class AppStateService
     {
-        public AnalysisType SelectedAnalysis { get; private set; } = AnalysisType.None;
+        public AnalysisType SelectedAnalysis { get; private set; } = AnalysisType.ReachingDefinitions;
         public event Action OnChange;
 
 

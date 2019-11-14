@@ -7,7 +7,12 @@ namespace Analysis.Analysis.ReachingDefinitions
     {
         private int _identId;
         private int? _label;
-        private string _identName; 
+        private string _identName;
+
+        public string IdentityID => _identId.ToString();
+        public string Label => _label?.ToString() ?? "?";
+        public string IdentityName => _identName;
+
 
         public RDDefinition(int identId, int label, string name)
         {

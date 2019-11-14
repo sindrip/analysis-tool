@@ -65,30 +65,33 @@ namespace WebApplication.Data
                 case AnalysisType.ReachingDefinitions:
                 {
                     var analysis = new RDAnalysis(ast);
-                    var lattice = analysis.GetResultLattice();
-                    int i = 0;
+                    var filledLattice = analysis.GetFilledLattice();
+                    var circlelattice = analysis.GetCircleLattice();
+                    
+                    int label = 0;
 
-                    res.AddRange(from item in lattice
-                         select new AnalysisResult
-                         {
-                             Label =  (i++).ToString(),
-                             Result = item.ToString()
-                         });
-
-                    break;
+                    var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
+                        Label = (label++).ToString(),
+                        NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()                        // NodeEntry = new AnalysisIdentifier(entry.GetDomain().ToHashSet().ToList()),
+                        .GroupBy(a => new {a.ID, a.Name})
+                        .Select( b => new AnalysisIdentifier  {
+                            Name = b.Key.Name,
+                            ID = b.Key.ID,
+                            Label = b.SelectMany(a=>a.Label).ToList()
+                        }).ToList(),
+                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name})
+                        .Select( b => new AnalysisIdentifier  {
+                            Name = b.Key.Name,
+                            ID = b.Key.ID,
+                            Label = b.SelectMany(a=>a.Label).ToList()
+                        }).ToList(),
+                    }).ToList();
+                    
+                    return zipped;
                 }
                 case AnalysisType.AvailableExpressions:
                 {
-                    var analysis = new AEAnalysis(ast);
-                    var lattice = analysis.GetResultLattice();
-                    int i = 0;
-
-                    res.AddRange(from item in lattice
-                         select new AnalysisResult
-                         {
-                             Label =  (i++).ToString(),
-                             Result = item.ToString()
-                         });
                     break;
                 }
                 default:

@@ -5,8 +5,9 @@
     <table class="table">
     <thead class="thead-light">
         <tr>
-            <th>Label</th>
-            <th>Result</th>
+            <th>Node</th>
+            <th>Entry</th>
+            <th>Exit</th>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +17,16 @@
             {
                 <tr>
                     <td>@item.Label</td>
-                    <td>@item.Result</td>
+                    <td>
+                    @foreach(var entry in item.NodeEntry) {
+                        @((MarkupString)entry.ToString())
+                    }
+                    </td>
+                    <td>
+                    @foreach(var exit in item.NodeExit) {
+                        @((MarkupString)exit.ToString())
+                    }
+                    </td>
                 </tr>
             }
         }

@@ -89,38 +89,38 @@ namespace ConsoleApp1
 }
 ";
 
-            var result = Parser.Util.StringToAst(input);
-            var aeresult = Parser.Util.StringToAst(aeinput);
+            // var result = Parser.Util.StringToAst(input);
+            // var aeresult = Parser.Util.StringToAst(aeinput);
             var rdresult = Parser.Util.StringToAst(rdinput);
-            var lvresult = Parser.Util.StringToAst(lvinput);
-            Console.WriteLine(result);
-            var fg = new FlowGraph(result);
-            Console.WriteLine(fg.Inital);
-            Console.WriteLine(string.Join(" ", fg.Final));
-            Console.WriteLine(string.Join("\n", fg.Blocks.Select(s => s.PrintBlock())));
-            Console.WriteLine(fg.Edges.Count());
-            Console.WriteLine(string.Join("\r\n", fg.Edges));
-            var fv = Analysis.Analysis.AnalysisUtil.FreeVariables(result);
+            // var lvresult = Parser.Util.StringToAst(lvinput);
+            // Console.WriteLine(result);
+            // var fg = new FlowGraph(result);
+            // Console.WriteLine(fg.Inital);
+            // Console.WriteLine(string.Join(" ", fg.Final));
+            // Console.WriteLine(string.Join("\n", fg.Blocks.Select(s => s.PrintBlock())));
+            // Console.WriteLine(fg.Edges.Count());
+            // Console.WriteLine(string.Join("\r\n", fg.Edges));
+            // var fv = Analysis.Analysis.AnalysisUtil.FreeVariables(result);
 
-            Console.WriteLine(fv.Count);
+            // Console.WriteLine(fv.Count);
 
-            var exp1 = new ABinOp(new IntLit(3), new IntLit(4), ABinOperator.Plus);
-            var exp2 = new ABinOp(new IntLit(3), new IntLit(4), ABinOperator.Plus);
-            var exp3 = new ABinOp(new IntLit(4), new IntLit(4), ABinOperator.Plus);
+            // var exp1 = new ABinOp(new IntLit(3), new IntLit(4), ABinOperator.Plus);
+            // var exp2 = new ABinOp(new IntLit(3), new IntLit(4), ABinOperator.Plus);
+            // var exp3 = new ABinOp(new IntLit(4), new IntLit(4), ABinOperator.Plus);
 
-            var exp4 = new ABinOp(exp1, exp2, ABinOperator.Mult);
-            var exp5 = new ABinOp(exp4, exp3, ABinOperator.Div);
+            // var exp4 = new ABinOp(exp1, exp2, ABinOperator.Mult);
+            // var exp5 = new ABinOp(exp4, exp3, ABinOperator.Div);
 
 
-            Console.WriteLine(exp1 == exp2); // Should be false as we are not overloading the operator
-            Console.WriteLine(exp1.Equals(exp2)); // Should be true as we have implemented the IEquatable interface
-            Console.WriteLine(exp1.Equals(exp3)); // Should be false, different expressions
+            // Console.WriteLine(exp1 == exp2); // Should be false as we are not overloading the operator
+            // Console.WriteLine(exp1.Equals(exp2)); // Should be true as we have implemented the IEquatable interface
+            // Console.WriteLine(exp1.Equals(exp3)); // Should be false, different expressions
 
-            var ae = Analysis.Analysis.AnalysisUtil.AvailableExpressions(exp5);
-            var ae2 = Analysis.Analysis.AnalysisUtil.AvailableExpressions(result);
-            Console.WriteLine("=========");
-            Console.WriteLine(ae);
-            Console.WriteLine(ae2);
+            // var ae = Analysis.Analysis.AnalysisUtil.AvailableExpressions(exp5);
+            // var ae2 = Analysis.Analysis.AnalysisUtil.AvailableExpressions(result);
+            // Console.WriteLine("=========");
+            // Console.WriteLine(ae);
+            // Console.WriteLine(ae2);
 
             //// Overflowing program debug
             //var overflow = "{int x; x:=0; Point.x := 0;}";
@@ -163,17 +163,17 @@ namespace ConsoleApp1
             //Console.WriteLine(t <= t);
             //Console.WriteLine(t2 <= (t & t2));
             //
-            //var analysis = new AEAnalysis(aeresult);
-            //Console.WriteLine(analysis);
+            // var analysis = new AEAnalysis(aeresult);
+            // Console.WriteLine(analysis);
             var analysis = new RDAnalysis(rdresult);
-            //Console.WriteLine(analysis);
+            Console.WriteLine(analysis);
 
-            var analysis2 = new LVAnalysis(lvresult);
-            var analysis3 = new FVAnalysis(lvresult);
-            var analysis4 = new DSAnalysis(lvresult);
-            Console.WriteLine(analysis2);
-            Console.WriteLine(analysis3);
-            Console.WriteLine(analysis4);
+            // var analysis2 = new LVAnalysis(lvresult);
+            // var analysis3 = new FVAnalysis(lvresult);
+            // var analysis4 = new DSAnalysis(lvresult);
+            // Console.WriteLine(analysis2);
+            // Console.WriteLine(analysis3);
+            // Console.WriteLine(analysis4);
         }
     }
 }
