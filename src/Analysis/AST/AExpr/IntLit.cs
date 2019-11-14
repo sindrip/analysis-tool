@@ -1,12 +1,13 @@
 using System;
+using System.Numerics;
 
 namespace Analysis.AST.AExpr
 {
     public class IntLit : IAExpr, IEquatable<IntLit>
     {
-        public int Value { get; set; }
+        public BigInteger Value { get; set; }
 
-        public IntLit(int value) => Value = value;
+        public IntLit(BigInteger value) => Value = value;
 
         public override string ToString()
         {
@@ -30,7 +31,7 @@ namespace Analysis.AST.AExpr
 
         public override int GetHashCode()
         {
-            return Value;
+            return Value.GetHashCode();
         }
     }
 }
