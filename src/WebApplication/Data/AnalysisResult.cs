@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Analysis.Analysis.ReachingDefinitions;
 using System.Linq;
 using Analysis.AST;
+using Analysis.Analysis.DetectionOfSigns;
 
 namespace WebApplication.Data
 {
@@ -28,13 +29,17 @@ namespace WebApplication.Data
             Name = result.Name.ToString();
             ID = result.Id.ToString();
         }
+        public AnalysisIdentifier(KeyValuePair<Identifier, HashSet<DSSign>> result) {
 
+            Name = result.Key.Name.ToString();
+            ID = result.Key.Id.ToString();
+            Label.AddRange(result.Value.Select(x=>x.ToString()));
+        }
+
+        //TODO: Inject the format string for each analysis
         public override string ToString() {
-            if(Label.Count > 0) {
-                string l = string.Join(", ", Label.Select(y=>y.ToString()));
-                return $"<kbd>{Name}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{l}</var> }}<br/>";
-            }
-                return $"<kbd>{Name}</kbd> ";
+            string l = string.Join(", ", Label.Select(y => y.ToString()));
+            return $"<kbd>{Name}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{l}</var> }}<br/>";
         }
     }
 }

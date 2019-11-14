@@ -168,12 +168,12 @@ namespace ConsoleApp1
             // var analysis = new RDAnalysis(rdresult);
             // Console.WriteLine(analysis);
 
-            var lvAnalysis = new LVAnalysis(lvresult);
+            // var lvAnalysis = new LVAnalysis(lvresult);
             // var analysis3 = new FVAnalysis(lvresult);
-            // var analysis4 = new DSAnalysis(lvresult);
-            Console.WriteLine(lvAnalysis);
+            var analysis4 = new DSAnalysis(lvresult);
+            // Console.WriteLine(lvAnalysis);
             // Console.WriteLine(analysis3);
-            // Console.WriteLine(analysis4);
+            Console.WriteLine(analysis4);
         }
     }
 }

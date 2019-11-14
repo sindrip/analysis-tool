@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Analysis.Analysis.DetectionOfSigns;
 using Analysis.Analysis.FaintVariables;
 using Analysis.Analysis.LiveVariables;
 using Analysis.Analysis.ReachingDefinitions;
@@ -130,6 +131,34 @@ namespace WebApplication.Data
                     var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
                         Label = (label++).ToString(),
                         NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name})
+                        .Select( b => new AnalysisIdentifier  {
+                            Name = b.Key.Name,
+                            ID = b.Key.ID,
+                            Label = b.SelectMany(a=>a.Label).ToList()
+                        }).ToList(),
+                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name})
+                        .Select( b => new AnalysisIdentifier  {
+                            Name = b.Key.Name,
+                            ID = b.Key.ID,
+                            Label = b.SelectMany(a=>a.Label).ToList()
+                        }).ToList(),
+                    }).ToList();
+                    
+                    return zipped;
+                }
+                case AnalysisType.DetectionOfSigns:
+                {
+                    var analysis = new DSAnalysis(ast);
+                    var filledLattice = analysis.GetFilledLattice();
+                    var circlelattice = analysis.GetCircleLattice();
+                    
+                    int label = 0;
+
+                    var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
+                        Label = (label++).ToString(),
+                        NodeEntry = entry.GetDomain().Select(x=> new AnalysisIdentifier(x)).ToList()
                         .GroupBy(a => new {a.ID, a.Name})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
