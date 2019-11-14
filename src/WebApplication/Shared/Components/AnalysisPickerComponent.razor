@@ -3,9 +3,14 @@
 
 <div>
     <select class="form-control" id="analysisTypes" @bind="selected" >
-        @foreach(var at in Enum.GetValues(typeof(AnalysisType)))
+        @foreach(AnalysisType at in Enum.GetValues(typeof(AnalysisType)))
         {
-            <option value="@at">@at.ToString()</option>
+            @if(at == selected) {
+                <option value="@at" selected>@at.ToString()</option>
+            }
+            else {
+                <option value="@at">@at.ToString()</option>
+            }
         }
     </select>
 </div>

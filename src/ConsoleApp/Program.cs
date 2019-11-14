@@ -92,7 +92,7 @@ namespace ConsoleApp1
             // var result = Parser.Util.StringToAst(input);
             // var aeresult = Parser.Util.StringToAst(aeinput);
             var rdresult = Parser.Util.StringToAst(rdinput);
-            // var lvresult = Parser.Util.StringToAst(lvinput);
+            var lvresult = Parser.Util.StringToAst(lvinput);
             // Console.WriteLine(result);
             // var fg = new FlowGraph(result);
             // Console.WriteLine(fg.Inital);
@@ -165,13 +165,13 @@ namespace ConsoleApp1
             //
             // var analysis = new AEAnalysis(aeresult);
             // Console.WriteLine(analysis);
-            var analysis = new RDAnalysis(rdresult);
-            Console.WriteLine(analysis);
+            // var analysis = new RDAnalysis(rdresult);
+            // Console.WriteLine(analysis);
 
-            // var analysis2 = new LVAnalysis(lvresult);
+            var lvAnalysis = new LVAnalysis(lvresult);
             // var analysis3 = new FVAnalysis(lvresult);
             // var analysis4 = new DSAnalysis(lvresult);
-            // Console.WriteLine(analysis2);
+            Console.WriteLine(lvAnalysis);
             // Console.WriteLine(analysis3);
             // Console.WriteLine(analysis4);
         }

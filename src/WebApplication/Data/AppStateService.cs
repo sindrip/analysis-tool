@@ -15,7 +15,6 @@ namespace WebApplication.Data
             NotifyStateChanged();
         }
 
-        
         public void NotifyStateChanged() => OnChange?.Invoke();
 
 

@@ -4,6 +4,7 @@ using Analysis.Analysis;
 using Analysis.Analysis.ReachingDefinitions;
 using System.Linq;
 using System.Diagnostics.CodeAnalysis;
+using Analysis.AST;
 
 namespace WebApplication.Data
 {
@@ -24,6 +25,11 @@ namespace WebApplication.Data
             Name = result.IdentityName.ToString();
             Label.Add(result.Label.ToString());
             ID = result.IdentityID.ToString();
+        }
+        public AnalysisIdentifier(Identifier lvResult) {
+            Name = lvResult.Name.ToString();
+            Label.Add("Live");
+            ID = lvResult.Id.ToString();
         }
 
         public override string ToString() {

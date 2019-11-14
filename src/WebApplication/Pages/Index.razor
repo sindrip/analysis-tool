@@ -16,7 +16,8 @@
                     <textarea id="editor" @bind-value="source" @bind-value:event="oninput"></textarea>
                     <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
 
-                    <AnalysisPickerComponent />
+                    <AnalysisPickerComponent
+                    />
 
                 </div>
             </div>
