@@ -23,6 +23,9 @@ namespace Analysis.Analysis.DetectionOfSigns
             var domain = _analysisFilled[label].GetDomain();
             var newDomain = block switch
             {
+                IntDecl intDecl => IntDeclTransfer(intDecl, domain),
+                ArrayDecl arrayDecl => ArrayDeclTransfer(arrayDecl, domain),
+                RecordDecl recordDecl => RecDeclTransfer(recordDecl, domain),
                 AssignStmt assignStmt => AssignTransfer(assignStmt, domain),
                 RecAssignStmt recAssignStmt => RecAssignTransfer(recAssignStmt, domain),
                 IfStmt ifStmt => ConditionTransfer(ifStmt.Condition, domain),
@@ -41,6 +44,38 @@ namespace Analysis.Analysis.DetectionOfSigns
             foreach (var pair in domain)
             {
                 newDomain.Add(pair.Key, pair.Value.ToHashSet());
+            }
+
+            return newDomain;
+        }
+
+        private DSDomain IntDeclTransfer(IntDecl intDecl, DSDomain domain)
+        {
+            var ident = new Identifier(intDecl.Name, VarType.Int, intDecl.Id);
+
+            var newDomain = CopyDomain(domain);
+            
+            newDomain[ident] = DSSign.Zero.Singleton().ToHashSet();
+            return newDomain;
+        }
+
+        private DSDomain ArrayDeclTransfer(ArrayDecl arrayDecl, DSDomain domain)
+        {
+            var ident = new Identifier(arrayDecl.Name, VarType.Array, arrayDecl.Id);
+
+            var newDomain = CopyDomain(domain);
+
+            newDomain[ident] = DSSign.Zero.Singleton().ToHashSet();
+            return newDomain;
+        }
+
+        private DSDomain RecDeclTransfer(RecordDecl recordDecl, DSDomain domain)
+        {
+            var newDomain = CopyDomain(domain);
+
+            foreach (var field in recordDecl.Fields)
+            {
+                newDomain[field] = DSSign.Zero.Singleton().ToHashSet();
             }
 
             return newDomain;
