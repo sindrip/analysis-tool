@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Analysis.CFG;
 
@@ -80,33 +81,31 @@ namespace Analysis.Analysis
 
     public class RoundRobin : IWorkList
     {
-        private LinkedList<FlowEdge> V;
+        private VContainer V;
         private LinkedList<FlowEdge> P;
         private List<(int, int)> rP;
 
         public RoundRobin(IEnumerable<FlowEdge> edgeList, List<(int, int)> rP)
         {
-            this.V = new LinkedList<FlowEdge>();
+            this.V = new VContainer(new LinkedList<FlowEdge>(edgeList));
             this.P = new LinkedList<FlowEdge>(edgeList);
             this.rP = rP;
         }
 
-        public bool Empty() => V.Count == 0 && P.Count == 0;
+        public bool Empty() => V.IsEmpty() && P.Count == 0;
 
         public FlowEdge Extract()
         {
-            if (V.Count == 0)
+            if (V.IsEmpty())
             {
-                V = sortRP(P);
-                FlowEdge q = V.First();
-                V.RemoveFirst();
+                V = new VContainer(SortRP(P));
+                FlowEdge q = V.PopFirst();
                 P.Clear();
                 return q;
             }
             else
             {
-                FlowEdge q = V.First();
-                V.RemoveFirst();
+                FlowEdge q = V.PopFirst();
                 return q;
             }
         }
@@ -119,11 +118,58 @@ namespace Analysis.Analysis
             }
         }
 
-        private LinkedList<FlowEdge> sortRP(LinkedList<FlowEdge> listToSort)
+        private LinkedList<FlowEdge> SortRP(LinkedList<FlowEdge> listToSort)
         {
             List<int> rPSortOrder = rP.Select(x => x.Item1).ToList();
 
             return new LinkedList<FlowEdge>(listToSort.OrderBy(x => rPSortOrder.IndexOf(x.Source)).ToList());
         }
+    }
+
+    class VContainer
+    {
+        LinkedList<FlowEdge> VLinkedList = new LinkedList<FlowEdge>();
+        Dictionary<FlowEdge, int> VDictionary = new Dictionary<FlowEdge, int>();
+
+        public VContainer(LinkedList<FlowEdge> linkedList)
+        {
+            VLinkedList = linkedList;
+
+            foreach (var edge in linkedList)
+            {
+                int ret;
+                if (VDictionary.TryGetValue(edge, out ret))
+                {
+                    VDictionary[edge] = ret + 1;
+                } else
+                {
+                    VDictionary[edge] = 1;
+                }
+            }
+        }
+
+        public bool Contains(FlowEdge edge)
+        {
+            int ret;
+            return VDictionary.TryGetValue(edge, out ret);
+        }
+
+        public bool IsEmpty() => VLinkedList.Count == 0;
+
+        internal FlowEdge PopFirst()
+        {
+            FlowEdge q = VLinkedList.First();
+            VLinkedList.RemoveFirst();
+
+            VDictionary[q] -= 1;
+
+            if (VDictionary[q] == 0)
+            {
+                VDictionary.Remove(q);
+            }
+
+            return q;
+        }
+
     }
 }

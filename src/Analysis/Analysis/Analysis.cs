@@ -83,7 +83,6 @@ namespace Analysis.Analysis
                     foreach (var e in edgesToAdd)
                     {
                         _workList.Insert(e);
-                        numberOfOperations++;
                     }
                 }
             }
