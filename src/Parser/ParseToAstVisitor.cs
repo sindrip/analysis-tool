@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Analysis.AST;
 using Analysis.AST.AExpr;
 using Analysis.AST.BExpr;
@@ -295,7 +296,7 @@ namespace Parser
 
         public override IAstNode VisitAexprLiteral(MicroCParser.AexprLiteralContext context)
         {
-            var value = int.Parse(context.NUMBER().GetText());
+            var value = BigInteger.Parse(context.NUMBER().GetText());
             return new IntLit(value);
         }
 
