@@ -15,7 +15,7 @@ namespace Analysis.Analysis.AvailableExpressions
         {
             _dummyLattice = new AELattice(program);
             
-            InitalizeAnalysis();
+            InitializeAnalysis();
             RunAnalysis();
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Analysis.AST;
@@ -14,7 +15,7 @@ namespace Analysis.Analysis
         protected List<ILattice<T>> _analysisFilled;
         protected List<ILattice<T>> _analysisCircle;
         protected Program _program;
-        protected IWorkList _workList;
+        //protected IWorkList _workList;
         
         protected abstract ILattice<T> TransferFunctions(int label);
         protected abstract ILattice<T> Iota();
@@ -46,8 +47,10 @@ namespace Analysis.Analysis
         protected IStatement GetBlock(int label) => _blocks.First(x => x.Label == label);
         protected IEnumerable<int> GetLabels() => _blocks.Select(b => b.Label);
 
-        protected void InitalizeAnalysis()
+        protected void InitializeAnalysis()
         {
+            _analysisFilled = new List<ILattice<T>>();
+
             var orderedBlocks = _blocks.OrderBy(x => x.Label);
             foreach (var b in orderedBlocks)
             {
@@ -66,12 +69,36 @@ namespace Analysis.Analysis
 
         protected void RunAnalysis()
         {
-            
-            _workList = new ChaoticIteration(_flow);
+            DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
+            IWorkList _workListRoundRobin = new RoundRobin(_flow, dfst.GetRP());
+            IWorkList _worklistFIFO = new FIFOWorklist(_flow);
+            IWorkList _worklistLIFO = new LIFOWorklist(_flow);
+            IWorkList _worklistChaotic = new ChaoticIteration(_flow.Shuffle(3));
+
+            Console.WriteLine("Round Robin worklist: " + WorkThroughWorklist(_workListRoundRobin));
+            Console.WriteLine("FIFO worklist: " + WorkThroughWorklist(_worklistFIFO));
+            Console.WriteLine("LIFO worklist: " + WorkThroughWorklist(_worklistLIFO));
+            Console.WriteLine("Chaotic worklist: " + WorkThroughWorklist(_worklistChaotic));
+
+            var labels = FlowUtil.Labels(_blocks);
+            foreach (var lab in labels)
+            {
+                var edges = _flow.Where(x => x.Dest == lab);
+                _analysisCircle[lab] = TransferFunctions(lab);
+            }
+        }
+
+        private int WorkThroughWorklist(IWorkList _workList)
+        {
+
+            InitializeAnalysis(); // reinitialize analysis since we run it several times
+
+            int numberOfOperations = 0;
 
             while (!_workList.Empty())
             {
                 var edge = _workList.Extract();
+                numberOfOperations++;
                 var sourceTransfer = TransferFunctions(edge.Source);
                 var target = _analysisFilled[edge.Dest];
                 if (!sourceTransfer.PartialOrder(target))
@@ -84,15 +111,10 @@ namespace Analysis.Analysis
                     }
                 }
             }
-            
-            var labels = FlowUtil.Labels(_blocks);
-            foreach (var lab in labels)
-            {
-                var edges = _flow.Where(x => x.Dest == lab);
-                _analysisCircle[lab] = TransferFunctions(lab);
-            }
+
+            return numberOfOperations;
         }
-        
+
         public override string ToString()
         {
             var circle = string.Join("\n", _analysisCircle.Select(x => x.ToString()));
