@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Analysis.Analysis;
 using Analysis.Analysis.ReachingDefinitions;
 using System.Linq;
-using System.Diagnostics.CodeAnalysis;
 using Analysis.AST;
 
 namespace WebApplication.Data
