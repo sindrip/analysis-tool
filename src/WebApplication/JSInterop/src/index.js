@@ -8,22 +8,6 @@ import 'codemirror/mode/clike/clike.js';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 
-export function AddCircleSvg() {
-    const svg = d3.select('#d3body')
-        .append('svg')
-        .attr('width', '100%')
-        .call(d3.zoom().on("zoom", function () {
-            svg.attr('transform', d3.event.transform)
-        }))
-        .append('g');
-
-    svg.append('circle')
-        .attr('cx', document.body.clientWidth / )
-        .attr('cy', document.body.clientHeight / 2)
-        .attr('r', 50)
-        .style('fill', 'B8DEE6');
-}
-
 export function CreateFlowGraph(graph) {
     let viz = new Viz({ Module, render });
     console.log(graph);
