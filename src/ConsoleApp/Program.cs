@@ -327,11 +327,11 @@ write r;
 
 
             Console.WriteLine("------- Analysis 1 --------");
-            var analysis1 = new LVAnalysis(result1);
+            var analysis1 = new FVAnalysis(result1);
             Console.WriteLine("--------- Analysis 2 --------");
-            var analysis2 = new LVAnalysis(result2);
+            var analysis2 = new FVAnalysis(result2);
             Console.WriteLine("------- Analysis 3 -------");
-            var analysis3 = new LVAnalysis(result3);
+            var analysis3 = new FVAnalysis(result3);
             //Console.WriteLine(analysis1);
             //Console.WriteLine(analysis2);
             //Console.WriteLine(analysis3);
