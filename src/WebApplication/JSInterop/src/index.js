@@ -18,7 +18,7 @@ export function AddCircleSvg() {
         .append('g');
 
     svg.append('circle')
-        .attr('cx', document.body.clientWidth / 2)
+        .attr('cx', document.body.clientWidth / )
         .attr('cy', document.body.clientHeight / 2)
         .attr('r', 50)
         .style('fill', 'B8DEE6');

@@ -7,20 +7,28 @@ namespace Analysis.Analysis.ReachingDefinitions
     {
         private int _identId;
         private int? _label;
+        private string _identName;
 
-        public RDDefinition(int identId, int label)
+        public string IdentityID => _identId.ToString();
+        public string Label => _label?.ToString() ?? "?";
+        public string IdentityName => _identName;
+
+
+        public RDDefinition(int identId, int label, string name)
         {
             _identId = identId;
             _label = label;
+            _identName = name;
         }
 
-        public RDDefinition(int identId)
+        public RDDefinition(int identId, string name)
         {
             _identId = identId;
             _label = null;
+            _identName = name;
         }
 
-        public override string ToString() => $"({_identId}, {_label?.ToString() ?? "?"})";
+        public override string ToString() => $"(#{_identId} {_identName}), L{_label?.ToString() ?? "?"})";
 
         public bool Equals(RDDefinition other)
         {

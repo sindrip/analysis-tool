@@ -1,7 +1,10 @@
 ﻿@page "/"
 @inject IJSRuntime JsRuntime;
-@inject WeatherForecastService ForecastService
+@inject AnalysisService ForecastService
+@inject AppStateService AppState
+
 @using WebApplication.Data
+@using WebApplication.Shared.Components
 
 <div class="container-fluid">
     <div class="row">
@@ -9,8 +12,13 @@
             <div class="row">
                 <div class="col-12">
                     <h1>Program</h1>
+
                     <textarea id="editor" @bind-value="source" @bind-value:event="oninput"></textarea>
                     <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
+
+                    <AnalysisPickerComponent
+                    />
+
                 </div>
             </div>
             <div class="row">
@@ -24,27 +32,10 @@
         <div class="col-md-7 col-sm-12">
             <div class="row">
                 <div class="col-12">
-                    <h1>Right Hand></h1>
-
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Label</th>
-                                <th>Entry</th>
-                                <th>Exit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (int x = 0; x < source.Split(";").Count()-1; x++)
-                            {
-                                <tr>
-                                    <td>@x</td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <AnalysisTableComponent 
+                        Title="@AppState.SelectedAnalysis.ToString()"
+                        Results="@analysis"
+                    />
                 </div>
             </div>
         </div>
@@ -54,7 +45,9 @@
 @code
 {
     string error = "";
-    private string _source = "{ \n  int x;\n  x := 0;\n}";
+    private string _source = "{\n  int x;\n  int y;\n  x := 0;\n  y := 1;\n}";
+
+    List<AnalysisResult> analysis = new List<AnalysisResult>();
 
     string source
     {
@@ -69,9 +62,14 @@
     async void Parse()
     {
         Console.WriteLine("parse");
+
         try
         {
             var graph = ForecastService.GetGraph(source);
+
+            Console.WriteLine(AppState.SelectedAnalysis.ToString());
+            analysis = ForecastService.RunAnalysis(source, AppState.SelectedAnalysis);
+            
             error = string.Empty;
 
             await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
@@ -98,6 +96,10 @@
             Parse();
             JsRuntime.InvokeAsync<string>("Lib.InitCodeMirror");
         }
+    }
+    protected override void OnInitialized()
+    {
+        AppState.OnChange += StateHasChanged;
     }
 
 }
