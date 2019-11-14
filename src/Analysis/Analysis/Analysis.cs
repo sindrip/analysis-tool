@@ -68,8 +68,6 @@ namespace Analysis.Analysis
             DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
             _workList = new RoundRobin(_flow, dfst.GetRP());
 
-            _workList = new ChaoticIteration(_flow);
-
             int numberOfOperations = 0;
 
             while (!_workList.Empty())
