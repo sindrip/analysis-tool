@@ -42,6 +42,7 @@ namespace Analysis.Analysis
                 BBinOp bbinop => FreeVariables(bbinop.Left).Union(FreeVariables(bbinop.Right)).ToHashSet(),
                 RBinOp rbinop => FreeVariables(rbinop.Left).Union(FreeVariables(rbinop.Right)).ToHashSet(),
                 // Arithmetic nodes
+                AUnaryMinus aUnaryMinus => FreeVariables(aUnaryMinus.Left).ToHashSet(),
                 ABinOp abinop => FreeVariables(abinop.Left).Union(FreeVariables(abinop.Right)).ToHashSet(),
                 VarAccess va => FreeVariables(va.Left),
                 RecordAccess ra => FreeVariables(ra.Right),
@@ -80,6 +81,9 @@ namespace Analysis.Analysis
                 WriteStmt writeStmt => AvailableExpressions(writeStmt.Left),
                 // Expressions
                 ArrayAccess aa => AvailableExpressions(aa.Left).Union(AvailableExpressions(aa.Right)).ToHashSet(),
+                AUnaryMinus aUnaryMinus => AvailableExpressions(aUnaryMinus.Left)
+                    .Union(aUnaryMinus.Singleton())
+                    .ToHashSet(),
                 ABinOp abinop => AvailableExpressions(abinop.Left)
                     .Union(AvailableExpressions(abinop.Right))
                     .Union(abinop.Singleton())

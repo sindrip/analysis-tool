@@ -262,6 +262,18 @@ public interface IMicroCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAexprParen([NotNull] MicroCParser.AexprParenContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>aexprUnaryMinus</c>
+	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterAexprUnaryMinus([NotNull] MicroCParser.AexprUnaryMinusContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>aexprUnaryMinus</c>
+	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitAexprUnaryMinus([NotNull] MicroCParser.AexprUnaryMinusContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>aexprVar</c>
 	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
 	/// </summary>

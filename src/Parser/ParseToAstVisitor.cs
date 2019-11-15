@@ -234,6 +234,17 @@ namespace Parser
             return Visit(context.a_expr()) as IAExpr;
         }
 
+        public override IAstNode VisitAexprUnaryMinus(MicroCParser.AexprUnaryMinusContext context)
+        {
+            IAExpr left = Visit(context.left) as IAExpr;
+            if (left is IntLit)
+            {
+                var intLit = left as IntLit;
+                return new IntLit(-intLit.Value);
+            }
+            return new AUnaryMinus(left);
+        }
+
         public override IAstNode VisitAexprProduct(MicroCParser.AexprProductContext context)
         {
             IAExpr left = Visit(context.left) as IAExpr;

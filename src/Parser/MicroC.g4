@@ -42,6 +42,7 @@ statement
     
 a_expr
     : LPAREN a_expr RPAREN #aexprParen
+    | op=MINUS left=a_expr #aexprUnaryMinus
     | left=a_expr op=( MULT | DIV ) right=a_expr #aexprProduct
     | left=a_expr op=( PLUS | MINUS ) right=a_expr #aexprSum
     | IDENT #aexprVar

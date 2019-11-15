@@ -306,6 +306,20 @@ public partial class MicroCBaseListener : IMicroCListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAexprParen([NotNull] MicroCParser.AexprParenContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>aexprUnaryMinus</c>
+	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterAexprUnaryMinus([NotNull] MicroCParser.AexprUnaryMinusContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>aexprUnaryMinus</c>
+	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitAexprUnaryMinus([NotNull] MicroCParser.AexprUnaryMinusContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>aexprVar</c>
 	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
 	/// <para>The default implementation does nothing.</para>

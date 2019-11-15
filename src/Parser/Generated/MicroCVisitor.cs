@@ -168,6 +168,13 @@ public interface IMicroCVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAexprParen([NotNull] MicroCParser.AexprParenContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>aexprUnaryMinus</c>
+	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitAexprUnaryMinus([NotNull] MicroCParser.AexprUnaryMinusContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>aexprVar</c>
 	/// labeled alternative in <see cref="MicroCParser.a_expr"/>.
 	/// </summary>
