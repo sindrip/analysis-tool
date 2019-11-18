@@ -20,7 +20,7 @@ namespace Analysis.Analysis.DetectionOfSigns
         protected override ILattice<DSDomain> TransferFunctions(int label)
         {
             var block = GetBlock(label);
-            var domain = _analysisFilled[label].GetDomain();
+            var domain = _analysisCircle[label].GetDomain();
             var newDomain = block switch
             {
                 IntDecl intDecl => IntDeclTransfer(intDecl, domain),

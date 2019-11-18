@@ -12,8 +12,8 @@ namespace Analysis.Analysis
         protected IEnumerable<int> _extremalLabels;
         protected IEnumerable<FlowEdge> _flow;
         protected IEnumerable<IStatement> _blocks;
-        protected List<ILattice<T>> _analysisFilled;
         protected List<ILattice<T>> _analysisCircle;
+        protected List<ILattice<T>> _analysisFilled;
         protected Program _program;
         //protected IWorkList _workList;
         
@@ -38,8 +38,8 @@ namespace Analysis.Analysis
                 _extremalLabels = FlowUtil.Final(program);
             }
             
-            _analysisFilled = new List<ILattice<T>>();
             _analysisCircle = new List<ILattice<T>>();
+            _analysisFilled = new List<ILattice<T>>();
         }
         
         public List<ILattice<T>> GetCircleLattice() => _analysisCircle; 
@@ -49,21 +49,21 @@ namespace Analysis.Analysis
 
         protected void InitializeAnalysis()
         {
-            _analysisFilled = new List<ILattice<T>>();
+            _analysisCircle = new List<ILattice<T>>();
 
             var orderedBlocks = _blocks.OrderBy(x => x.Label);
             foreach (var b in orderedBlocks)
             {
                 if (_extremalLabels.Contains(b.Label))
                 {
-                    _analysisFilled.Add(Iota());
+                    _analysisCircle.Add(Iota());
                 }
                 else
                 {
-                    _analysisFilled.Add(Bottom());
+                    _analysisCircle.Add(Bottom());
                 }
 
-                _analysisCircle.Add(Bottom());
+                _analysisFilled.Add(Bottom());
             }
         }
 
@@ -84,7 +84,7 @@ namespace Analysis.Analysis
             foreach (var lab in labels)
             {
                 var edges = _flow.Where(x => x.Dest == lab);
-                _analysisCircle[lab] = TransferFunctions(lab);
+                _analysisFilled[lab] = TransferFunctions(lab);
             }
         }
 
@@ -100,10 +100,10 @@ namespace Analysis.Analysis
                 var edge = _workList.Extract();
                 numberOfOperations++;
                 var sourceTransfer = TransferFunctions(edge.Source);
-                var target = _analysisFilled[edge.Dest];
+                var target = _analysisCircle[edge.Dest];
                 if (!sourceTransfer.PartialOrder(target))
                 {
-                    _analysisFilled[edge.Dest] = target.Join(sourceTransfer);
+                    _analysisCircle[edge.Dest] = target.Join(sourceTransfer);
                     var edgesToAdd = _flow.Where(x => x.Source == edge.Dest);
                     foreach (var e in edgesToAdd)
                     {
@@ -117,8 +117,8 @@ namespace Analysis.Analysis
 
         public override string ToString()
         {
-            var circle = string.Join("\n", _analysisCircle.Select(x => x.ToString()));
-            var filled = string.Join("\n", _analysisFilled.Select(x => x.ToString()));
+            var circle = string.Join("\n", _analysisFilled.Select(x => x.ToString()));
+            var filled = string.Join("\n", _analysisCircle.Select(x => x.ToString()));
             return $"circle: {circle} \n filled: {filled}";
         }
 

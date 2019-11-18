@@ -26,7 +26,7 @@ namespace Analysis.Analysis.LiveVariables
             var block = GetBlock(label);
             var kill = Kill(block);
             var gen = Gen(block);
-            var domain = _analysisFilled[label].GetDomain();
+            var domain = _analysisCircle[label].GetDomain();
             var newDomain = domain.Except(kill).Union(gen).ToDomain();
             return new LVLattice(newDomain);
         }

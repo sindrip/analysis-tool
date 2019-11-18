@@ -23,7 +23,7 @@ namespace Analysis.Analysis.FaintVariables
         protected override ILattice<FVDomain> TransferFunctions(int label)
         {
             var block = GetBlock(label);
-            var domain = _analysisFilled[label].GetDomain();
+            var domain = _analysisCircle[label].GetDomain();
             var newDomain = block switch
             {
                 AssignStmt assignStmt => AssignTransfer(assignStmt, domain),
