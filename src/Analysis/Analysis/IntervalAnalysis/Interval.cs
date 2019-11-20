@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.ComTypes;
@@ -45,6 +47,17 @@ namespace Analysis.Analysis.IntervalAnalysis
             return new Interval(min, max);
         }
 
+        public Interval Copy()
+        {
+            if (IsBottom)
+                return new Interval();
+
+            var lb = LowerBound.Copy();
+            var ub = UpperBound.Copy();
+            
+            return new Interval(lb, ub);
+        }
+
         public static bool operator <=(Interval left, Interval right)
         {
             if (left.IsBottom)
@@ -64,22 +77,61 @@ namespace Analysis.Analysis.IntervalAnalysis
         public static Interval operator +(Interval left, Interval right)
         {
             if (left.IsBottom || right.IsBottom)
-                return Interval.Bottom();
+                return Bottom();
 
-            
+            return new Interval(left.LowerBound + right.LowerBound, left.UpperBound + right.LowerBound);
         }
         
         public static Interval operator -(Interval left, Interval right)
         {
-            
+            if (left.IsBottom || right.IsBottom)
+                return Bottom();
+
+            return new Interval(left.LowerBound - right.UpperBound, left.UpperBound - right.LowerBound);
         }
         public static Interval operator *(Interval left, Interval right)
         {
-            
+            if (left.IsBottom || right.IsBottom)
+                return Bottom();
+
+            var llb = left.LowerBound;
+            var lub = left.UpperBound;
+            var rlb = right.LowerBound;
+            var rub = right.UpperBound;
+
+            var l = new List<ExtendedZ> {llb * rlb, llb * rub, lub * rlb, lub * rub};
+            return new Interval(l.Min(), l.Max());
         }
         public static Interval operator /(Interval left, Interval right)
         {
+            if (left.IsBottom || right.IsBottom || right.ContainsZero())
+                return Bottom();
             
+            var llb = left.LowerBound;
+            var lub = left.UpperBound;
+            var rlb = right.LowerBound;
+            var rub = right.UpperBound;
+            
+            var l = new List<ExtendedZ> {llb / rlb, llb / rub, lub / rlb, lub / rub};
+            return new Interval(l.Min(), l.Max());
+        }
+
+        private bool ContainsZero()
+        {
+            if (LowerBound.PositiveInf)
+                return false;
+            
+            if (LowerBound.NegativeInf)
+            {
+                if (UpperBound.PositiveInf)
+                    return true;
+                if (UpperBound.NegativeInf)
+                    return false;
+
+                return UpperBound.Value > 0;
+            }
+
+            return LowerBound.Value > 0;
         }
 
         public override string ToString() => $"[{LowerBound}, {UpperBound}]";

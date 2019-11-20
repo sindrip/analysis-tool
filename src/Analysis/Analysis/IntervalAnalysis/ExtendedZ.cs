@@ -68,6 +68,16 @@ namespace Analysis.Analysis.IntervalAnalysis
             return new ExtendedZ(BigInteger.Max(left.Value, right.Value));
         }
 
+        public ExtendedZ Copy()
+        {
+            if (NegativeInf)
+                return NegativeInfinity();
+            else if (PositiveInf)
+                return PositiveInfinity();
+            
+            else return new ExtendedZ(Value);
+        }
+
         public static bool operator <=(ExtendedZ left, ExtendedZ right)
         {
             if (left.NegativeInf)
@@ -110,23 +120,59 @@ namespace Analysis.Analysis.IntervalAnalysis
             return left.Value >= right.Value;
         }
 
+        // TODO: make the operators
         public static ExtendedZ operator +(ExtendedZ left, ExtendedZ right)
         {
+            if (left.NegativeInf || right.NegativeInf)
+                return NegativeInfinity();
+
+            if (left.PositiveInf || right.PositiveInf)
+                return PositiveInfinity();
             
+            return new ExtendedZ(left.Value + right.Value);
         }
         
         public static ExtendedZ operator -(ExtendedZ left, ExtendedZ right)
         {
+            if (left.NegativeInf || right.NegativeInf)
+                return NegativeInfinity();
+
+            if (left.PositiveInf || right.PositiveInf)
+                return PositiveInfinity();
             
+            return new ExtendedZ(left.Value - right.Value);
         }
+        
         public static ExtendedZ operator *(ExtendedZ left, ExtendedZ right)
         {
+            if (left.NegativeInf || right.NegativeInf)
+                return NegativeInfinity();
+
+            if (left.PositiveInf || right.PositiveInf)
+                return PositiveInfinity();
             
+            return new ExtendedZ(left.Value * right.Value);
         }
+        
         public static ExtendedZ operator /(ExtendedZ left, ExtendedZ right)
         {
+            if (left.NegativeInf || right.NegativeInf)
+                return NegativeInfinity();
+
+            if (left.PositiveInf || right.PositiveInf)
+                return PositiveInfinity();
             
+            return new ExtendedZ(left.Value / right.Value);
         }
 
+        public override string ToString()
+        {
+            if (PositiveInf)
+                return "+inf";
+            else if (NegativeInf)
+                return "-inf";
+            
+            return Value.ToString();
+        }
     }
 }
