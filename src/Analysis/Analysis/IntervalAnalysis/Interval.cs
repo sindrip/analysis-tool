@@ -78,7 +78,7 @@ namespace Analysis.Analysis.IntervalAnalysis
             if (right.IsBottom)
                 return false;
 
-            return (left.LowerBound <= right.LowerBound) && (left.LowerBound <= right.LowerBound);
+            return (right.LowerBound <= left.LowerBound) && (left.UpperBound <= right.UpperBound);
         }
 
         public static bool operator >=(Interval left, Interval right)

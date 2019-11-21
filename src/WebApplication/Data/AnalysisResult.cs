@@ -4,6 +4,7 @@ using Analysis.Analysis.ReachingDefinitions;
 using System.Linq;
 using Analysis.AST;
 using Analysis.Analysis.DetectionOfSigns;
+using Analysis.Analysis.IntervalAnalysis;
 
 namespace WebApplication.Data
 {
@@ -44,8 +45,15 @@ namespace WebApplication.Data
 
             FormatString = formatString;
         }
+        public AnalysisIdentifier(KeyValuePair<Identifier, Interval> result, string formatString) {
 
-        //TODO: Inject the format string for each analysis
+            Name = result.Key.Name.ToString();
+            ID = result.Key.Id.ToString();
+            Label.Add(result.Value.ToString());
+
+            FormatString = formatString;
+        }
+
         public override string ToString() {
             string l = string.Join(", ", Label.Select(y => y.ToString()));
 
