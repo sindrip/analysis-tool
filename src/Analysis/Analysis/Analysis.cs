@@ -50,6 +50,7 @@ namespace Analysis.Analysis
         protected void InitializeAnalysis()
         {
             _analysisCircle = new List<ILattice<T>>();
+            _analysisFilled = new List<ILattice<T>>();
 
             var orderedBlocks = _blocks.OrderBy(x => x.Label);
             foreach (var b in orderedBlocks)
