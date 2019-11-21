@@ -6,6 +6,7 @@ using Analysis.Analysis;
 using Analysis.Analysis.AvailableExpressions;
 using Analysis.Analysis.DetectionOfSigns;
 using Analysis.Analysis.FaintVariables;
+using Analysis.Analysis.IntervalAnalysis;
 using Analysis.Analysis.LiveVariables;
 using Analysis.Analysis.ReachingDefinitions;
 using Analysis.AST;
@@ -156,7 +157,6 @@ int x;
 
 r := (0,1);
 
-read x;
 
 while (x > 0) {
 r.fst := r.fst + x;
@@ -332,6 +332,8 @@ write r;
             var analysis2 = new FVAnalysis(result2);
             Console.WriteLine("------- Analysis 3 -------");
             var analysis3 = new FVAnalysis(result3);
+            var analysis4 = new IAAnalysis(result1);
+            Console.WriteLine(analysis4);
             //Console.WriteLine(analysis1);
             //Console.WriteLine(analysis2);
             //Console.WriteLine(analysis3);

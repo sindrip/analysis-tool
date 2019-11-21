@@ -5,7 +5,7 @@ namespace WebApplication.Data
 {
     public class AppStateService
     {
-        public AnalysisType SelectedAnalysis { get; private set; } = AnalysisType.ReachingDefinitions;
+        public AnalysisType SelectedAnalysis { get; private set; } = GetDefaultAnalysis();
         public event Action OnChange;
 
 
@@ -17,6 +17,10 @@ namespace WebApplication.Data
 
         public void NotifyStateChanged() => OnChange?.Invoke();
 
+        public static AnalysisType GetDefaultAnalysis()
+        {
+            return AnalysisType.ReachingDefinitions;
+        }
 
     }
 }

@@ -7,6 +7,7 @@ namespace WebApplication.Data {
         DetectionOfSigns,
         FaintVariables,
         LiveVariables,
+        IntervalAnalysis
     }
 
 }

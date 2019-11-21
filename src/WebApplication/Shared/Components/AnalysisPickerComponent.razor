@@ -17,7 +17,7 @@
 
 
 @code {
-    private AnalysisType _selected { get; set; }
+    private AnalysisType _selected { get; set; } = AppStateService.GetDefaultAnalysis();
 
     [Parameter]
     public AnalysisType selected
@@ -29,10 +29,14 @@
             SelectAnalysis();
         }
     }
+    [Parameter]
+    public EventCallback OnSelect { get; set; }
 
     void SelectAnalysis() {
         AppState.SetAnalysisType(_selected);
+
+        OnSelect.InvokeAsync(null);
     }
 
-    
+
 }

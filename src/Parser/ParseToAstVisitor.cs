@@ -62,7 +62,7 @@ namespace Parser
             var label = ++_label;
             var name = context.IDENT().GetText();
             var size = int.Parse(context.NUMBER().GetText());
-            var id = _symbolTable.InsertSymbol(name, VarType.Array);
+            var id = _symbolTable.InsertSymbol(name, VarType.Array, size);
             var arrayDecl = new ArrayDecl(name, size);
             arrayDecl.Label = label;
             arrayDecl.Id = id;
@@ -113,7 +113,7 @@ namespace Parser
             var label = ++_label;
             string name = context.IDENT().GetText();
             var symbol = _symbolTable.LookupSymbol(name);
-            var ident = new Identifier(name, symbol.Type, symbol.Id);
+            var ident = new Identifier(name, symbol.Type, symbol.Id, symbol.Size);
             // TODO: Type check the symbol
 
             IAExpr index = Visit(context.index) as IAExpr;

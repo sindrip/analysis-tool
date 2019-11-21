@@ -2,10 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Analysis.Analysis.DetectionOfSigns;
 using Analysis.Analysis.FaintVariables;
 using Analysis.Analysis.LiveVariables;
 using Analysis.Analysis.ReachingDefinitions;
+using Analysis.Analysis.IntervalAnalysis;
+
 using Analysis.CFG;
 
 namespace WebApplication.Data
@@ -70,23 +73,27 @@ namespace WebApplication.Data
                     var filledLattice = analysis.GetFilledLattice();
                     var circlelattice = analysis.GetCircleLattice();
                     
+                    string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{1}</var> }}<br/>";
+                    
                     int label = 0;
 
                     var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
                         Label = (label++).ToString(),
-                        NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString,
                         }).ToList(),
-                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString,
                         }).ToList(),
                     }).ToList();
                     
@@ -99,22 +106,25 @@ namespace WebApplication.Data
                     var circlelattice = analysis.GetCircleLattice();
                     
                     int label = 0;
+                    string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> Live <br/>";
 
                     var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
                         Label = (label++).ToString(),
-                        NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
                         }).ToList(),
-                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
                         }).ToList(),
                     }).ToList();
                     
@@ -127,22 +137,25 @@ namespace WebApplication.Data
                     var circlelattice = analysis.GetCircleLattice();
                     
                     int label = 0;
+                    string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> Faint<br/>";
 
                     var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
                         Label = (label++).ToString(),
-                        NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeEntry = entry.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
                         }).ToList(),
-                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
                         }).ToList(),
                     }).ToList();
                     
@@ -155,22 +168,56 @@ namespace WebApplication.Data
                     var circlelattice = analysis.GetCircleLattice();
                     
                     int label = 0;
+                    string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{1}</var> }}<br/>";
 
                     var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
                         Label = (label++).ToString(),
-                        NodeEntry = entry.GetDomain().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeEntry = entry.GetDomain().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
                         }).ToList(),
-                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x)).ToList()
-                        .GroupBy(a => new {a.ID, a.Name})
+                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
                         .Select( b => new AnalysisIdentifier  {
                             Name = b.Key.Name,
                             ID = b.Key.ID,
-                            Label = b.SelectMany(a=>a.Label).ToList()
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
+                        }).ToList(),
+                    }).ToList();
+                    
+                    return zipped;
+                }
+                case AnalysisType.IntervalAnalysis:
+                {
+                    var analysis = new IAAnalysis(ast);
+                    var filledLattice = analysis.GetFilledLattice();
+                    var circlelattice = analysis.GetCircleLattice();
+                    
+                    int label = 0;
+                    string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{1}</var> }}<br/>";
+
+                    var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
+                        Label = (label++).ToString(),
+                        NodeEntry = entry.GetDomain().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
+                        .Select( b => new AnalysisIdentifier  {
+                            Name = b.Key.Name,
+                            ID = b.Key.ID,
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
+                        }).ToList(),
+                        NodeExit = exit.GetDomain().ToHashSet().Select(x=> new AnalysisIdentifier(x, htmlFormat)).ToList()
+                        .GroupBy(a => new {a.ID, a.Name, a.FormatString})
+                        .Select( b => new AnalysisIdentifier  {
+                            Name = b.Key.Name,
+                            ID = b.Key.ID,
+                            Label = b.SelectMany(a=>a.Label).ToList(),
+                            FormatString = b.Key.FormatString
                         }).ToList(),
                     }).ToList();
                     
