@@ -31,6 +31,19 @@ namespace Parser
             return symbol.Id;
         }
 
+        public int InsertSymbol(string name, VarType type, int size)
+        {
+            var current = _symbols[_currentScope];
+            if (current.Any(s => s.Name == name))
+            {
+                throw new ArgumentException($"Symbol with name {name} already declared in scope");
+            }
+            
+            var symbol = new Symbol(name, type, _id++, size);
+            current.Add(symbol);
+            return symbol.Id;
+        }
+
         public int InsertSymbol(string name, IList<Symbol> children)
         {
             var current = _symbols[_currentScope];

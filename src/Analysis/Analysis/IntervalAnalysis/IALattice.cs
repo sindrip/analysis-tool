@@ -8,11 +8,8 @@ namespace Analysis.Analysis.IntervalAnalysis
     public class IALattice : ILattice<IADomain>
     {
         public IADomain Domain { get; set; }
-        //public bool _bottom { get; private set; }
 
-        //private IALattice() => _bottom = true;
         public IALattice(IADomain domain) => Domain = domain;
-
 
         public static IALattice Bottom(Program program)
         {
@@ -51,7 +48,17 @@ namespace Analysis.Analysis.IntervalAnalysis
             return new IALattice(newDomain);
         }
 
+        public ILattice<IADomain> Meet(ILattice<IADomain> right)
+        {
+            var rightDomain = right.GetDomain();
+            var newDomain = new IADomain();
+            
+            return new IALattice(newDomain);
+        }
+        
         public IADomain GetDomain() => Domain;
+
+        public bool IsBottom() => Domain.All(x => x.Value.IsBottom);
 
         public override string ToString()
         {

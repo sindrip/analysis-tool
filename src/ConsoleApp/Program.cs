@@ -157,7 +157,6 @@ int x;
 
 r := (0,1);
 
-read x;
 
 while (x > 0) {
 r.fst := r.fst + x;

@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Intrinsics;
 
 namespace Analysis.Analysis.IntervalAnalysis
 {
@@ -45,6 +42,21 @@ namespace Analysis.Analysis.IntervalAnalysis
             var max = ExtendedZ.Max(UpperBound, right.UpperBound);
 
             return new Interval(min, max);
+        }
+
+        public Interval Meet(Interval right)
+        {
+            if (IsBottom || right.IsBottom)
+                return Bottom();
+
+            var min = ExtendedZ.Min(LowerBound, right.LowerBound);
+            var max = ExtendedZ.Max(UpperBound, right.UpperBound);
+            if (min <= max)
+            {
+                return new Interval(min, max);
+            }
+
+            return Bottom();
         }
 
         public Interval Copy()
@@ -100,7 +112,9 @@ namespace Analysis.Analysis.IntervalAnalysis
             var rub = right.UpperBound;
 
             var l = new List<ExtendedZ> {llb * rlb, llb * rub, lub * rlb, lub * rub};
-            return new Interval(l.Min(), l.Max());
+            var min = l.Aggregate(ExtendedZ.PositiveInfinity(), (x, y) => ExtendedZ.Min(x, y));
+            var max = l.Aggregate(ExtendedZ.NegativeInfinity(), (x, y) => ExtendedZ.Max(x, y));
+            return new Interval(min, max);
         }
         public static Interval operator /(Interval left, Interval right)
         {

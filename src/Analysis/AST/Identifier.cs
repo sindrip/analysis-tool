@@ -8,6 +8,7 @@ namespace Analysis.AST
         public string Name { get; set; }
         public VarType Type { get; set; }
         public int Id { get; }
+        public int Size { get; }
         public List<Identifier> Children { get; set; }
 
         public Identifier(string name, VarType type, int id)
@@ -15,6 +16,14 @@ namespace Analysis.AST
             Name = name;
             Type = type;
             Id = id;
+        }
+        
+        public Identifier(string name, VarType type, int id, int size)
+        {
+            Name = name;
+            Type = type;
+            Id = id;
+            Size = size;
         }
 
         public override string ToString()

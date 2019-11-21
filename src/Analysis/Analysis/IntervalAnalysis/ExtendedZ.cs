@@ -1,14 +1,15 @@
+using System;
 using System.Numerics;
 
 namespace Analysis.Analysis.IntervalAnalysis
 {
-    public class ExtendedZ
+    public class ExtendedZ : IComparable<ExtendedZ>
     {
         public BigInteger Value { get; private set; }
         public bool NegativeInf { get; private set; }
         public bool PositiveInf { get; private set; }
 
-         ExtendedZ()
+        private ExtendedZ()
         {
         }
 
@@ -31,13 +32,6 @@ namespace Analysis.Analysis.IntervalAnalysis
             var pos = new ExtendedZ();
             pos.PositiveInf = true;
             return pos;
-        }
-
-        public void Deconstruct(out BigInteger val, out bool nega, out bool pos)
-        {
-            val = Value;
-            nega = NegativeInf;
-            pos = PositiveInf;
         }
 
         public static ExtendedZ Min(ExtendedZ left, ExtendedZ right)
@@ -163,6 +157,11 @@ namespace Analysis.Analysis.IntervalAnalysis
                 return PositiveInfinity();
             
             return new ExtendedZ(left.Value / right.Value);
+        }
+
+        public int CompareTo(ExtendedZ other)
+        {
+            throw new NotImplementedException();
         }
 
         public override string ToString()
