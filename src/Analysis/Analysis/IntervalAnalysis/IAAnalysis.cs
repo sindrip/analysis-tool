@@ -54,7 +54,7 @@ namespace Analysis.Analysis.IntervalAnalysis
                 return newDomain;
             
             var ident = new Identifier(intDecl.Name, VarType.Int, intDecl.Id);
-            newDomain[ident] = new Interval(new ExtendedZ(0), new ExtendedZ(0));
+            newDomain[ident] = new Interval(new ExtendedZ(0), new ExtendedZ(0)).ToIntervalK(_program);
 
             return newDomain;
         }
@@ -67,7 +67,7 @@ namespace Analysis.Analysis.IntervalAnalysis
                 return newDomain;
             
             var ident = new Identifier(arrayDecl.Name, VarType.Array, arrayDecl.Id);
-            newDomain[ident] = new Interval(new ExtendedZ(0), new ExtendedZ(0));
+            newDomain[ident] = new Interval(new ExtendedZ(0), new ExtendedZ(0)).ToIntervalK(_program);
             
             return newDomain;
         }
@@ -81,7 +81,7 @@ namespace Analysis.Analysis.IntervalAnalysis
 
             foreach (var field in recordDecl.Fields)
             {
-                newDomain[field] = new Interval(new ExtendedZ(0), new ExtendedZ(0));
+                newDomain[field] = new Interval(new ExtendedZ(0), new ExtendedZ(0)).ToIntervalK(_program);
             }
 
             return newDomain;
@@ -122,7 +122,7 @@ namespace Analysis.Analysis.IntervalAnalysis
             if (newValue.IsBottom)
                 return Bottom().GetDomain();
 
-            newDomain[ident] = newValue;
+            newDomain[ident] = newValue.ToIntervalK(_program);
             return newDomain;
         }
 
@@ -142,7 +142,7 @@ namespace Analysis.Analysis.IntervalAnalysis
                 if (newInterval.IsBottom)
                     return Bottom().GetDomain();
 
-                newDomain[ident] = IAUtil.Arithmetic(expr, domain);
+                newDomain[ident] = newInterval.ToIntervalK(_program);
             }
 
             return newDomain;
@@ -169,8 +169,8 @@ namespace Analysis.Analysis.IntervalAnalysis
                 if (indexInterval.IsBottom)
                     return Bottom().GetDomain();
             }
-            
-            newDomain[ident] = new Interval(ExtendedZ.NegativeInfinity(), ExtendedZ.PositiveInfinity());
+
+            newDomain[ident] = new Interval(ExtendedZ.NegativeInfinity(), ExtendedZ.PositiveInfinity()).ToIntervalK(_program);
             return newDomain;
         }
 

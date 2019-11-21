@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Numerics;
+using Analysis.AST;
 
 namespace Analysis.Analysis.IntervalAnalysis
 {
@@ -128,6 +130,47 @@ namespace Analysis.Analysis.IntervalAnalysis
             
             var l = new List<ExtendedZ> {llb / rlb, llb / rub, lub / rlb, lub / rub};
             return new Interval(l.Min(), l.Max());
+        }
+
+        public Interval ToIntervalK(Program program)
+        {
+            var iv = AnalysisUtil.InterestingValues(program).ToList();
+            
+            if (IsBottom)
+                return Bottom();
+            var lb = Sup(iv, LowerBound);
+            var ub = Inf(iv, UpperBound);
+            return new Interval(lb, ub);
+        }
+
+        private ExtendedZ Sup(List<BigInteger> iv, ExtendedZ n)
+        {
+            if (n.NegativeInf)
+                return ExtendedZ.NegativeInfinity();
+
+            if (n.PositiveInf)
+                return new ExtendedZ(iv.Min());
+
+            var lt = iv.Where(k => k <= n.Value).ToList();
+            if (lt.Count == 0)
+                return ExtendedZ.NegativeInfinity();
+            
+            return new ExtendedZ(lt.Max());
+        }
+
+        private ExtendedZ Inf(List<BigInteger> iv, ExtendedZ n)
+        {
+            if (n.PositiveInf)
+                return ExtendedZ.PositiveInfinity();
+            
+            if (n.NegativeInf)
+                return new ExtendedZ(iv.Max());
+
+            var gt = iv.Where(k => n.Value <= k).ToList();
+            if (gt.Count == 0)
+                return ExtendedZ.PositiveInfinity();
+            
+            return new ExtendedZ(gt.Min());
         }
 
         private bool ContainsZero()
