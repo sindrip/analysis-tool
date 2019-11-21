@@ -17,6 +17,7 @@
                     <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
 
                     <AnalysisPickerComponent
+                        OnSelect="Parse"
                     />
 
                 </div>
@@ -69,7 +70,7 @@
 
             Console.WriteLine(AppState.SelectedAnalysis.ToString());
             analysis = ForecastService.RunAnalysis(source, AppState.SelectedAnalysis);
-            
+
             error = string.Empty;
 
             await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
