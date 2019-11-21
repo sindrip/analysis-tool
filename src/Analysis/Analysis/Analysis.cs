@@ -50,6 +50,7 @@ namespace Analysis.Analysis
         protected void InitializeAnalysis()
         {
             _analysisCircle = new List<ILattice<T>>();
+            _analysisFilled = new List<ILattice<T>>();
 
             var orderedBlocks = _blocks.OrderBy(x => x.Label);
             foreach (var b in orderedBlocks)
@@ -73,12 +74,12 @@ namespace Analysis.Analysis
             IWorkList _workListRoundRobin = new RoundRobin(_flow, dfst.GetRP());
             IWorkList _worklistFIFO = new FIFOWorklist(_flow);
             IWorkList _worklistLIFO = new LIFOWorklist(_flow);
-            IWorkList _worklistChaotic = new ChaoticIteration(_flow.Shuffle(3));
+            IWorkList _worklistChaotic = new ChaoticIteration(_flow.Shuffle(2));
 
-            Console.WriteLine("Round Robin worklist: " + WorkThroughWorklist(_workListRoundRobin));
             Console.WriteLine("FIFO worklist: " + WorkThroughWorklist(_worklistFIFO));
             Console.WriteLine("LIFO worklist: " + WorkThroughWorklist(_worklistLIFO));
             Console.WriteLine("Chaotic worklist: " + WorkThroughWorklist(_worklistChaotic));
+            Console.WriteLine("Round Robin worklist: " + WorkThroughWorklist(_workListRoundRobin));
 
             var labels = FlowUtil.Labels(_blocks);
             foreach (var lab in labels)

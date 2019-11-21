@@ -13,11 +13,26 @@
                 <div class="col-12">
                     <h1>Program</h1>
 
+                    @if (examplePrograms == null)
+                    {
+                        <p><em>Loading...</em></p>
+                    }
+                    else
+                    {
+                        <label for="exampleProgram">Example Program: </label>
+                        <select id="exampleProgram" @bind="source">
+                            <option></option>
+                            @foreach (var program in examplePrograms)
+                            {
+                                <option value="@program.Value">@program.Key</option>
+                            }
+                        </select>
+                    }
+
                     <textarea id="editor" @bind-value="source" @bind-value:event="oninput"></textarea>
                     <div class="p-3 mb-2 text-white @(String.IsNullOrEmpty(error) ? "bg-success" : "bg-danger")">@error</div>
 
-                    <AnalysisPickerComponent
-                    />
+                    <AnalysisPickerComponent />
 
                 </div>
             </div>
@@ -44,6 +59,8 @@
 
 @code
 {
+    Dictionary<string, string> examplePrograms;
+
     string error = "";
     private string _source = "{\n  int x;\n  int y;\n  x := 0;\n  y := 1;\n}";
 
@@ -69,11 +86,11 @@
 
             Console.WriteLine(AppState.SelectedAnalysis.ToString());
             analysis = ForecastService.RunAnalysis(source, AppState.SelectedAnalysis);
-            
+
             error = string.Empty;
 
             await JsRuntime.InvokeAsync<string>("Lib.CreateFlowGraph", graph);
-            await JsRuntime.InvokeAsync<string>("Lib.InitCodeMirror");
+            await JsRuntime.InvokeAsync<string>("Lib.UpdateCodeMirror", source);
 
             StateHasChanged();
         }
@@ -93,6 +110,7 @@
     {
         if (firstRender)
         {
+            examplePrograms = AnalysisExamplePrograms.GetPrograms();
             Parse();
             JsRuntime.InvokeAsync<string>("Lib.InitCodeMirror");
         }
