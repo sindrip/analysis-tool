@@ -332,6 +332,9 @@ write r;
             var analysis2 = new FVAnalysis(result2);
             Console.WriteLine("------- Analysis 3 -------");
             var analysis3 = new FVAnalysis(result3);
+            
+            Console.WriteLine(string.Join(" ", AnalysisUtil.InterestingValues(result1).Select(x => x.ToString())));
+            
             var analysis4 = new IAAnalysis(result1);
             Console.WriteLine(analysis4);
             //Console.WriteLine(analysis1);

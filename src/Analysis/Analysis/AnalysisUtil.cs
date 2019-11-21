@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Analysis.AST;
 using Analysis.AST.AExpr;
 using Analysis.AST.BExpr;
@@ -97,6 +98,54 @@ namespace Analysis.Analysis
                     .Union(rbinop.Singleton())
                     .ToHashSet(),
                 _ => Enumerable.Empty<IExpression>().ToHashSet(),
+            };
+
+        public static HashSet<BigInteger> InterestingValues(IAstNode node) =>
+            IV(node).SelectMany(x => new HashSet<BigInteger> {x, x - 1, x + 1}).ToHashSet();
+        
+        private static HashSet<BigInteger> IV(IAstNode node) =>
+            node switch
+            {
+                // Sequence Statements
+                Program p => p.TopLevelStmts.SelectMany(stmt => IV(stmt)).ToHashSet(),
+                ScopedBlock _ => new HashSet<BigInteger>(),
+                UnscopedBlock ub => ub.Statements.SelectMany(stmt => IV(stmt)).ToHashSet(),
+                // Declarations
+                IntDecl id => (new BigInteger(0)).Singleton().ToHashSet(),
+                ArrayDecl ad => new HashSet<BigInteger> {0, ad.Size},
+                RecordDecl rc => (new BigInteger(0)).Singleton().ToHashSet(),
+                // Statements
+                IfStmt ifStmt => IV(ifStmt.Condition).Union(IV(ifStmt.Body))
+                    .ToHashSet(),
+                IfElseStmt ifElseStmt => IV(ifElseStmt.Condition)
+                    .Union(IV(ifElseStmt.IfBody))
+                    .Union(IV(ifElseStmt.ElseBody))
+                    .ToHashSet(),
+                WhileStmt whileStmt => IV(whileStmt.Condition)
+                    .Union(IV(whileStmt.Body))
+                    .ToHashSet(),
+                AssignStmt assignStmt => IV(assignStmt.Left)
+                    .Union(IV(assignStmt.Right))
+                    .ToHashSet(),
+                RecAssignStmt recAssignStmt => recAssignStmt.Right.SelectMany(stmt => IV(stmt))
+                    .ToHashSet(),
+                ReadStmt readStmt => IV(readStmt.Left),
+                WriteStmt writeStmt => IV(writeStmt.Left),
+                // Expressions
+                ArrayAccess aa => IV(aa.Left).Union(IV(aa.Right)).ToHashSet(),
+                AUnaryMinus aUnaryMinus => IV(aUnaryMinus.Left)
+                    .ToHashSet(),
+                ABinOp abinop => IV(abinop.Left)
+                    .Union(IV(abinop.Right))
+                    .ToHashSet(),
+                BBinOp bbinop => IV(bbinop.Left)
+                    .Union(IV(bbinop.Right))
+                    .ToHashSet(),
+                RBinOp rbinop => IV(rbinop.Left)
+                    .Union(IV(rbinop.Right))
+                    .ToHashSet(),
+                IntLit intlit => intlit.Value.Singleton().ToHashSet(),
+                _ => Enumerable.Empty<BigInteger>().ToHashSet(),
             };
     }
 }
