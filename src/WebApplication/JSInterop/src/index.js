@@ -43,13 +43,24 @@ export function InitCodeMirror() {
             theme: "material",
             autofocus: true,
         });
-        cmEditor.on('change', x => {
-            editor.value = x.getValue();
-            editor.dispatchEvent(new Event('input', {
-                bubbles: true,
-                cancelable: true
-            }));
+        cmEditor.on('change', (x, change) => {
+            if (change.origin !== 'setValue') {
+                editor.value = x.getValue();
+                console.log(x.getValue());
+                editor.dispatchEvent(new Event('input', {
+                    bubbles: true,
+                    cancelable: true
+                }));
+            }
         });
-    } 
+    }
 
 };
+
+export function UpdateCodeMirror(source) {
+    let cmEditor = document.querySelector('.CodeMirror').CodeMirror;
+    let existingValue = cmEditor.getDoc().getValue();
+    if (existingValue !== source) {
+        cmEditor.getDoc().setValue(source);
+    }
+}
