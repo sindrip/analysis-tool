@@ -7,6 +7,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Analysis\Analysis.csproj" />
+      <ProjectReference Include="..\Parser\Parser.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Antlr4.Runtime.Standard" Version="4.7.2" />
     </ItemGroup>
 
 </Project>

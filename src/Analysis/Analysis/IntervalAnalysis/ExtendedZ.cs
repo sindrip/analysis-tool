@@ -90,6 +90,9 @@ namespace Analysis.Analysis.IntervalAnalysis
                 return false;
             }
 
+            if (right.NegativeInf)
+                return false;
+
             return left.Value <= right.Value;
         }
 

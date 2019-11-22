@@ -118,8 +118,8 @@ namespace Analysis.Analysis
 
         public override string ToString()
         {
-            var circle = string.Join("\n", _analysisFilled.Select(x => x.ToString()));
-            var filled = string.Join("\n", _analysisCircle.Select(x => x.ToString()));
+            var circle = string.Join("\n", _analysisCircle.Select(x => x.ToString()));
+            var filled = string.Join("\n", _analysisFilled.Select(x => x.ToString()));
             return $"circle: {circle} \n filled: {filled}";
         }
 

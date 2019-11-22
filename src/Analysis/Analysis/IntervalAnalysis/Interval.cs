@@ -149,7 +149,7 @@ namespace Analysis.Analysis.IntervalAnalysis
                 return ExtendedZ.NegativeInfinity();
 
             if (n.PositiveInf)
-                return new ExtendedZ(iv.Min());
+                return new ExtendedZ(iv.Max());
 
             var lt = iv.Where(k => k <= n.Value).ToList();
             if (lt.Count == 0)
@@ -164,7 +164,7 @@ namespace Analysis.Analysis.IntervalAnalysis
                 return ExtendedZ.PositiveInfinity();
             
             if (n.NegativeInf)
-                return new ExtendedZ(iv.Max());
+                return new ExtendedZ(iv.Min());
 
             var gt = iv.Where(k => n.Value <= k).ToList();
             if (gt.Count == 0)

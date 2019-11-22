@@ -23,7 +23,20 @@ namespace ConsoleApp2
             Console.WriteLine($"4 <= posinf: {val4 <= posinf}");
             Console.WriteLine($"posinf <= negainf: {posinf <= negainf}");
             Console.WriteLine($"posinf <= posinf: {posinf <= posinf}");
-            
+
+            var input = @"
+{
+    int x;
+    x := 1;
+    while (x > 0) {
+        x := x - 1;
+    }
+}
+";
+            var result = Parser.Util.StringToAst(input);
+            var analysis = new IAAnalysis(result);
+            Console.WriteLine(analysis);
+
         }
     }
 }

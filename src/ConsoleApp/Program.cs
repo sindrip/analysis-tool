@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Analysis.Analysis;
-using Analysis.Analysis.AvailableExpressions;
-using Analysis.Analysis.DetectionOfSigns;
 using Analysis.Analysis.FaintVariables;
 using Analysis.Analysis.IntervalAnalysis;
-using Analysis.Analysis.LiveVariables;
-using Analysis.Analysis.ReachingDefinitions;
-using Analysis.AST;
 using Analysis.CFG;
 using Analysis.AST.AExpr;
 
