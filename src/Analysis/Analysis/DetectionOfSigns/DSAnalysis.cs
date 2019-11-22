@@ -96,8 +96,9 @@ namespace Analysis.Analysis.DetectionOfSigns
             {
                 VarAccess varAccess => DSUtil.Arithmetic(assignStmt.Right, domain),
                 RecordAccess recordAccess => DSUtil.Arithmetic(assignStmt.Right, domain),
-                ArrayAccess arrayAccess => DSUtil.Arithmetic(arrayAccess.Right, domain)
-                    .Union(DSUtil.Arithmetic(assignStmt.Right, domain)),
+                ArrayAccess arrayAccess => DSUtil.Arithmetic(assignStmt.Right, domain)
+                    .Union(domain[ident])
+                    //.Union(DSUtil.Arithmetic(arrayAccess.Right, domain)),
             };
 
             newDomain[ident] = newValue.ToHashSet();

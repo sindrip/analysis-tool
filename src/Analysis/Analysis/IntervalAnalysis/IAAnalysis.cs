@@ -107,8 +107,9 @@ namespace Analysis.Analysis.IntervalAnalysis
             {
                 VarAccess varAccess => IAUtil.Arithmetic(assignStmt.Right, domain),
                 RecordAccess recordAccess => IAUtil.Arithmetic(assignStmt.Right, domain),
-                ArrayAccess arrayAccess => IAUtil.Arithmetic(arrayAccess.Right, domain)
-                    .Join(IAUtil.Arithmetic(assignStmt.Right, domain)),
+                ArrayAccess arrayAccess => IAUtil.Arithmetic(assignStmt.Right, domain)
+                    .Join(domain[ident]),
+                    //.Join(IAUtil.Arithmetic(arrayAccess.Right, domain)),
             };
 
             if (assignStmt.Left is ArrayAccess)
@@ -117,6 +118,13 @@ namespace Analysis.Analysis.IntervalAnalysis
                 var indexInterval = IAUtil.Arithmetic(ra.Right, domain);
                 if (indexInterval.IsBottom)
                     return Bottom().GetDomain();
+                
+                var arrayIndices = new Interval(new ExtendedZ(0), new ExtendedZ(ra.Left.Size - 1));
+                var meet = indexInterval.Meet(arrayIndices);
+                if (indexInterval.Meet(arrayIndices).IsBottom)
+                {
+                    return Bottom().GetDomain();
+                }
             }
 
             if (newValue.IsBottom)

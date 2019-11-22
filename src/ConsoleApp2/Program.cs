@@ -33,9 +33,21 @@ namespace ConsoleApp2
     }
 }
 ";
-            var result = Parser.Util.StringToAst(input);
-            var analysis = new IAAnalysis(result);
-            Console.WriteLine(analysis);
+
+            var input2 = @"
+{
+    int[1] a;
+    read a[-1];
+    a[-1] := 1;
+    read a[0];
+}
+";
+            //var result = Parser.Util.StringToAst(input);
+            //var analysis = new IAAnalysis(result);
+            //Console.WriteLine(analysis);
+            var result2 = Parser.Util.StringToAst(input2);
+            var analysis2 = new IAAnalysis(result2);
+            Console.WriteLine(analysis2);
 
         }
     }

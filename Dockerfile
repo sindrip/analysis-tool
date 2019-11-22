@@ -17,6 +17,7 @@ COPY src/WebApplication/WebApplication.csproj src/WebApplication/
 COPY src/Analysis/Analysis.csproj src/Analysis/
 COPY src/Parser/Parser.csproj src/Parser/
 COPY src/ConsoleApp/ConsoleApp.csproj src/ConsoleApp/
+COPY src/ConsoleApp2/ConsoleApp2.csproj src/ConsoleApp2/
 RUN dotnet restore AnalysisTool.sln
 COPY . .
 WORKDIR /src/src/WebApplication

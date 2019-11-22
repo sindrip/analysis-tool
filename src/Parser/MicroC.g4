@@ -37,6 +37,8 @@ statement
     | IF LPAREN b_expr RPAREN ifBody=unscopedBlock ELSE elseBody=unscopedBlock #ifElseStmt
     | WHILE LPAREN b_expr RPAREN unscopedBlock #whileStmt
     | READ IDENT SEMICOLON #readStmt
+    | READ IDENT LBRACKET index=a_expr RBRACKET SEMICOLON #readArrStmt
+    | READ name=IDENT DOT field=IDENT SEMICOLON #readFieldStmt
     | WRITE a_expr SEMICOLON #writeStmt
     ;
     

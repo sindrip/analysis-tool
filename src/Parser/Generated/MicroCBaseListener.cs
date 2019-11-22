@@ -250,6 +250,34 @@ public partial class MicroCBaseListener : IMicroCListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitReadStmt([NotNull] MicroCParser.ReadStmtContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by the <c>readArrStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterReadArrStmt([NotNull] MicroCParser.ReadArrStmtContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>readArrStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitReadArrStmt([NotNull] MicroCParser.ReadArrStmtContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>readFieldStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterReadFieldStmt([NotNull] MicroCParser.ReadFieldStmtContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>readFieldStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitReadFieldStmt([NotNull] MicroCParser.ReadFieldStmtContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by the <c>writeStmt</c>
 	/// labeled alternative in <see cref="MicroCParser.statement"/>.
 	/// <para>The default implementation does nothing.</para>

@@ -214,6 +214,30 @@ public interface IMicroCListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitReadStmt([NotNull] MicroCParser.ReadStmtContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>readArrStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterReadArrStmt([NotNull] MicroCParser.ReadArrStmtContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>readArrStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitReadArrStmt([NotNull] MicroCParser.ReadArrStmtContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>readFieldStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterReadFieldStmt([NotNull] MicroCParser.ReadFieldStmtContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>readFieldStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitReadFieldStmt([NotNull] MicroCParser.ReadFieldStmtContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>writeStmt</c>
 	/// labeled alternative in <see cref="MicroCParser.statement"/>.
 	/// </summary>

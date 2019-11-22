@@ -210,7 +210,6 @@ namespace Parser
         public override IAstNode VisitReadStmt(MicroCParser.ReadStmtContext context)
         {
             var label = ++_label;
-            // TODO all of read possibilites
             string name = context.IDENT().GetText();
             var symbol = _symbolTable.LookupSymbol(name);
             var ident = new Identifier(symbol.Name, symbol.Type, symbol.Id);
@@ -219,6 +218,47 @@ namespace Parser
             readStmt.Label = label;
             return readStmt;
         }
+
+        public override IAstNode VisitReadArrStmt(MicroCParser.ReadArrStmtContext context)
+        {
+            var label = ++_label;
+            string name = context.IDENT().GetText();
+            var symbol = _symbolTable.LookupSymbol(name);
+            var ident = new Identifier(symbol.Name, symbol.Type, symbol.Id, symbol.Size);
+            IAExpr index = Visit(context.index) as IAExpr;
+            IStateAccess sa = new ArrayAccess(ident, index);
+            var readStmt = new ReadStmt(sa);
+            readStmt.Label = label;
+            return readStmt;
+        }
+
+        public override IAstNode VisitReadFieldStmt(MicroCParser.ReadFieldStmtContext context)
+        {
+            
+            var label = ++_label;
+            string recName = context.name.Text;
+            string fieldName = context.field.Text;
+            var recSymbol = _symbolTable.LookupSymbol(recName);
+            if (recSymbol == null)
+            {
+                throw new ArgumentException($"Record: {recName} does not exist");
+            }
+            var fieldSymbol = recSymbol.Children.SingleOrDefault(f => f.Name == fieldName);
+            if (fieldSymbol == null)
+            {
+                throw new ArgumentException($"Record: {recName} does not include a field: {fieldName}");
+            }
+
+            var recIdent = new Identifier(recName, recSymbol.Type, recSymbol.Id);
+            var fieldIdent = new Identifier(fieldName, fieldSymbol.Type, fieldSymbol.Id);
+
+            RecordAccess sa = new RecordAccess(recIdent, fieldIdent);
+
+            var readStmt = new ReadStmt(sa);
+            readStmt.Label = label;
+            return readStmt;
+        }
+
 
         public override IAstNode VisitWriteStmt(MicroCParser.WriteStmtContext context)
         {

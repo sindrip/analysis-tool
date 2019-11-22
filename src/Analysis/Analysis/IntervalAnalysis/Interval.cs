@@ -51,11 +51,12 @@ namespace Analysis.Analysis.IntervalAnalysis
             if (IsBottom || right.IsBottom)
                 return Bottom();
 
-            var min = ExtendedZ.Min(LowerBound, right.LowerBound);
-            var max = ExtendedZ.Max(UpperBound, right.UpperBound);
-            if (min <= max)
+            var max = ExtendedZ.Max(LowerBound, right.LowerBound);
+            var min = ExtendedZ.Min(UpperBound, right.UpperBound);
+            // TODO: fix this
+            if (max <= min)
             {
-                return new Interval(min, max);
+                return new Interval(max, min);
             }
 
             return Bottom();

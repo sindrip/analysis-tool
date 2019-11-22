@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Analysis.Analysis.IntervalAnalysis
 {
-    public class ExtendedZ : IComparable<ExtendedZ>
+    public class ExtendedZ
     {
         public BigInteger Value { get; private set; }
         public bool NegativeInf { get; private set; }
@@ -117,7 +117,6 @@ namespace Analysis.Analysis.IntervalAnalysis
             return left.Value >= right.Value;
         }
 
-        // TODO: make the operators
         public static ExtendedZ operator +(ExtendedZ left, ExtendedZ right)
         {
             if (left.NegativeInf || right.NegativeInf)
@@ -160,11 +159,6 @@ namespace Analysis.Analysis.IntervalAnalysis
                 return PositiveInfinity();
             
             return new ExtendedZ(left.Value / right.Value);
-        }
-
-        public int CompareTo(ExtendedZ other)
-        {
-            throw new NotImplementedException();
         }
 
         public override string ToString()

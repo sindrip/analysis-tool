@@ -140,6 +140,20 @@ public interface IMicroCVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitReadStmt([NotNull] MicroCParser.ReadStmtContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>readArrStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitReadArrStmt([NotNull] MicroCParser.ReadArrStmtContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>readFieldStmt</c>
+	/// labeled alternative in <see cref="MicroCParser.statement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitReadFieldStmt([NotNull] MicroCParser.ReadFieldStmtContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>writeStmt</c>
 	/// labeled alternative in <see cref="MicroCParser.statement"/>.
 	/// </summary>
