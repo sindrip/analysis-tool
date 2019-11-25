@@ -37,7 +37,7 @@ namespace Analysis.CFG
                 Program program => Final(program.TopLevelStmts.Last()),
                 ScopedBlock scopedBlock => Final(scopedBlock.Statements.Last()),
                 UnscopedBlock unscopedBlock => Final(unscopedBlock.Statements.Last()),
-                IfStmt ifStmt => Final(ifStmt.Body),
+                IfStmt ifStmt => Final(ifStmt.Body).Union(ifStmt.Label.Singleton()),
                 IfElseStmt ifElseStmt => Final(ifElseStmt.IfBody).Union(Final(ifElseStmt.ElseBody)),
                 IStatement statement => new HashSet<int> {statement.Label},
                 _ => throw new ArgumentException("Final can only accept Meta Nodes and IStatement Nodes")
