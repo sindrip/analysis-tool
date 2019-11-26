@@ -2,7 +2,7 @@
 @inject AppStateService AppState
 
 <div>
-    <select class="form-control" id="analysisTypes" @bind="selected" >
+    <select class="form-control" id="analysisTypes" @bind="selected" style="margin-bottom: 10px">
         @foreach(AnalysisType at in Enum.GetValues(typeof(AnalysisType)))
         {
             @if(at == selected) {

@@ -11,6 +11,7 @@ namespace Analysis.Analysis
         FlowEdge Extract();
         void Insert(FlowEdge flowEdge);
         bool Empty();
+        List<FlowEdge> GetCurrentEdges();
     }
 
     public class ChaoticIteration : IWorkList
@@ -32,6 +33,11 @@ namespace Analysis.Analysis
         }
 
         public bool Empty() => _edgeList.Count == 0;
+
+        public List<FlowEdge> GetCurrentEdges()
+        {
+            return _edgeList.ToList();
+        }
     }
 
     public class FIFOWorklist : IWorkList
@@ -47,6 +53,11 @@ namespace Analysis.Analysis
         public FlowEdge Extract()
         {
             return _edgeList.Dequeue();
+        }
+
+        public List<FlowEdge> GetCurrentEdges()
+        {
+            return _edgeList.ToList();
         }
 
         public void Insert(FlowEdge flowEdge)
@@ -70,6 +81,11 @@ namespace Analysis.Analysis
         public FlowEdge Extract()
         {
             return _edgeList.Pop();
+        }
+
+        public List<FlowEdge> GetCurrentEdges()
+        {
+            return _edgeList.ToList();
         }
 
         public void Insert(FlowEdge flowEdge)
@@ -108,6 +124,11 @@ namespace Analysis.Analysis
                 FlowEdge q = V.PopFirst();
                 return q;
             }
+        }
+
+        public List<FlowEdge> GetCurrentEdges()
+        {
+            return P.ToList();
         }
 
         public void Insert(FlowEdge flowEdge)

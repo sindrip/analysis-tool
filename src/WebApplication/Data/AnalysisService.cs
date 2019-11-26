@@ -10,6 +10,7 @@ using Analysis.Analysis.ReachingDefinitions;
 using Analysis.Analysis.IntervalAnalysis;
 
 using Analysis.CFG;
+using Analysis.Analysis;
 
 namespace WebApplication.Data
 {
@@ -19,6 +20,8 @@ namespace WebApplication.Data
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+
+        private List<IterationStep> _iterationSteps;
 
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {
@@ -60,7 +63,7 @@ namespace WebApplication.Data
             var fg = new FlowGraph(ast);
             return fg.ToGraphvizFormat();
         }
-        public List<AnalysisResult> RunAnalysis(string source, AnalysisType analysisType)
+        public List<AnalysisResult> RunAnalysis(string source, AnalysisType analysisType, WorklistType worklistType)
         {
             var ast = Parser.Util.StringToAst(source);
             List<AnalysisResult> res = new List<AnalysisResult>();
@@ -69,9 +72,10 @@ namespace WebApplication.Data
             {
                 case AnalysisType.ReachingDefinitions:
                 {
-                    var analysis = new RDAnalysis(ast);
+                    var analysis = new RDAnalysis(ast, worklistType.ToString());
                     var filledLattice = analysis.GetFilledLattice();
                     var circlelattice = analysis.GetCircleLattice();
+                    _iterationSteps = analysis.GetIterationSteps();
                     
                     string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{1}</var> }}<br/>";
                     
@@ -101,9 +105,10 @@ namespace WebApplication.Data
                 }
                 case AnalysisType.LiveVariables:
                 {
-                    var analysis = new LVAnalysis(ast);
+                    var analysis = new LVAnalysis(ast, worklistType.ToString());
                     var filledLattice = analysis.GetFilledLattice();
                     var circlelattice = analysis.GetCircleLattice();
+                    _iterationSteps = analysis.GetIterationSteps();
                     
                     int label = 0;
                     string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> Live <br/>";
@@ -132,10 +137,11 @@ namespace WebApplication.Data
                 }
                 case AnalysisType.FaintVariables:
                 {
-                    var analysis = new FVAnalysis(ast);
+                    var analysis = new FVAnalysis(ast, worklistType.ToString());
                     var filledLattice = analysis.GetFilledLattice();
                     var circlelattice = analysis.GetCircleLattice();
-                    
+                    _iterationSteps = analysis.GetIterationSteps();
+
                     int label = 0;
                     string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> Faint<br/>";
 
@@ -163,9 +169,10 @@ namespace WebApplication.Data
                 }
                 case AnalysisType.DetectionOfSigns:
                 {
-                    var analysis = new DSAnalysis(ast);
+                    var analysis = new DSAnalysis(ast, worklistType.ToString());
                     var filledLattice = analysis.GetFilledLattice();
                     var circlelattice = analysis.GetCircleLattice();
+                    _iterationSteps = analysis.GetIterationSteps();
                     
                     int label = 0;
                     string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{1}</var> }}<br/>";
@@ -194,9 +201,10 @@ namespace WebApplication.Data
                 }
                 case AnalysisType.IntervalAnalysis:
                 {
-                    var analysis = new IAAnalysis(ast);
+                    var analysis = new IAAnalysis(ast, worklistType.ToString());
                     var filledLattice = analysis.GetFilledLattice();
                     var circlelattice = analysis.GetCircleLattice();
+                    _iterationSteps = analysis.GetIterationSteps();
                     
                     int label = 0;
                     string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> {{ <var>{1}</var> }}<br/>";
@@ -230,6 +238,20 @@ namespace WebApplication.Data
             }
 
             return res;
+        }
+
+
+        public List<WorklistResult> GetIterationSteps()
+        {
+            List<WorklistResult> iterationSteps = new List<WorklistResult>();
+
+            foreach(var entry in _iterationSteps)
+            {
+                WorklistResult currentStep = new WorklistResult(entry.CurrentStep, entry.CurrentLabel, entry.UpdatedWorklist, entry.AnalysisCircle);
+                iterationSteps.Add(currentStep);
+            }
+
+            return iterationSteps;
         }
     }
 }

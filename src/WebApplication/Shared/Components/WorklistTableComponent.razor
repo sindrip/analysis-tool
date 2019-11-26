@@ -1,0 +1,74 @@
+@using WebApplication.Data
+
+<div class="my-3">
+    <h2>@Title</h2>
+    <button class="btn btn-primary" @onclick="previousStep">Previous Step</button><button class="btn btn-primary" @onclick="nextStep">Next Step</button>
+    <table class="table">
+    <tbody>
+        @if (Results.Count > 0)
+        {
+            {
+                WorklistResult item = Results.Find(x => x.CurrentStep == StepNumber);
+                if (item != null)
+                {
+                <tr>
+                    <th>Current Step</th>
+                    <td>@item.CurrentStep</td>
+                </tr>
+                <tr>
+                    <th>Current Label</th>
+                    <td>@item.CurrentLabel</td>
+                </tr>
+                <tr>
+                    <th>Updated Worklist</th>
+                    <td>
+                    @foreach (var entry in item.UpdatedWorklist)
+                    {
+                        @((MarkupString)entry.ToString())
+                    }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Nodes</th>
+                    <th>@Title</th>
+                </tr>
+                @foreach (var entry in @item.AnalysisCircle)
+                {
+                    <tr>
+                        <td>@entry.Item1</td>
+                        <td>@entry.Item2</td>
+                    </tr>
+                }
+                }
+            }
+        }
+    </tbody>
+    </table>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public List<WorklistResult> Results { get; set; }
+
+    private int StepNumber = 1;
+
+    private void previousStep()
+    {
+        if (StepNumber > 1) // TODO remember to change so 0 step is included
+        {
+            StepNumber--;
+        }
+    }
+
+    void nextStep()
+    {
+        if (StepNumber < Results.Count)
+        {
+            StepNumber++;
+        }
+    }
+}

@@ -12,7 +12,7 @@ namespace Analysis.Analysis.LiveVariables
     {
         private LVLattice _dummyLattice;
         
-        public LVAnalysis(Program program) : base(program, AnalysisDirection.Backward)
+        public LVAnalysis(Program program, string worklistName) : base(program, AnalysisDirection.Backward, worklistName)
         {
             //_dummyLattice = new LVLattice(program);
             _dummyLattice = new LVLattice();

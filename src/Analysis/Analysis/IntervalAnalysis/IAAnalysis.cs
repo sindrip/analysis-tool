@@ -8,7 +8,7 @@ namespace Analysis.Analysis.IntervalAnalysis
     public class IAAnalysis : Analysis<IADomain>
     {
 
-        public IAAnalysis(Program program) : base(program, AnalysisDirection.Forward)
+        public IAAnalysis(Program program, string worklistName) : base(program, AnalysisDirection.Forward, worklistName)
         {
             InitializeAnalysis();
             RunAnalysis();

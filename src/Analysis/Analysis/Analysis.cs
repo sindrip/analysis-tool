@@ -15,16 +15,18 @@ namespace Analysis.Analysis
         protected List<ILattice<T>> _analysisCircle;
         protected List<ILattice<T>> _analysisFilled;
         protected Program _program;
-        //protected IWorkList _workList;
-        
+        protected IWorkList _worklist;
+        protected string _worklistMethodName;
+        protected List<IterationStep> _iterationSteps;
         protected abstract ILattice<T> TransferFunctions(int label);
         protected abstract ILattice<T> Iota();
         protected abstract ILattice<T> Bottom();
 
-        public Analysis(Program program, AnalysisDirection direction)
+        public Analysis(Program program, AnalysisDirection direction, string worklistName)
         {
             _program = program;
             _blocks = FlowUtil.Blocks(program);
+            _worklistMethodName = worklistName;
             
             var flow = FlowUtil.Flow(program);
             if (direction == AnalysisDirection.Forward)
@@ -37,9 +39,12 @@ namespace Analysis.Analysis
                 _flow = FlowUtil.FlowR(flow);
                 _extremalLabels = FlowUtil.Final(program);
             }
-            
+
+
             _analysisCircle = new List<ILattice<T>>();
             _analysisFilled = new List<ILattice<T>>();
+
+            _iterationSteps = new List<IterationStep>();
         }
         
         public List<ILattice<T>> GetCircleLattice() => _analysisCircle; 
@@ -49,9 +54,6 @@ namespace Analysis.Analysis
 
         protected void InitializeAnalysis()
         {
-            _analysisCircle = new List<ILattice<T>>();
-            _analysisFilled = new List<ILattice<T>>();
-
             var orderedBlocks = _blocks.OrderBy(x => x.Label);
             foreach (var b in orderedBlocks)
             {
@@ -70,16 +72,26 @@ namespace Analysis.Analysis
 
         protected void RunAnalysis()
         {
-            DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
-            IWorkList _workListRoundRobin = new RoundRobin(_flow, dfst.GetRP());
-            IWorkList _worklistFIFO = new FIFOWorklist(_flow);
-            IWorkList _worklistLIFO = new LIFOWorklist(_flow);
-            IWorkList _worklistChaotic = new ChaoticIteration(_flow.Shuffle(2));
+            switch (_worklistMethodName)
+            {
+                case "FIFOWorklist":
+                    _worklist = new FIFOWorklist(_flow);
+                    break;
+                case "LIFOWorklist":
+                    _worklist = new LIFOWorklist(_flow);
+                    break;
+                case "ChaoticIteration":
+                    _worklist = new ChaoticIteration(_flow);
+                    break;
+                case "RoundRobin":
+                    DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
+                    _worklist = new RoundRobin(_flow, dfst.GetRP());
+                    break;
+                default:
+                    break;
+            }
 
-            Console.WriteLine("FIFO worklist: " + WorkThroughWorklist(_worklistFIFO));
-            Console.WriteLine("LIFO worklist: " + WorkThroughWorklist(_worklistLIFO));
-            Console.WriteLine("Chaotic worklist: " + WorkThroughWorklist(_worklistChaotic));
-            Console.WriteLine("Round Robin worklist: " + WorkThroughWorklist(_workListRoundRobin));
+            WorkThroughWorklist(_worklist);
 
             var labels = FlowUtil.Labels(_blocks);
             foreach (var lab in labels)
@@ -91,15 +103,13 @@ namespace Analysis.Analysis
 
         private int WorkThroughWorklist(IWorkList _workList)
         {
-
-            InitializeAnalysis(); // reinitialize analysis since we run it several times
-
             int numberOfOperations = 0;
 
             while (!_workList.Empty())
             {
                 var edge = _workList.Extract();
                 numberOfOperations++;
+
                 var sourceTransfer = TransferFunctions(edge.Source);
                 var target = _analysisCircle[edge.Dest];
                 if (!sourceTransfer.PartialOrder(target))
@@ -111,9 +121,23 @@ namespace Analysis.Analysis
                         _workList.Insert(e);
                     }
                 }
+
+                List<(int, string)> analysisCircleList = new List<(int, string)>();
+
+                foreach(int lab in FlowUtil.Labels(_blocks))
+                {
+                    analysisCircleList.Add((lab, _analysisCircle[lab].ToString()));
+                }
+
+                _iterationSteps.Add(new IterationStep(numberOfOperations, edge.Source, _workList.GetCurrentEdges(), analysisCircleList));
             }
 
             return numberOfOperations;
+        }
+
+        public List<IterationStep> GetIterationSteps()
+        {
+            return _iterationSteps;
         }
 
         public override string ToString()

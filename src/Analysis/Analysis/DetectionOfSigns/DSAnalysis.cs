@@ -11,7 +11,7 @@ namespace Analysis.Analysis.DetectionOfSigns
     public class DSAnalysis : Analysis<DSDomain>
 
     {
-        public DSAnalysis(Program program) : base(program, AnalysisDirection.Forward)
+        public DSAnalysis(Program program, string worklistName) : base(program, AnalysisDirection.Forward, worklistName)
         {
             InitializeAnalysis();
             RunAnalysis();

@@ -11,7 +11,7 @@ namespace Analysis.Analysis.AvailableExpressions
     {
         private AELattice _dummyLattice;
 
-        public AEAnalysis(Program program) : base(program, AnalysisDirection.Forward)
+        public AEAnalysis(Program program, string worklistName) : base(program, AnalysisDirection.Forward, worklistName)
         {
             _dummyLattice = new AELattice(program);
             

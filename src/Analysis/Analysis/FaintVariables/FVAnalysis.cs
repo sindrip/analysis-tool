@@ -12,7 +12,7 @@ namespace Analysis.Analysis.FaintVariables
     {
         private FVLattice _dummyLattice;
         
-        public FVAnalysis(Program program) : base(program, AnalysisDirection.Backward)
+        public FVAnalysis(Program program, string worklistName) : base(program, AnalysisDirection.Backward, worklistName)
         {
             _dummyLattice = new FVLattice();
             

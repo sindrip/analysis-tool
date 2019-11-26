@@ -1,0 +1,42 @@
+@using WebApplication.Data
+@inject AppStateService AppState
+
+<div>
+    <select class="form-control" id="worklistTypes" @bind="selected" >
+        @foreach(WorklistType worklistType in Enum.GetValues(typeof(WorklistType)))
+        {
+            @if(worklistType == selected) {
+                <option value="@worklistType" selected>@worklistType.ToString()</option>
+            }
+            else {
+                <option value="@worklistType">@worklistType.ToString()</option>
+            }
+        }
+    </select>
+</div>
+
+
+@code {
+    private WorklistType _selected { get; set; } = AppStateService.GetDefaultWorklist();
+
+    [Parameter]
+    public WorklistType selected
+    {
+        get => _selected;
+        set
+        {
+            _selected = value;
+            SelectWorklist();
+        }
+    }
+    [Parameter]
+    public EventCallback OnSelect { get; set; }
+
+    void SelectWorklist() {
+        AppState.SetWorklistType(_selected);
+
+        OnSelect.InvokeAsync(null);
+    }
+
+
+}

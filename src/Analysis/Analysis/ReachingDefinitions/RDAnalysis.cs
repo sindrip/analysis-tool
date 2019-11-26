@@ -9,7 +9,7 @@ namespace Analysis.Analysis.ReachingDefinitions
     {
         private RDLattice _dummyLattice;
 
-        public RDAnalysis(Program program) : base(program, AnalysisDirection.Forward)
+        public RDAnalysis(Program program, string worklistName) : base(program, AnalysisDirection.Forward, worklistName)
         {
             _dummyLattice = new RDLattice(program);
             
