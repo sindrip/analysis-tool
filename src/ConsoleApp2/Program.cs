@@ -36,18 +36,37 @@ namespace ConsoleApp2
 
             var input2 = @"
 {
+    int x;
     int[1] a;
-    read a[-1];
-    a[-1] := 1;
     read a[0];
+    a[0] := 1;
+    read a[0];
+    if (x > 0) {
+        a[-1] := 0;
+    }
+    read a[0];
+}
+";
+
+            var input3 = @"
+{
+int x;
+x := -1;
+while (x > 0) {
+    x := x - 1;
+}
+x := x / 2;
 }
 ";
             //var result = Parser.Util.StringToAst(input);
             //var analysis = new IAAnalysis(result);
             //Console.WriteLine(analysis);
-            var result2 = Parser.Util.StringToAst(input2);
-            var analysis2 = new IAAnalysis(result2);
-            Console.WriteLine(analysis2);
+            //var result2 = Parser.Util.StringToAst(input2);
+            //var analysis2 = new IAAnalysis(result2);
+            //Console.WriteLine(analysis2);
+            var result3 = Parser.Util.StringToAst(input3);
+            var analysis3 = new IAAnalysis(result3, "FIFOWorklist");
+            Console.WriteLine(analysis3);
 
         }
     }

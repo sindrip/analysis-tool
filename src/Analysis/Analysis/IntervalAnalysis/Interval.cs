@@ -130,7 +130,9 @@ namespace Analysis.Analysis.IntervalAnalysis
             var rub = right.UpperBound;
             
             var l = new List<ExtendedZ> {llb / rlb, llb / rub, lub / rlb, lub / rub};
-            return new Interval(l.Min(), l.Max());
+            var min = l.Aggregate(ExtendedZ.PositiveInfinity(), (x, y) => ExtendedZ.Min(x, y));
+            var max = l.Aggregate(ExtendedZ.NegativeInfinity(), (x, y) => ExtendedZ.Max(x, y));
+            return new Interval(min, max);
         }
 
         public Interval ToIntervalK(Program program)
@@ -186,10 +188,17 @@ namespace Analysis.Analysis.IntervalAnalysis
                 if (UpperBound.NegativeInf)
                     return false;
 
-                return UpperBound.Value > 0;
+                return UpperBound.Value >= 0;
             }
 
-            return LowerBound.Value > 0;
+            if (UpperBound.PositiveInf)
+            {
+                return LowerBound.Value <= 0;
+            }
+
+            return LowerBound.Value == 0
+                   || UpperBound.Value == 0
+                   || ((LowerBound.Value <= 0) && (UpperBound.Value >= 0));
         }
 
         public override string ToString() => $"[{LowerBound}, {UpperBound}]";
