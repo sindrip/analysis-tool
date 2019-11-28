@@ -16,7 +16,7 @@
                 {
                 <tr>
                     <th>Current Step</th>
-                    <td>@item.CurrentStep</td>
+                    <td>@item.CurrentStep of @(Results.Count- 1)</td>
                 </tr>
                 <tr>
                     <th>Current Edge</th>
@@ -61,7 +61,7 @@
 
     private void previousStep()
     {
-        if (StepNumber > 0) // TODO remember to change so 0 step is included
+        if (StepNumber > 0)
         {
             StepNumber--;
         }
