@@ -21,7 +21,6 @@
                     {
                         <label for="exampleProgram">Example Program: </label>
                         <select id="exampleProgram" @bind="source">
-                            <option></option>
                             @foreach (var program in examplePrograms)
                             {
                                 <option value="@program.Value">@program.Key</option>

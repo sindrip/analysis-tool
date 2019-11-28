@@ -128,7 +128,7 @@ namespace Analysis.Analysis
 
         public List<FlowEdge> GetCurrentEdges()
         {
-            return P.ToList();
+            return V.GetLinkedList().ToList();
         }
 
         public void Insert(FlowEdge flowEdge)
@@ -176,6 +176,11 @@ namespace Analysis.Analysis
         }
 
         public bool IsEmpty() => VLinkedList.Count == 0;
+
+        public LinkedList<FlowEdge> GetLinkedList()
+        {
+            return VLinkedList;
+        }
 
         internal FlowEdge PopFirst()
         {
