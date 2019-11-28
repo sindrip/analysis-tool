@@ -81,7 +81,7 @@ namespace Analysis.Analysis
                     _worklist = new LIFOWorklist(_flow);
                     break;
                 case "ChaoticIteration":
-                    _worklist = new ChaoticIteration(_flow);
+                    _worklist = new ChaoticIteration(_flow.Shuffle(3));
                     break;
                 case "RoundRobin":
                     DepthFirstSpanningTree dfst = new DepthFirstSpanningTree(new FlowGraph(_program));
@@ -105,6 +105,16 @@ namespace Analysis.Analysis
         {
             int numberOfOperations = 0;
 
+
+            List<(int, string)> analysisCircleList = new List<(int, string)>();
+
+            foreach (int lab in FlowUtil.Labels(_blocks))
+            {
+                analysisCircleList.Add((lab, _analysisCircle[lab].ToString()));
+            }
+
+            _iterationSteps.Add(new IterationStep(numberOfOperations, null, _workList.GetCurrentEdges(), analysisCircleList));
+
             while (!_workList.Empty())
             {
                 var edge = _workList.Extract();
@@ -122,14 +132,13 @@ namespace Analysis.Analysis
                     }
                 }
 
-                List<(int, string)> analysisCircleList = new List<(int, string)>();
-
-                foreach(int lab in FlowUtil.Labels(_blocks))
+                analysisCircleList = new List<(int, string)>();
+                foreach (int lab in FlowUtil.Labels(_blocks))
                 {
                     analysisCircleList.Add((lab, _analysisCircle[lab].ToString()));
                 }
 
-                _iterationSteps.Add(new IterationStep(numberOfOperations, edge.Source, _workList.GetCurrentEdges(), analysisCircleList));
+                _iterationSteps.Add(new IterationStep(numberOfOperations, edge, _workList.GetCurrentEdges(), analysisCircleList));
             }
 
             return numberOfOperations;

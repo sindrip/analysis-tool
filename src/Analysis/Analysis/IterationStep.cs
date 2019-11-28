@@ -9,14 +9,14 @@ namespace Analysis.Analysis
     public class IterationStep
     {
         public int CurrentStep;
-        public int CurrentLabel;
+        public FlowEdge? CurrentEdge;
         public List<FlowEdge> UpdatedWorklist;
         public List<(int, string)> AnalysisCircle;
-        // figure out how to add analysis circle
-        public IterationStep(int currentStep, int currentLabel, List<FlowEdge> updatedWorklist, List<(int, string)> analysisCircle)
+
+        public IterationStep(int currentStep, FlowEdge? currentEdge, List<FlowEdge> updatedWorklist, List<(int, string)> analysisCircle)
         {
             CurrentStep = currentStep;
-            CurrentLabel = currentLabel;
+            CurrentEdge = currentEdge;
             UpdatedWorklist = updatedWorklist;
             AnalysisCircle = analysisCircle;
         }

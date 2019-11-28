@@ -2,7 +2,10 @@
 
 <div class="my-3">
     <h2>@Title</h2>
-    <button class="btn btn-primary" @onclick="previousStep">Previous Step</button><button class="btn btn-primary" @onclick="nextStep">Next Step</button>
+    <button class="btn btn-success" @onclick="firstStep">First Step</button>
+    <button class="btn btn-success" @onclick="previousStep">Previous Step</button>
+    <button class="btn btn-success" @onclick="nextStep">Next Step</button>
+    <button class="btn btn-success" @onclick="lastStep">Last Step</button>
     <table class="table">
     <tbody>
         @if (Results.Count > 0)
@@ -16,8 +19,8 @@
                     <td>@item.CurrentStep</td>
                 </tr>
                 <tr>
-                    <th>Current Label</th>
-                    <td>@item.CurrentLabel</td>
+                    <th>Current Edge</th>
+                    <td>@item.CurrentEdge</td>
                 </tr>
                 <tr>
                     <th>Updated Worklist</th>
@@ -54,11 +57,11 @@
     [Parameter]
     public List<WorklistResult> Results { get; set; }
 
-    private int StepNumber = 1;
+    private int StepNumber = 0;
 
     private void previousStep()
     {
-        if (StepNumber > 1) // TODO remember to change so 0 step is included
+        if (StepNumber > 0) // TODO remember to change so 0 step is included
         {
             StepNumber--;
         }
@@ -66,9 +69,20 @@
 
     void nextStep()
     {
-        if (StepNumber < Results.Count)
+        if (StepNumber < Results.Count - 1)
         {
             StepNumber++;
         }
     }
+
+    void firstStep()
+    {
+        StepNumber = 0;
+    }
+
+    void lastStep()
+    {
+        StepNumber = Results.Count - 1;
+    }
+
 }
