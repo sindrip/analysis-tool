@@ -55,7 +55,7 @@ x := -1;
 while (x > 0) {
     x := x - 1;
 }
-x := x / 2;
+x := x * x;
 }
 ";
             //var result = Parser.Util.StringToAst(input);

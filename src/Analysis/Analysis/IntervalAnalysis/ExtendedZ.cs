@@ -130,10 +130,10 @@ namespace Analysis.Analysis.IntervalAnalysis
         
         public static ExtendedZ operator -(ExtendedZ left, ExtendedZ right)
         {
-            if (left.NegativeInf || right.NegativeInf)
+            if (left.NegativeInf || right.PositiveInf)
                 return NegativeInfinity();
 
-            if (left.PositiveInf || right.PositiveInf)
+            if (left.PositiveInf || right.NegativeInf)
                 return PositiveInfinity();
             
             return new ExtendedZ(left.Value - right.Value);
@@ -141,22 +141,122 @@ namespace Analysis.Analysis.IntervalAnalysis
         
         public static ExtendedZ operator *(ExtendedZ left, ExtendedZ right)
         {
-            if (left.NegativeInf || right.NegativeInf)
-                return NegativeInfinity();
+            if (left.NegativeInf)
+            {
+                if (right.NegativeInf)
+                    return PositiveInfinity();
+                else if (right.PositiveInf)
+                    return NegativeInfinity();
+                else if (right.Value < 0)
+                    return PositiveInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return NegativeInfinity();
+            }
 
-            if (left.PositiveInf || right.PositiveInf)
-                return PositiveInfinity();
+            if (left.PositiveInf)
+            {
+                if (right.NegativeInf)
+                    return NegativeInfinity();
+                else if (right.PositiveInf)
+                    return PositiveInfinity();
+                else if (right.Value < 0)
+                    return NegativeInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return PositiveInfinity();
+            }
+
+            if (right.NegativeInf)
+            {
+                if (left.NegativeInf)
+                    return PositiveInfinity();
+                else if (right.PositiveInf)
+                    return NegativeInfinity();
+                else if (left.Value < 0)
+                    return PositiveInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return NegativeInfinity();
+            }
+            
+            if (right.PositiveInf)
+            {
+                if (left.NegativeInf)
+                    return NegativeInfinity();
+                else if (right.PositiveInf)
+                    return PositiveInfinity();
+                else if (left.Value < 0)
+                    return NegativeInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return PositiveInfinity();
+            }
             
             return new ExtendedZ(left.Value * right.Value);
         }
         
         public static ExtendedZ operator /(ExtendedZ left, ExtendedZ right)
         {
-            if (left.NegativeInf || right.NegativeInf)
-                return NegativeInfinity();
+            if (left.NegativeInf)
+            {
+                if (right.NegativeInf)
+                    return PositiveInfinity();
+                else if (right.PositiveInf)
+                    return NegativeInfinity();
+                else if (right.Value < 0)
+                    return PositiveInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return NegativeInfinity();
+            }
 
-            if (left.PositiveInf || right.PositiveInf)
-                return PositiveInfinity();
+            if (left.PositiveInf)
+            {
+                if (right.NegativeInf)
+                    return NegativeInfinity();
+                else if (right.PositiveInf)
+                    return PositiveInfinity();
+                else if (right.Value < 0)
+                    return NegativeInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return PositiveInfinity();
+            }
+
+            if (right.NegativeInf)
+            {
+                if (left.NegativeInf)
+                    return PositiveInfinity();
+                else if (right.PositiveInf)
+                    return NegativeInfinity();
+                else if (left.Value < 0)
+                    return PositiveInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return NegativeInfinity();
+            }
+            
+            if (right.PositiveInf)
+            {
+                if (left.NegativeInf)
+                    return NegativeInfinity();
+                else if (right.PositiveInf)
+                    return PositiveInfinity();
+                else if (left.Value < 0)
+                    return NegativeInfinity();
+                else if (right.Value == 0)
+                    return new ExtendedZ(0);
+                else if (right.Value > 0)
+                    return PositiveInfinity();
+            }
             
             return new ExtendedZ(left.Value / right.Value);
         }
