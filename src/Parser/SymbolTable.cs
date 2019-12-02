@@ -63,7 +63,7 @@ namespace Parser
         {
             if (scope == -1)
             {
-                return null;
+                throw new ArgumentException($"Use before declaration: {name}");
             }
 
             var current = _symbols[scope];

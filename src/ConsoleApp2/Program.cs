@@ -58,15 +58,25 @@ while (x > 0) {
 x := x * x;
 }
 ";
+
+            var input4 = @"
+{
+    int x;
+    y := 0;
+}
+";
             //var result = Parser.Util.StringToAst(input);
             //var analysis = new IAAnalysis(result);
             //Console.WriteLine(analysis);
             //var result2 = Parser.Util.StringToAst(input2);
             //var analysis2 = new IAAnalysis(result2);
             //Console.WriteLine(analysis2);
-            var result3 = Parser.Util.StringToAst(input3);
-            var analysis3 = new IAAnalysis(result3, "FIFOWorklist");
-            Console.WriteLine(analysis3);
+            //var result3 = Parser.Util.StringToAst(input3);
+            //var analysis3 = new IAAnalysis(result3, "FIFOWorklist");
+            //Console.WriteLine(analysis3);
+            var result4 = Parser.Util.StringToAst(input4);
+            var analysis4 = new IAAnalysis(result4, "FIFOWorklist");
+            Console.WriteLine(analysis4);
 
         }
     }
