@@ -247,7 +247,7 @@ namespace WebApplication.Data
 
             foreach(var entry in _iterationSteps)
             {
-                WorklistResult currentStep = new WorklistResult(entry.CurrentStep, entry.CurrentEdge, entry.UpdatedWorklist, entry.AnalysisCircle);
+                WorklistResult currentStep = new WorklistResult(entry.CurrentStep, entry.CurrentEdge, entry.UpdatedWorklist, entry.AnalysisCircle, entry.V, entry.P);
                 iterationSteps.Add(currentStep);
             }
 

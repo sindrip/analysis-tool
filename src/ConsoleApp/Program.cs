@@ -5,6 +5,7 @@ using Analysis.Analysis.FaintVariables;
 using Analysis.Analysis.IntervalAnalysis;
 using Analysis.CFG;
 using Analysis.AST.AExpr;
+using Analysis.Analysis.ReachingDefinitions;
 
 namespace ConsoleApp1
 {
@@ -272,73 +273,11 @@ write r;
             Console.WriteLine(ae);
             Console.WriteLine(ae2);
 
-            //// Overflowing program debug
-            //var overflow = "{int x; x:=0; Point.x := 0;}";
-            //var overflowParse = Parser.Util.StringToAst(overflow);
-            //
-            //Console.WriteLine(overflowParse);
-
-            //var x = new Identifier("x", "int", 0);
-            //var y = new Identifier("y", "int", 2);
-            //var A = new Identifier("A", "array", 1);
-            //var d1 = new Dictionary<Identifier, HashSet<int>>();
-            //d1[x] = new HashSet<int> {1,2};
-            //d1[A] = new HashSet<int> {1};
-            //d1[y] = new HashSet<int>() {3};
-            //var d2 = new Dictionary<Identifier, HashSet<int>>();
-            //d2[x] = new HashSet<int> {1,2,3};
-            //d2[A] = new HashSet<int> {2};
-            //var l1 = new RDLattice(d1);
-            //var l2 = new RDLattice(d2);
-            //Console.WriteLine(l1.PartialOrder(l2));
-            //var joined = l1.Join(l2);
-            //Console.WriteLine(joined);
-
-            // var n = d2.Except(d1);
-            // var s = string.Join("\n", n.Select(x => $"{x.Key}: {string.Join(",", x.Value)}"));
-            // Console.WriteLine(s);
-
-            //var hs = new HashSet<int?>();
-            //hs.Add(1);
-            //hs.Add(null);
-            //hs.Add(null);
-            //hs.Add(2);
-            //Console.WriteLine(hs.Count);
-
-
-            //var t = new AELattice(ae2);
-            //var t2 = new AELattice(ae);
-            //Console.WriteLine(t);
-            //Console.WriteLine(t2);
-            //Console.WriteLine(t <= t);
-            //Console.WriteLine(t2 <= (t & t2));
-            //
-            //var analysis = new AEAnalysis(aeresult);
-            //Console.WriteLine(analysis);
-            //var analysis = new RDAnalysis(rdresult);
-            //Console.WriteLine(analysis);
-
 
             Console.WriteLine("------- Analysis 1 --------");
-            var analysis1 = new FVAnalysis(result1);
-            Console.WriteLine("--------- Analysis 2 --------");
-            var analysis2 = new FVAnalysis(result2);
-            Console.WriteLine("------- Analysis 3 -------");
-            var analysis3 = new FVAnalysis(result3);
-            
-            Console.WriteLine(string.Join(" ", AnalysisUtil.InterestingValues(result1).Select(x => x.ToString())));
-            
-            var analysis4 = new IAAnalysis(result1);
-            Console.WriteLine(analysis4);
-            //Console.WriteLine(analysis1);
-            //Console.WriteLine(analysis2);
-            //Console.WriteLine(analysis3);
-            //var analysis2 = new LVAnalysis(lvresult);
-            //var analysis3 = new FVAnalysis(lvresult);
-            //var analysis4 = new DSAnalysis(lvresult);
-            //Console.WriteLine(analysis2);
-            //Console.WriteLine(analysis3);
-            //Console.WriteLine(analysis4);
+            var analysis1 = new RDAnalysis(result1, "RoundRobin");
+            Console.WriteLine(analysis1);
+
         }
     }
 }

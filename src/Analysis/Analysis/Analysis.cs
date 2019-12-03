@@ -113,7 +113,7 @@ namespace Analysis.Analysis
                 analysisCircleList.Add((lab, _analysisCircle[lab].ToString()));
             }
 
-            _iterationSteps.Add(new IterationStep(numberOfOperations, null, _workList.GetCurrentEdges(), analysisCircleList));
+            _iterationSteps.Add(new IterationStep(numberOfOperations, null, _workList.GetCurrentEdges(), analysisCircleList, _workList.GetV(), _workList.GetP()));
 
             while (!_workList.Empty())
             {
@@ -138,7 +138,7 @@ namespace Analysis.Analysis
                     analysisCircleList.Add((lab, _analysisCircle[lab].ToString()));
                 }
 
-                _iterationSteps.Add(new IterationStep(numberOfOperations, edge, _workList.GetCurrentEdges(), analysisCircleList));
+                _iterationSteps.Add(new IterationStep(numberOfOperations, edge, _workList.GetCurrentEdges(), analysisCircleList, _workList.GetV(), _workList.GetP()));
             }
 
             return numberOfOperations;
@@ -155,7 +155,6 @@ namespace Analysis.Analysis
             var filled = string.Join("\n", _analysisFilled.Select(x => x.ToString()));
             return $"circle: {circle} \n filled: {filled}";
         }
-
     }
 
     public enum AnalysisDirection

@@ -12,6 +12,8 @@ namespace Analysis.Analysis
         void Insert(FlowEdge flowEdge);
         bool Empty();
         List<FlowEdge> GetCurrentEdges();
+        LinkedList<FlowEdge> GetV();
+        LinkedList<FlowEdge> GetP();
     }
 
     public class ChaoticIteration : IWorkList
@@ -38,6 +40,16 @@ namespace Analysis.Analysis
         {
             return _edgeList.ToList();
         }
+
+        public LinkedList<FlowEdge> GetV()
+        {
+            return new LinkedList<FlowEdge>();
+        }
+
+        public LinkedList<FlowEdge> GetP()
+        {
+            return new LinkedList<FlowEdge>();
+        }
     }
 
     public class FIFOWorklist : IWorkList
@@ -58,6 +70,16 @@ namespace Analysis.Analysis
         public List<FlowEdge> GetCurrentEdges()
         {
             return _edgeList.ToList();
+        }
+
+        public LinkedList<FlowEdge> GetP()
+        {
+            return new LinkedList<FlowEdge>();
+        }
+
+        public LinkedList<FlowEdge> GetV()
+        {
+            return new LinkedList<FlowEdge>();
         }
 
         public void Insert(FlowEdge flowEdge)
@@ -86,6 +108,16 @@ namespace Analysis.Analysis
         public List<FlowEdge> GetCurrentEdges()
         {
             return _edgeList.ToList();
+        }
+
+        public LinkedList<FlowEdge> GetP()
+        {
+            return new LinkedList<FlowEdge>();
+        }
+
+        public LinkedList<FlowEdge> GetV()
+        {
+            return new LinkedList<FlowEdge>();
         }
 
         public void Insert(FlowEdge flowEdge)
@@ -131,9 +163,19 @@ namespace Analysis.Analysis
             return V.GetLinkedList().ToList();
         }
 
+        public LinkedList<FlowEdge> GetP()
+        {
+            return P;
+        }
+
+        public LinkedList<FlowEdge> GetV()
+        {
+            return V.GetLinkedList();
+        }
+
         public void Insert(FlowEdge flowEdge)
         {
-            if (!V.Contains(flowEdge))
+            if (!V.Contains(flowEdge) && !P.Contains(flowEdge))
             {
                 P.AddLast(flowEdge);
             }
