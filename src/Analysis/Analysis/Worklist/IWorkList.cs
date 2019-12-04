@@ -141,7 +141,7 @@ namespace Analysis.Analysis
             this.rP = rP;
             LinkedList<FlowEdge> sortedEdgeList = SortRP(new LinkedList<FlowEdge>(edgeList));
 
-            this.P = new LinkedList<FlowEdge>(sortedEdgeList);
+            this.P = new LinkedList<FlowEdge>();
             this.V = new VContainer(sortedEdgeList);
         }
 
