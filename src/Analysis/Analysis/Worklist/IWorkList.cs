@@ -84,7 +84,10 @@ namespace Analysis.Analysis
 
         public void Insert(FlowEdge flowEdge)
         {
-            _edgeList.Enqueue(flowEdge);
+            if (!_edgeList.Contains(flowEdge))
+            {
+                _edgeList.Enqueue(flowEdge);
+            }
         }
 
     }
@@ -135,9 +138,11 @@ namespace Analysis.Analysis
 
         public RoundRobin(IEnumerable<FlowEdge> edgeList, List<(int, int)> rP)
         {
-            this.V = new VContainer(new LinkedList<FlowEdge>(edgeList));
-            this.P = new LinkedList<FlowEdge>(edgeList);
             this.rP = rP;
+            LinkedList<FlowEdge> sortedEdgeList = SortRP(new LinkedList<FlowEdge>(edgeList));
+
+            this.P = new LinkedList<FlowEdge>(sortedEdgeList);
+            this.V = new VContainer(sortedEdgeList);
         }
 
         public bool Empty() => V.IsEmpty() && P.Count == 0;
@@ -196,7 +201,7 @@ namespace Analysis.Analysis
 
         public VContainer(LinkedList<FlowEdge> linkedList)
         {
-            VLinkedList = linkedList;
+            VLinkedList = new LinkedList<FlowEdge>(linkedList);
 
             foreach (var edge in linkedList)
             {
