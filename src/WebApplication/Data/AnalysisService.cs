@@ -143,7 +143,7 @@ namespace WebApplication.Data
                     _iterationSteps = analysis.GetIterationSteps();
 
                     int label = 0;
-                    string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> Faint<br/>";
+                    string htmlFormat = "<kbd>{0}</kbd> <span class='oi oi-arrow-right' aria-hidden='true'></span> Strongly Live<br/>";
 
                     var zipped = circlelattice.Zip(filledLattice, (entry, exit) => new AnalysisResult {
                         Label = (label++).ToString(),
