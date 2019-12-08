@@ -1,5 +1,6 @@
 ﻿using System;
 using Analysis.Analysis.IntervalAnalysis;
+using Analysis.Analysis.ReachingDefinitions;
 
 namespace ConsoleApp2
 {
@@ -65,6 +66,21 @@ x := x * x;
     y := 0;
 }
 ";
+
+            var input5 = @"
+{
+  { int fst; int snd } r;
+  int x;
+  r := (0,1);
+  read x;
+  while (x > 0) {
+    r.fst := r.fst + x;
+    r.snd := r.snd + x;
+    x := x-1;
+  }
+  r := (0,0);
+}
+";
             //var result = Parser.Util.StringToAst(input);
             //var analysis = new IAAnalysis(result);
             //Console.WriteLine(analysis);
@@ -74,9 +90,12 @@ x := x * x;
             //var result3 = Parser.Util.StringToAst(input3);
             //var analysis3 = new IAAnalysis(result3, "FIFOWorklist");
             //Console.WriteLine(analysis3);
-            var result4 = Parser.Util.StringToAst(input4);
-            var analysis4 = new IAAnalysis(result4, "FIFOWorklist");
-            Console.WriteLine(analysis4);
+            //var result4 = Parser.Util.StringToAst(input4);
+            //var analysis4 = new IAAnalysis(result4, "FIFOWorklist");
+            //Console.WriteLine(analysis4);
+            var result5 = Parser.Util.StringToAst(input5);
+            var analysis5 = new RDAnalysis(result5, "FIFOWorklist");
+            Console.WriteLine(analysis5);
 
         }
     }
