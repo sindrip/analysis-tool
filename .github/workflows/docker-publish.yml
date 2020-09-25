@@ -12,7 +12,7 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: paif
+  IMAGE_NAME: analysis-tool
 
 jobs:
   push:
