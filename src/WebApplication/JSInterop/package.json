@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "codemirror": "^5.49.2",
+    "codemirror": "^5.58.2",
     "css-loader": "^3.2.0",
     "style-loader": "^1.0.0",
     "viz.js": "^2.1.2"
